@@ -29,3 +29,21 @@ descriptor inside the resolved class. Symbols in `org.telegram.messenger`,
 changes an internal string or you add a new hook, add or adjust an entry
 there. Anything the tool can't resolve is printed at the end of a run.
 The hand-made `TelegramWeb-70999.json` remains the reference for 12.10.4.
+
+## Current coverage
+
+The generator auto-resolves the R8-renamed classes OpGram depends on most
+(ChatActivity, ChatMessageCell, TextCheckCell, ProfileActivity, PhotoViewer,
+SecretMediaViewer) and several members by descriptor. Two kinds of symbol
+still need help and are reported at the end of a run:
+
+- **Classes with no string constants** (small cells such as HeaderCell,
+  TextSettingsCell, SimpleTextView, UItem). They must be matched by
+  superclass + member descriptors; add those hints to `fingerprints.json`.
+- **Classes whose strings are shared** with a sibling (e.g. SettingsActivity
+  vs the debug-menu builder). Disambiguating them needs matching by the
+  *obfuscated* superclass, which is a planned enhancement.
+
+For these, keep using the hand-made `TelegramWeb-<versionCode>.json` as the
+reference. The generator never overwrites it (writes `.generated.json` unless
+`--force`).

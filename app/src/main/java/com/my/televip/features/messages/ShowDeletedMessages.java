@@ -24,6 +24,25 @@ import java.util.ArrayList;
 public class ShowDeletedMessages {
 
     public static final int FLAG_DELETED = 1 << 31;
+    public static final String DELETED_AT = "opgram_deleted_at";
+
+    /** Marks a message owner as deleted and records the wall-clock time of deletion. */
+    public static void stampDeleted(TLRPC.Message owner) {
+        owner.setFlags(owner.getFlags() | FLAG_DELETED);
+        try {
+            de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField(owner.get_Message(), DELETED_AT, System.currentTimeMillis());
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public static long getDeletedAt(TLRPC.Message owner) {
+        try {
+            Object v = de.robv.android.xposed.XposedHelpers.getAdditionalInstanceField(owner.get_Message(), DELETED_AT);
+            return v instanceof Long ? (Long) v : 0L;
+        } catch (Throwable t) {
+            return 0L;
+        }
+    }
 
     private static boolean isDeleteMessage = false;
 
@@ -45,7 +64,7 @@ public class ShowDeletedMessages {
                 for (final Object msgObj : dialogMessages) {
                     TLRPC.Message owner = new MessageObject(msgObj).getMessageOwner();
                     if (channelMessages.getMessages().contains(owner.getId())) {
-                        owner.setFlags(owner.getFlags() | FLAG_DELETED);
+                        stampDeleted(owner);
                     }
                 }
             }
@@ -62,7 +81,7 @@ public class ShowDeletedMessages {
                     break;
                 } else {
                     TLRPC.Message owner = new MessageObject(msgObj).getMessageOwner();
-                    owner.setFlags(owner.getFlags() | FLAG_DELETED);
+                    stampDeleted(owner);
                 }
             }
             markMessagesDeletedForController(messagesController.getMessagesStorage(), 0, messages);

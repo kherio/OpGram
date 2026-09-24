@@ -79,6 +79,16 @@ public class ConfigItem {
 
     public int getCustomCalendar() { return ConfigPreferences.getInt(key+"Int"); }
 
+    /** Stored as an int (value*100) so it survives without a float pref type. */
+    public float getFloatValue(float fallback) {
+        int v = ConfigPreferences.getInt(key+"Int");
+        return v > 0 ? v / 100f : fallback;
+    }
+
+    public void setFloatValue(float value) {
+        ConfigPreferences.putInt(key+"Int", Math.round(value * 100));
+    }
+
     public void setCustomCalendar(int value) {
         ConfigPreferences.putInt(key+"Int", value);
     }

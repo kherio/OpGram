@@ -70,6 +70,32 @@ public class MessageDatabase extends SQLiteOpenHelper {
         }
     }
 
+    /** Recent edited/saved message versions, newest first, optionally filtered by text. */
+    public java.util.List<String[]> queryRecent(String filter, int limit) {
+        java.util.List<String[]> out = new java.util.ArrayList<>();
+        try {
+            SQLiteDatabase database = getReadableDatabase();
+            String q = "SELECT " + COLUMN_MESSAGE + ", " + COLUMN_MESSAGE_DATE + ", " + COLUMN_MSG_COUNT +
+                    " FROM " + TABLE_MESSAGES;
+            String[] args;
+            if (filter != null && !filter.isEmpty()) {
+                q += " WHERE " + COLUMN_MESSAGE + " LIKE ?";
+                args = new String[]{"%" + filter + "%"};
+            } else {
+                args = new String[]{};
+            }
+            q += " ORDER BY " + COLUMN_MESSAGE_DATE + " DESC LIMIT " + limit;
+            Cursor c = database.rawQuery(q, args);
+            while (c.moveToNext()) {
+                out.add(new String[]{c.getString(0), String.valueOf(c.getLong(1)), String.valueOf(c.getInt(2))});
+            }
+            c.close();
+        } catch (Throwable t) {
+            Logger.e(t);
+        }
+        return out;
+    }
+
     public boolean searchMessage(long id, int msgId, String message) {
         if (message == null) return false;
 

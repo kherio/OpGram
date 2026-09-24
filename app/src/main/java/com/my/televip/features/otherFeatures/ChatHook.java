@@ -56,6 +56,13 @@ public class ChatHook {
 
                             headerItem.lazilyAddSubItem(8353848, drawableResource, Translator.get(Keys.ToTheMessage));
 
+                            if (ConfigManager.chatLock != null && ConfigManager.chatLock.isEnable()) {
+                                long lockDid = chatActivity.getDialogId();
+                                int lockIcon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE),
+                                        com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? "msg_unmute" : "msg_mute");
+                                headerItem.lazilyAddSubItem(8353851, lockIcon, Translator.get(
+                                        com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? Keys.UnlockThisChat : Keys.LockThisChat));
+                            }
                             if (ConfigManager.isGhostMode()) {
                                 long did = chatActivity.getDialogId();
                                 int icon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "msg_markread");
@@ -84,6 +91,8 @@ public class ChatHook {
 
                         if (id == 8353847) {
                             chat.scrollToMessageId(1, 0, true, 0, true, 0);
+                        } else if (id == 8353851) {
+                            com.my.televip.features.extra.ChatLock.toggle(chat.getDialogId());
                         } else if (id == 8353849) {
                             GhostExceptions.markAsReadNow(chat.getDialogId());
                         } else if (id == 8353850) {

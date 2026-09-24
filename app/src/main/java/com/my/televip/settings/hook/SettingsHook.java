@@ -90,13 +90,13 @@ public class SettingsHook {
                                     uItem = XposedHelpers.callStaticMethod(SettingsActivity$SettingCell$FactoryClass, Obfuscate.getMethodName("SettingsActivity$SettingCell$Factory", "of"),
                                             new Class[]{int.class, int.class, int.class, int.class, CharSequence.class, CharSequence.class, CharSequence.class},
                                             8353847, color1, color2, 8353847,
-                                            Translator.get(Keys.GhostMode), Translator.get(Keys.ByMustafa), null);
+                                            com.my.televip.Branding.title(), Translator.get(Keys.ByMustafa), null);
                                 } else {
                                 uItem = XposedHelpers.callStaticMethod(SettingsActivity$SettingCell$FactoryClass, Obfuscate.getMethodName("SettingsActivity$SettingCell$Factory", "of"), 8353847,
                                         color1,
                                         color2,
                                         8353847,
-                                        Translator.get(Keys.GhostMode),
+                                        com.my.televip.Branding.title(),
                                         Translator.get(Keys.ByMustafa));
                                 }
                                 for (int i = 0; i < arrayList.size(); i++) {
@@ -155,7 +155,7 @@ public class SettingsHook {
                                 itemConstructor.setAccessible(true);
                             }
 
-                            Object newItem = itemConstructor.newInstance(8353847, Translator.get(Keys.GhostMode), SettingsIconResolver.getIconSettings());
+                            Object newItem = itemConstructor.newInstance(8353847, com.my.televip.Branding.title(), SettingsIconResolver.getIconSettings());
 
                             if (items instanceof ArrayList<?>) {
                                 ArrayList<Object> typedItems = (ArrayList<Object>) items;

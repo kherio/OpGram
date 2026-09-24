@@ -1,10 +1,12 @@
 package com.my.televip.Class;
 
 public class ClassNames {
+    public static final String DOWNLOAD_CONTROLLER = "org.telegram.messenger.DownloadController";
     public static final String MESSAGE_OBJECT = "org.telegram.messenger.MessageObject";
     public static final String CHAT_ACTIVITY = "org.telegram.ui.ChatActivity";
     public static final String PROFILE_ACTIVITY = "org.telegram.ui.ProfileActivity";
     public static final String DRAWABLE = "org.telegram.messenger.R$drawable";
+    public static final String MEDIA_CONTROLLER = "org.telegram.messenger.MediaController";
     public static final String MESSAGES_CONTROLLER = "org.telegram.messenger.MessagesController";
     public static final String MESSAGES_STORAGE = "org.telegram.messenger.MessagesStorage";
     public static final String THEME = "org.telegram.ui.ActionBar.Theme";

@@ -6,6 +6,9 @@ import com.my.televip.features.ui.DisableChannelSwipeBack;
 import com.my.televip.features.ui.DisableNumberRounding;
 import com.my.televip.features.ui.ExactLastSeen;
 import com.my.televip.features.extra.ConfirmSending;
+import com.my.televip.features.extra.VoicePlaybackSpeed;
+import com.my.televip.features.extra.BatterySaver;
+import com.my.televip.features.extra.ChatLock;
 import com.my.televip.features.extra.HideSponsoredMessages;
 import com.my.televip.features.ui.DisableProfileSwipeBack;
 import com.my.televip.features.stories.DisableStories;
@@ -98,9 +101,15 @@ public class ConfigManager {
     public static ConfigItem showSecondsInTime;
     public static ConfigItem hideSponsoredMessages;
     public static ConfigItem confirmSending;
+    public static ConfigItem showDeletedTime;
+    public static ConfigItem voicePlaybackSpeed;
+    public static ConfigItem noStoriesPreload;
+    public static ConfigItem hideStoriesBar;
+    public static ConfigItem chatLock;
     public static ConfigItem backupHeader;
     public static ConfigItem btnExportSettings;
     public static ConfigItem btnImportSettings;
+    public static ConfigItem btnViewEditsHistory;
     public static ConfigItem btnClearEditsHistory;
     public static ConfigItem hideUpdateApp;
     public static ConfigItem fixTLError;
@@ -190,6 +199,21 @@ public class ConfigManager {
 
         showSecondsInTime = new ConfigItem(ConfigItem.SWITCH, Keys.ShowSecondsInTime, "14:32 -> 14:32:07", ConfigPreferences.getBoolean(Keys.ShowSecondsInTime), MessageTimeModifier::init);
         items.add(showSecondsInTime);
+
+        showDeletedTime = new ConfigItem(ConfigItem.SWITCH, Keys.ShowDeletedTime, ConfigPreferences.getBoolean(Keys.ShowDeletedTime), MessageTimeModifier::init);
+        items.add(showDeletedTime);
+
+        voicePlaybackSpeed = new ConfigItem(ConfigItem.SWITCH, Keys.VoicePlaybackSpeed, "1.5x", ConfigPreferences.getBoolean(Keys.VoicePlaybackSpeed), VoicePlaybackSpeed::init);
+        items.add(voicePlaybackSpeed);
+
+        noStoriesPreload = new ConfigItem(ConfigItem.SWITCH, Keys.NoStoriesPreload, ConfigPreferences.getBoolean(Keys.NoStoriesPreload), BatterySaver::init);
+        items.add(noStoriesPreload);
+
+        hideStoriesBar = new ConfigItem(ConfigItem.SWITCH, Keys.HideStoriesBar, ConfigPreferences.getBoolean(Keys.HideStoriesBar), BatterySaver::init);
+        items.add(hideStoriesBar);
+
+        chatLock = new ConfigItem(ConfigItem.SWITCH, Keys.ChatLock, ConfigPreferences.getBoolean(Keys.ChatLock), ChatLock::init);
+        items.add(chatLock);
 
         confirmSending = new ConfigItem(ConfigItem.SWITCH, Keys.ConfirmSending, ConfigPreferences.getBoolean(Keys.ConfirmSending), ConfirmSending::init);
         items.add(confirmSending);
@@ -285,6 +309,8 @@ public class ConfigManager {
         items.add(btnExportSettings);
         btnImportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ImportSettings);
         items.add(btnImportSettings);
+        btnViewEditsHistory = new ConfigItem(ConfigItem.TEXT, Keys.ViewEditsHistory);
+        items.add(btnViewEditsHistory);
         btnClearEditsHistory = new ConfigItem(ConfigItem.TEXT, Keys.ClearEditsHistory);
         items.add(btnClearEditsHistory);
 

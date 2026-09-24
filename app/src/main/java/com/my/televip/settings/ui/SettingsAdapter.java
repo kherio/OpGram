@@ -173,6 +173,9 @@ public class SettingsAdapter {
                         case Keys.ImportSettings:
                             BackupActions.importSettings((Activity) settingsController.getContext());
                             break;
+                        case Keys.ViewEditsHistory:
+                            EditsViewer.show((Activity) settingsController.getContext());
+                            break;
                         case Keys.ClearEditsHistory:
                             BackupActions.clearEditsHistory((Activity) settingsController.getContext());
                             break;

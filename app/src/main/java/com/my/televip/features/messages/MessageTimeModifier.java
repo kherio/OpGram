@@ -98,6 +98,14 @@ public class MessageTimeModifier {
 
             if (deleted && (message.getFlags() & ShowDeletedMessages.FLAG_DELETED) != 0) {
                 prefix = Translator.get(Keys.Deleted);
+                if (ConfigManager.showDeletedTime != null && ConfigManager.showDeletedTime.isEnable()) {
+                    long at = ShowDeletedMessages.getDeletedAt(message);
+                    if (at > 0) {
+                        String t = new java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+                                .format(new java.util.Date(at));
+                        prefix = prefix + " " + t;
+                    }
+                }
                 redColor = true;
             }
 

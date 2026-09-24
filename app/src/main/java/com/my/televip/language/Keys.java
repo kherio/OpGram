@@ -133,4 +133,19 @@ public class Keys {
     public static final String GhostIncludeChat = "GhostIncludeChat";
     public static final String GhostExcludedToast = "GhostExcludedToast";
     public static final String GhostIncludedToast = "GhostIncludedToast";
+    public static final String ShowDeletedTime = "ShowDeletedTime";
+    public static final String VoicePlaybackSpeed = "VoicePlaybackSpeed";
+    public static final String NoStoriesPreload = "NoStoriesPreload";
+    public static final String HideStoriesBar = "HideStoriesBar";
+    public static final String ChatLock = "ChatLock";
+    public static final String ChatLockPrompt = "ChatLockPrompt";
+    public static final String ChatLocked = "ChatLocked";
+    public static final String ChatUnlocked = "ChatUnlocked";
+    public static final String LockThisChat = "LockThisChat";
+    public static final String UnlockThisChat = "UnlockThisChat";
+    public static final String ViewEditsHistory = "ViewEditsHistory";
+    public static final String Search = "Search";
+    public static final String NoEditsSaved = "NoEditsSaved";
+    public static final String ExtraSettings = "ExtraSettings";
+    public static final String Version = "Version";
 }

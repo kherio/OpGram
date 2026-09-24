@@ -1,0 +1,1031 @@
+diff --git a/app/build.gradle b/app/build.gradle
+index 2071e5d..d17ab77 100755
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -8,8 +8,8 @@ android {
+         applicationId "com.my.televip"
+         minSdk 27
+         targetSdk 36
+-        versionCode 1000
+-        versionName "1.0"
++        versionCode 1100
++        versionName "1.1"
+ 
+         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables {
+diff --git a/app/src/main/assets/lang/ar.json b/app/src/main/assets/lang/ar.json
+index 03cecc0..7aebb49 100644
+--- a/app/src/main/assets/lang/ar.json
++++ b/app/src/main/assets/lang/ar.json
+@@ -9,7 +9,7 @@
+   "ChangeTo": "تم التغيير الى",
+   "NameDeleted": "تم حذف الاسم",
+   "GhostMode": "الوضع المتقدم",
+-  "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
++  "ByMustafa": "مبني على TeleVip بواسطة @m_1_iq",
+   "HideSeen": "اخفاء علامة الاستلام",
+   "HideStoryView": "اخفاء مشاهدة قصة",
+   "HideTyping": "اخفاء مؤشر الكتابة",
+@@ -107,5 +107,20 @@
+   "ApproximateCreationDateNotice": "يعتمد هذا التاريخ على تقدير مستند إلى معرف تيليجرام، وقد لا يكون مطابقًا لتاريخ الإنشاء الفعلي.",
+   "EnableVoiceMessageSaving": "السماح بحفظ الرسائل الصوتية",
+   "ExactLastSeen": "وقت آخر ظهور بالضبط",
+-  "TeleVip": "OpGram"
++  "TeleVip": "OpGram",
++  "ShowDeletedTime": "Show deletion time next to \"deleted\"",
++  "VoicePlaybackSpeed": "Default voice playback speed (1.5x)",
++  "NoStoriesPreload": "Don't preload stories (saves battery/data)",
++  "HideStoriesBar": "Hide the stories bar",
++  "ChatLock": "Lock chats with fingerprint",
++  "ChatLockPrompt": "Authenticate to open this chat",
++  "ChatLocked": "Chat locked",
++  "ChatUnlocked": "Chat unlocked",
++  "LockThisChat": "Lock this chat",
++  "UnlockThisChat": "Unlock this chat",
++  "ViewEditsHistory": "View saved edits history",
++  "Search": "Search",
++  "NoEditsSaved": "No saved edits yet",
++  "ExtraSettings": "Extra",
++  "Version": "Version"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/assets/lang/en.json b/app/src/main/assets/lang/en.json
+index 27ba219..658b572 100644
+--- a/app/src/main/assets/lang/en.json
++++ b/app/src/main/assets/lang/en.json
+@@ -9,7 +9,7 @@
+   "ChangeTo": "Change to",
+   "NameDeleted": "Name deleted",
+   "GhostMode": "Advanced Mode",
+-  "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
++  "ByMustafa": "Based on TeleVip by @m_1_iq",
+   "HideSeen": "Hide 'Seen' status",
+   "HideStoryView": "Hide 'Story View' status",
+   "HideTyping": "Hide Typing...",
+@@ -134,5 +134,20 @@
+   "GhostExcludeChat": "Exclude from Ghost Mode",
+   "GhostIncludeChat": "Include in Ghost Mode",
+   "GhostExcludedToast": "This chat is now excluded from Ghost Mode",
+-  "GhostIncludedToast": "Ghost Mode applies to this chat again"
++  "GhostIncludedToast": "Ghost Mode applies to this chat again",
++  "ShowDeletedTime": "Show deletion time next to \"deleted\"",
++  "VoicePlaybackSpeed": "Default voice playback speed (1.5x)",
++  "NoStoriesPreload": "Don't preload stories (saves battery/data)",
++  "HideStoriesBar": "Hide the stories bar",
++  "ChatLock": "Lock chats with fingerprint",
++  "ChatLockPrompt": "Authenticate to open this chat",
++  "ChatLocked": "Chat locked",
++  "ChatUnlocked": "Chat unlocked",
++  "LockThisChat": "Lock this chat",
++  "UnlockThisChat": "Unlock this chat",
++  "ViewEditsHistory": "View saved edits history",
++  "Search": "Search",
++  "NoEditsSaved": "No saved edits yet",
++  "ExtraSettings": "Extra",
++  "Version": "Version"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/assets/lang/es.json b/app/src/main/assets/lang/es.json
+index 942714e..4306d45 100644
+--- a/app/src/main/assets/lang/es.json
++++ b/app/src/main/assets/lang/es.json
+@@ -9,7 +9,7 @@
+   "ChangeTo": "Cambiar a",
+   "NameDeleted": "Nombre eliminado",
+   "GhostMode": "Modo avanzado",
+-  "ByMustafa": "OpGram · basado en TeleVip de @m_1_iq",
++  "ByMustafa": "Basado en TeleVip de @m_1_iq",
+   "HideSeen": "Ocultar el estado 'Visto'",
+   "HideStoryView": "Ocultar que has visto historias",
+   "HideTyping": "Ocultar 'Escribiendo…'",
+@@ -134,5 +134,20 @@
+   "GhostExcludeChat": "Excluir del modo fantasma",
+   "GhostIncludeChat": "Incluir en el modo fantasma",
+   "GhostExcludedToast": "Este chat queda excluido del modo fantasma",
+-  "GhostIncludedToast": "El modo fantasma vuelve a aplicarse a este chat"
++  "GhostIncludedToast": "El modo fantasma vuelve a aplicarse a este chat",
++  "ShowDeletedTime": "Mostrar la hora de borrado junto a \"eliminado\"",
++  "VoicePlaybackSpeed": "Velocidad de las notas de voz (1.5x)",
++  "NoStoriesPreload": "No precargar historias (ahorra batería/datos)",
++  "HideStoriesBar": "Ocultar la barra de historias",
++  "ChatLock": "Bloquear chats con huella",
++  "ChatLockPrompt": "Autentícate para abrir este chat",
++  "ChatLocked": "Chat bloqueado",
++  "ChatUnlocked": "Chat desbloqueado",
++  "LockThisChat": "Bloquear este chat",
++  "UnlockThisChat": "Desbloquear este chat",
++  "ViewEditsHistory": "Ver historial de ediciones guardado",
++  "Search": "Buscar",
++  "NoEditsSaved": "Aún no hay ediciones guardadas",
++  "ExtraSettings": "Extra",
++  "Version": "Versión"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/assets/lang/fa.json b/app/src/main/assets/lang/fa.json
+index 1417374..554c08e 100644
+--- a/app/src/main/assets/lang/fa.json
++++ b/app/src/main/assets/lang/fa.json
+@@ -9,7 +9,7 @@
+   "ChangeTo": "تغییر به",
+   "NameDeleted": "اسم پاک شد",
+   "GhostMode": "حالت پیشرفته",
+-  "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
++  "ByMustafa": "بر پایه TeleVip از @m_1_iq",
+   "HideSeen": "مخفی کردن وضعیت 'دیده شد'",
+   "HideStoryView": "مخفی کردن 'دیده شدن استوری'",
+   "HideTyping": "مخفی کردن 'در حال تایپ...'",
+@@ -107,5 +107,20 @@
+   "ApproximateCreationDateNotice": "این تاریخ بر اساس تخمینی است که از شناسه تلگرام (Telegram ID) به دست آمده و ممکن است با تاریخ واقعی ایجاد حساب مطابقت نداشته باشد.",
+   "EnableVoiceMessageSaving": "فعال کردن ذخیره پیام‌های صوتی",
+   "ExactLastSeen": "زمان دقیق آخرین بازدید",
+-  "TeleVip": "OpGram"
++  "TeleVip": "OpGram",
++  "ShowDeletedTime": "Show deletion time next to \"deleted\"",
++  "VoicePlaybackSpeed": "Default voice playback speed (1.5x)",
++  "NoStoriesPreload": "Don't preload stories (saves battery/data)",
++  "HideStoriesBar": "Hide the stories bar",
++  "ChatLock": "Lock chats with fingerprint",
++  "ChatLockPrompt": "Authenticate to open this chat",
++  "ChatLocked": "Chat locked",
++  "ChatUnlocked": "Chat unlocked",
++  "LockThisChat": "Lock this chat",
++  "UnlockThisChat": "Unlock this chat",
++  "ViewEditsHistory": "View saved edits history",
++  "Search": "Search",
++  "NoEditsSaved": "No saved edits yet",
++  "ExtraSettings": "Extra",
++  "Version": "Version"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/assets/lang/zh.json b/app/src/main/assets/lang/zh.json
+index 634d093..8d66895 100644
+--- a/app/src/main/assets/lang/zh.json
++++ b/app/src/main/assets/lang/zh.json
+@@ -9,7 +9,7 @@
+   "ChangeTo": "更改为",
+   "NameDeleted": "名称已删除",
+   "GhostMode": "高级模式",
+-  "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
++  "ByMustafa": "基于 @m_1_iq 的 TeleVip",
+   "HideSeen": "隐藏“已查看”状态",
+   "HideStoryView": "隐藏 '故事观看' 状态",
+   "HideTyping": "隐藏正在输入...",
+@@ -107,5 +107,20 @@
+   "ApproximateCreationDateNotice": "此日期是根据 Telegram ID 推算得出的估计值，可能与实际创建日期不一致。",
+   "EnableVoiceMessageSaving": "开启语音消息保存",
+   "ExactLastSeen": "精确的最后上线时间",
+-  "TeleVip": "OpGram"
++  "TeleVip": "OpGram",
++  "ShowDeletedTime": "Show deletion time next to \"deleted\"",
++  "VoicePlaybackSpeed": "Default voice playback speed (1.5x)",
++  "NoStoriesPreload": "Don't preload stories (saves battery/data)",
++  "HideStoriesBar": "Hide the stories bar",
++  "ChatLock": "Lock chats with fingerprint",
++  "ChatLockPrompt": "Authenticate to open this chat",
++  "ChatLocked": "Chat locked",
++  "ChatUnlocked": "Chat unlocked",
++  "LockThisChat": "Lock this chat",
++  "UnlockThisChat": "Unlock this chat",
++  "ViewEditsHistory": "View saved edits history",
++  "Search": "Search",
++  "NoEditsSaved": "No saved edits yet",
++  "ExtraSettings": "Extra",
++  "Version": "Version"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/java/com/my/televip/Branding.java b/app/src/main/java/com/my/televip/Branding.java
+index bbb95c9..f357c30 100644
+--- a/app/src/main/java/com/my/televip/Branding.java
++++ b/app/src/main/java/com/my/televip/Branding.java
+@@ -1,10 +1,43 @@
+ package com.my.televip;
+ 
+-/** OpGram branding (fork of TeleVip by @m_1_iq). */
++import android.content.Context;
++import android.content.pm.PackageInfo;
++
++import com.my.televip.application.ApplicationLoaderHook;
++import com.my.televip.utils.Utils;
++
++/**
++ * OpGram branding.
++ *
++ * OpGram is a fork of TeleVip, originally created by @m_1_iq
++ * (https://github.com/mustafa1dev/TeleVip-Lsposed). TeleVip is licensed under
++ * the GPL, which requires keeping attribution to the original author; the
++ * credit below must stay in the module.
++ */
+ public final class Branding {
+     public static final String NAME = "OpGram";
++    public static final String ORIGINAL_AUTHOR = "@m_1_iq";
+     public static final String REPO_URL = "https://github.com/kherio/OpGram";
+     public static final String RELEASES_URL = REPO_URL + "/releases";
+ 
++    /** Reads the module's own versionName from its package (falls back if unavailable). */
++    public static String version() {
++        try {
++            Context ctx = ApplicationLoaderHook.getApplicationContext();
++            if (ctx != null) {
++                PackageInfo info = ctx.getPackageManager().getPackageInfo("com.my.televip", 0);
++                if (info != null && info.versionName != null) return info.versionName;
++            }
++        } catch (Throwable ignored) {
++        }
++        return "";
++    }
++
++    /** Title shown in the OpGram panel header, e.g. "OpGram 1.1". */
++    public static String title() {
++        String v = version();
++        return v.isEmpty() ? NAME : NAME + " " + v;
++    }
++
+     private Branding() {}
+ }
+diff --git a/app/src/main/java/com/my/televip/Class/ClassNames.java b/app/src/main/java/com/my/televip/Class/ClassNames.java
+index e962bfd..26ffd66 100644
+--- a/app/src/main/java/com/my/televip/Class/ClassNames.java
++++ b/app/src/main/java/com/my/televip/Class/ClassNames.java
+@@ -1,10 +1,12 @@
+ package com.my.televip.Class;
+ 
+ public class ClassNames {
++    public static final String DOWNLOAD_CONTROLLER = "org.telegram.messenger.DownloadController";
+     public static final String MESSAGE_OBJECT = "org.telegram.messenger.MessageObject";
+     public static final String CHAT_ACTIVITY = "org.telegram.ui.ChatActivity";
+     public static final String PROFILE_ACTIVITY = "org.telegram.ui.ProfileActivity";
+     public static final String DRAWABLE = "org.telegram.messenger.R$drawable";
++    public static final String MEDIA_CONTROLLER = "org.telegram.messenger.MediaController";
+     public static final String MESSAGES_CONTROLLER = "org.telegram.messenger.MessagesController";
+     public static final String MESSAGES_STORAGE = "org.telegram.messenger.MessagesStorage";
+     public static final String THEME = "org.telegram.ui.ActionBar.Theme";
+diff --git a/app/src/main/java/com/my/televip/Configs/ConfigItem.java b/app/src/main/java/com/my/televip/Configs/ConfigItem.java
+index c9a0836..6187382 100644
+--- a/app/src/main/java/com/my/televip/Configs/ConfigItem.java
++++ b/app/src/main/java/com/my/televip/Configs/ConfigItem.java
+@@ -79,6 +79,16 @@ public class ConfigItem {
+ 
+     public int getCustomCalendar() { return ConfigPreferences.getInt(key+"Int"); }
+ 
++    /** Stored as an int (value*100) so it survives without a float pref type. */
++    public float getFloatValue(float fallback) {
++        int v = ConfigPreferences.getInt(key+"Int");
++        return v > 0 ? v / 100f : fallback;
++    }
++
++    public void setFloatValue(float value) {
++        ConfigPreferences.putInt(key+"Int", Math.round(value * 100));
++    }
++
+     public void setCustomCalendar(int value) {
+         ConfigPreferences.putInt(key+"Int", value);
+     }
+diff --git a/app/src/main/java/com/my/televip/Configs/ConfigManager.java b/app/src/main/java/com/my/televip/Configs/ConfigManager.java
+index 1a57b77..6138ef9 100755
+--- a/app/src/main/java/com/my/televip/Configs/ConfigManager.java
++++ b/app/src/main/java/com/my/televip/Configs/ConfigManager.java
+@@ -6,6 +6,9 @@ import com.my.televip.features.ui.DisableChannelSwipeBack;
+ import com.my.televip.features.ui.DisableNumberRounding;
+ import com.my.televip.features.ui.ExactLastSeen;
+ import com.my.televip.features.extra.ConfirmSending;
++import com.my.televip.features.extra.VoicePlaybackSpeed;
++import com.my.televip.features.extra.BatterySaver;
++import com.my.televip.features.extra.ChatLock;
+ import com.my.televip.features.extra.HideSponsoredMessages;
+ import com.my.televip.features.ui.DisableProfileSwipeBack;
+ import com.my.televip.features.stories.DisableStories;
+@@ -98,9 +101,15 @@ public class ConfigManager {
+     public static ConfigItem showSecondsInTime;
+     public static ConfigItem hideSponsoredMessages;
+     public static ConfigItem confirmSending;
++    public static ConfigItem showDeletedTime;
++    public static ConfigItem voicePlaybackSpeed;
++    public static ConfigItem noStoriesPreload;
++    public static ConfigItem hideStoriesBar;
++    public static ConfigItem chatLock;
+     public static ConfigItem backupHeader;
+     public static ConfigItem btnExportSettings;
+     public static ConfigItem btnImportSettings;
++    public static ConfigItem btnViewEditsHistory;
+     public static ConfigItem btnClearEditsHistory;
+     public static ConfigItem hideUpdateApp;
+     public static ConfigItem fixTLError;
+@@ -191,6 +200,21 @@ public class ConfigManager {
+         showSecondsInTime = new ConfigItem(ConfigItem.SWITCH, Keys.ShowSecondsInTime, "14:32 -> 14:32:07", ConfigPreferences.getBoolean(Keys.ShowSecondsInTime), MessageTimeModifier::init);
+         items.add(showSecondsInTime);
+ 
++        showDeletedTime = new ConfigItem(ConfigItem.SWITCH, Keys.ShowDeletedTime, ConfigPreferences.getBoolean(Keys.ShowDeletedTime), MessageTimeModifier::init);
++        items.add(showDeletedTime);
++
++        voicePlaybackSpeed = new ConfigItem(ConfigItem.SWITCH, Keys.VoicePlaybackSpeed, "1.5x", ConfigPreferences.getBoolean(Keys.VoicePlaybackSpeed), VoicePlaybackSpeed::init);
++        items.add(voicePlaybackSpeed);
++
++        noStoriesPreload = new ConfigItem(ConfigItem.SWITCH, Keys.NoStoriesPreload, ConfigPreferences.getBoolean(Keys.NoStoriesPreload), BatterySaver::init);
++        items.add(noStoriesPreload);
++
++        hideStoriesBar = new ConfigItem(ConfigItem.SWITCH, Keys.HideStoriesBar, ConfigPreferences.getBoolean(Keys.HideStoriesBar), BatterySaver::init);
++        items.add(hideStoriesBar);
++
++        chatLock = new ConfigItem(ConfigItem.SWITCH, Keys.ChatLock, ConfigPreferences.getBoolean(Keys.ChatLock), ChatLock::init);
++        items.add(chatLock);
++
+         confirmSending = new ConfigItem(ConfigItem.SWITCH, Keys.ConfirmSending, ConfigPreferences.getBoolean(Keys.ConfirmSending), ConfirmSending::init);
+         items.add(confirmSending);
+ 
+@@ -285,6 +309,8 @@ public class ConfigManager {
+         items.add(btnExportSettings);
+         btnImportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ImportSettings);
+         items.add(btnImportSettings);
++        btnViewEditsHistory = new ConfigItem(ConfigItem.TEXT, Keys.ViewEditsHistory);
++        items.add(btnViewEditsHistory);
+         btnClearEditsHistory = new ConfigItem(ConfigItem.TEXT, Keys.ClearEditsHistory);
+         items.add(btnClearEditsHistory);
+ 
+diff --git a/app/src/main/java/com/my/televip/Database/MessageDatabase.java b/app/src/main/java/com/my/televip/Database/MessageDatabase.java
+index 54996f6..956d188 100644
+--- a/app/src/main/java/com/my/televip/Database/MessageDatabase.java
++++ b/app/src/main/java/com/my/televip/Database/MessageDatabase.java
+@@ -70,6 +70,32 @@ public class MessageDatabase extends SQLiteOpenHelper {
+         }
+     }
+ 
++    /** Recent edited/saved message versions, newest first, optionally filtered by text. */
++    public java.util.List<String[]> queryRecent(String filter, int limit) {
++        java.util.List<String[]> out = new java.util.ArrayList<>();
++        try {
++            SQLiteDatabase database = getReadableDatabase();
++            String q = "SELECT " + COLUMN_MESSAGE + ", " + COLUMN_MESSAGE_DATE + ", " + COLUMN_MSG_COUNT +
++                    " FROM " + TABLE_MESSAGES;
++            String[] args;
++            if (filter != null && !filter.isEmpty()) {
++                q += " WHERE " + COLUMN_MESSAGE + " LIKE ?";
++                args = new String[]{"%" + filter + "%"};
++            } else {
++                args = new String[]{};
++            }
++            q += " ORDER BY " + COLUMN_MESSAGE_DATE + " DESC LIMIT " + limit;
++            Cursor c = database.rawQuery(q, args);
++            while (c.moveToNext()) {
++                out.add(new String[]{c.getString(0), String.valueOf(c.getLong(1)), String.valueOf(c.getInt(2))});
++            }
++            c.close();
++        } catch (Throwable t) {
++            Logger.e(t);
++        }
++        return out;
++    }
++
+     public boolean searchMessage(long id, int msgId, String message) {
+         if (message == null) return false;
+ 
+diff --git a/app/src/main/java/com/my/televip/features/extra/BatterySaver.java b/app/src/main/java/com/my/televip/features/extra/BatterySaver.java
+new file mode 100644
+index 0000000..46f589a
+--- /dev/null
++++ b/app/src/main/java/com/my/televip/features/extra/BatterySaver.java
+@@ -0,0 +1,56 @@
++package com.my.televip.features.extra;
++
++import com.my.televip.Class.ClassLoad;
++import com.my.televip.Class.ClassNames;
++import com.my.televip.Configs.ConfigManager;
++import com.my.televip.base.BaseMethodHook;
++import com.my.televip.hooks.HMethod;
++import com.my.televip.logging.Logger;
++
++/**
++ * Battery / data savers built on non-obfuscated messenger classes:
++ *  - stop preloading stories in the background (DownloadController.canPreloadStories)
++ *  - hide the stories bar in the chat list (MessagesController.storiesEnabled)
++ * Both method names are stable because these classes are not obfuscated.
++ */
++public class BatterySaver {
++
++    public static boolean isEnable = false;
++
++    private static boolean noStoriesPreload() {
++        return ConfigManager.noStoriesPreload != null && ConfigManager.noStoriesPreload.isEnable();
++    }
++
++    private static boolean hideStoriesBar() {
++        return ConfigManager.hideStoriesBar != null && ConfigManager.hideStoriesBar.isEnable();
++    }
++
++    public static void init() {
++        try {
++            if (isEnable) return;
++            isEnable = true;
++
++            Class<?> dc = ClassLoad.getClass(ClassNames.DOWNLOAD_CONTROLLER);
++            if (dc != null) {
++                HMethod.hookMethod(dc, "canPreloadStories", new BaseMethodHook() {
++                    @Override
++                    protected void beforeMethod(MethodHookParam param) {
++                        if (noStoriesPreload()) param.setResult(false);
++                    }
++                });
++            }
++
++            Class<?> mc = ClassLoad.getClass(ClassNames.MESSAGES_CONTROLLER);
++            if (mc != null) {
++                HMethod.hookMethod(mc, "storiesEnabled", new BaseMethodHook() {
++                    @Override
++                    protected void beforeMethod(MethodHookParam param) {
++                        if (hideStoriesBar()) param.setResult(false);
++                    }
++                });
++            }
++        } catch (Throwable t) {
++            Logger.e(t);
++        }
++    }
++}
+diff --git a/app/src/main/java/com/my/televip/features/extra/ChatLock.java b/app/src/main/java/com/my/televip/features/extra/ChatLock.java
+new file mode 100644
+index 0000000..364e921
+--- /dev/null
++++ b/app/src/main/java/com/my/televip/features/extra/ChatLock.java
+@@ -0,0 +1,148 @@
++package com.my.televip.features.extra;
++
++import android.app.Activity;
++import android.hardware.biometrics.BiometricPrompt;
++import android.os.Build;
++import android.os.CancellationSignal;
++import android.view.View;
++import android.widget.Toast;
++
++import com.my.televip.Class.ClassLoad;
++import com.my.televip.Class.ClassNames;
++import com.my.televip.Configs.ConfigManager;
++import com.my.televip.Configs.ConfigPreferences;
++import com.my.televip.base.BaseMethodHook;
++import com.my.televip.hooks.HMethod;
++import com.my.televip.language.Keys;
++import com.my.televip.language.Translator;
++import com.my.televip.logging.Logger;
++import com.my.televip.utils.Utils;
++import com.my.televip.virtuals.ui.ChatActivity;
++
++import java.util.HashSet;
++import java.util.Set;
++
++import de.robv.android.xposed.XposedHelpers;
++
++/**
++ * Locks selected chats behind the device biometric/credential. When a locked chat
++ * opens, its content view is hidden until authentication succeeds.
++ * Requires API 28+ (BiometricPrompt); below that the lock is skipped.
++ */
++public class ChatLock {
++
++    public static boolean isEnable = false;
++    private static final String PREF = "ChatLockList";
++    private static Set<Long> locked;
++    private static final Set<Long> unlockedThisSession = new HashSet<>();
++
++    private static synchronized Set<Long> set() {
++        if (locked == null) {
++            locked = new HashSet<>();
++            String raw = ConfigPreferences.getString(PREF);
++            if (raw != null && !raw.isEmpty()) {
++                for (String s : raw.split(",")) {
++                    try { locked.add(Long.parseLong(s.trim())); } catch (Throwable ignored) {}
++                }
++            }
++        }
++        return locked;
++    }
++
++    private static synchronized void save() {
++        StringBuilder sb = new StringBuilder();
++        for (Long id : set()) { if (sb.length() > 0) sb.append(','); sb.append(id); }
++        ConfigPreferences.putString(PREF, sb.toString());
++    }
++
++    public static boolean isLocked(long dialogId) {
++        return dialogId != 0 && set().contains(dialogId);
++    }
++
++    public static void toggle(long dialogId) {
++        if (dialogId == 0) return;
++        boolean nowLocked;
++        synchronized (ChatLock.class) {
++            if (set().contains(dialogId)) { set().remove(dialogId); nowLocked = false; }
++            else { set().add(dialogId); nowLocked = true; }
++            unlockedThisSession.remove(dialogId);
++            save();
++        }
++        try {
++            Toast.makeText(Utils.getCurrentActivity(),
++                    Translator.get(nowLocked ? Keys.ChatLocked : Keys.ChatUnlocked), Toast.LENGTH_SHORT).show();
++        } catch (Throwable ignored) {}
++    }
++
++    public static void init() {
++        try {
++            if (isEnable) return;
++            isEnable = true;
++            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return;
++
++            Class<?> chat = ClassLoad.getClass(ClassNames.CHAT_ACTIVITY);
++            if (chat == null) return;
++
++            HMethod.hookMethod(chat, "onResume", new BaseMethodHook() {
++                @Override
++                protected void afterMethod(MethodHookParam param) {
++                    try {
++                        if (ConfigManager.chatLock == null || !ConfigManager.chatLock.isEnable()) return;
++                        ChatActivity ca = new ChatActivity(param.thisObject);
++                        long did = ca.getDialogId();
++                        if (!isLocked(did) || unlockedThisSession.contains(did)) return;
++
++                        final View content = (View) XposedHelpers.getObjectField(
++                                param.thisObject, com.my.televip.obfuscate.Obfuscate.getFieldName("BaseFragment", "fragmentView"));
++                        if (content != null) content.setVisibility(View.INVISIBLE);
++                        prompt(did, content);
++                    } catch (Throwable t) {
++                        Logger.e(t);
++                    }
++                }
++            });
++        } catch (Throwable t) {
++            Logger.e(t);
++        }
++    }
++
++    private static void prompt(final long dialogId, final View content) {
++        final Activity activity = Utils.getCurrentActivity();
++        if (activity == null) { reveal(content); return; }
++        try {
++            BiometricPrompt.Builder b = new BiometricPrompt.Builder(activity)
++                    .setTitle(Translator.get(Keys.ChatLock))
++                    .setDescription(Translator.get(Keys.ChatLockPrompt));
++            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
++                b.setAllowedAuthenticators(
++                        android.hardware.biometrics.BiometricManager.Authenticators.BIOMETRIC_WEAK
++                                | android.hardware.biometrics.BiometricManager.Authenticators.DEVICE_CREDENTIAL);
++            } else {
++                b.setDeviceCredentialAllowed(true);
++            }
++            BiometricPrompt prompt = b.build();
++            prompt.authenticate(new CancellationSignal(), activity.getMainExecutor(),
++                    new BiometricPrompt.AuthenticationCallback() {
++                        @Override
++                        public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
++                            unlockedThisSession.add(dialogId);
++                            reveal(content);
++                        }
++
++                        @Override
++                        public void onAuthenticationError(int code, CharSequence errString) {
++                            // leave hidden and go back
++                            try { activity.onBackPressed(); } catch (Throwable ignored) {}
++                        }
++                    });
++        } catch (Throwable t) {
++            Logger.e(t);
++            reveal(content);
++        }
++    }
++
++    private static void reveal(final View content) {
++        if (content == null) return;
++        content.post(() -> content.setVisibility(View.VISIBLE));
++    }
++}
+diff --git a/app/src/main/java/com/my/televip/features/extra/VoicePlaybackSpeed.java b/app/src/main/java/com/my/televip/features/extra/VoicePlaybackSpeed.java
+new file mode 100644
+index 0000000..45e2ac2
+--- /dev/null
++++ b/app/src/main/java/com/my/televip/features/extra/VoicePlaybackSpeed.java
+@@ -0,0 +1,56 @@
++package com.my.televip.features.extra;
++
++import com.my.televip.Class.ClassLoad;
++import com.my.televip.Class.ClassNames;
++import com.my.televip.Configs.ConfigManager;
++import com.my.televip.base.BaseMethodHook;
++import com.my.televip.hooks.HMethod;
++import com.my.televip.logging.Logger;
++
++import de.robv.android.xposed.XposedHelpers;
++
++/**
++ * Applies a default playback speed to voice notes and round video messages.
++ * MediaController lives in org.telegram.messenger (not obfuscated), so playMessage
++ * and setPlaybackSpeed keep their names across builds.
++ */
++public class VoicePlaybackSpeed {
++
++    public static boolean isEnable = false;
++
++    public static void init() {
++        try {
++            if (isEnable) return;
++            isEnable = true;
++
++            final Class<?> mediaController = ClassLoad.getClass(ClassNames.MEDIA_CONTROLLER);
++            if (mediaController == null) return;
++
++            HMethod.hookMethod(mediaController, "playMessage", ClassLoad.getClass(ClassNames.MESSAGE_OBJECT), new BaseMethodHook() {
++                @Override
++                protected void afterMethod(MethodHookParam param) {
++                    applyIfVoice(param.thisObject, param.args[0]);
++                }
++            });
++        } catch (Throwable t) {
++            Logger.e(t);
++        }
++    }
++
++    private static void applyIfVoice(Object controller, Object messageObject) {
++        try {
++            if (ConfigManager.voicePlaybackSpeed == null || !ConfigManager.voicePlaybackSpeed.isEnable()) return;
++            if (messageObject == null || controller == null) return;
++
++            boolean isVoice = (boolean) XposedHelpers.callMethod(messageObject, "isVoice");
++            boolean isRound = (boolean) XposedHelpers.callMethod(messageObject, "isRoundVideo");
++            if (!isVoice && !isRound) return;
++
++            float speed = ConfigManager.voicePlaybackSpeed.getFloatValue(1.5f);
++            // setPlaybackSpeed(boolean isMusic, float speed); false = voice/video path
++            XposedHelpers.callMethod(controller, "setPlaybackSpeed", false, speed);
++        } catch (Throwable t) {
++            Logger.e(t);
++        }
++    }
++}
+diff --git a/app/src/main/java/com/my/televip/features/messages/MessageTimeModifier.java b/app/src/main/java/com/my/televip/features/messages/MessageTimeModifier.java
+index ab26f24..a5e9143 100644
+--- a/app/src/main/java/com/my/televip/features/messages/MessageTimeModifier.java
++++ b/app/src/main/java/com/my/televip/features/messages/MessageTimeModifier.java
+@@ -98,6 +98,14 @@ public class MessageTimeModifier {
+ 
+             if (deleted && (message.getFlags() & ShowDeletedMessages.FLAG_DELETED) != 0) {
+                 prefix = Translator.get(Keys.Deleted);
++                if (ConfigManager.showDeletedTime != null && ConfigManager.showDeletedTime.isEnable()) {
++                    long at = ShowDeletedMessages.getDeletedAt(message);
++                    if (at > 0) {
++                        String t = new java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
++                                .format(new java.util.Date(at));
++                        prefix = prefix + " " + t;
++                    }
++                }
+                 redColor = true;
+             }
+ 
+diff --git a/app/src/main/java/com/my/televip/features/messages/ShowDeletedMessages.java b/app/src/main/java/com/my/televip/features/messages/ShowDeletedMessages.java
+index 681b2e8..24f8ee5 100644
+--- a/app/src/main/java/com/my/televip/features/messages/ShowDeletedMessages.java
++++ b/app/src/main/java/com/my/televip/features/messages/ShowDeletedMessages.java
+@@ -24,6 +24,25 @@ import java.util.ArrayList;
+ public class ShowDeletedMessages {
+ 
+     public static final int FLAG_DELETED = 1 << 31;
++    public static final String DELETED_AT = "opgram_deleted_at";
++
++    /** Marks a message owner as deleted and records the wall-clock time of deletion. */
++    public static void stampDeleted(TLRPC.Message owner) {
++        owner.setFlags(owner.getFlags() | FLAG_DELETED);
++        try {
++            de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField(owner.get_Message(), DELETED_AT, System.currentTimeMillis());
++        } catch (Throwable ignored) {
++        }
++    }
++
++    public static long getDeletedAt(TLRPC.Message owner) {
++        try {
++            Object v = de.robv.android.xposed.XposedHelpers.getAdditionalInstanceField(owner.get_Message(), DELETED_AT);
++            return v instanceof Long ? (Long) v : 0L;
++        } catch (Throwable t) {
++            return 0L;
++        }
++    }
+ 
+     private static boolean isDeleteMessage = false;
+ 
+@@ -45,7 +64,7 @@ public class ShowDeletedMessages {
+                 for (final Object msgObj : dialogMessages) {
+                     TLRPC.Message owner = new MessageObject(msgObj).getMessageOwner();
+                     if (channelMessages.getMessages().contains(owner.getId())) {
+-                        owner.setFlags(owner.getFlags() | FLAG_DELETED);
++                        stampDeleted(owner);
+                     }
+                 }
+             }
+@@ -62,7 +81,7 @@ public class ShowDeletedMessages {
+                     break;
+                 } else {
+                     TLRPC.Message owner = new MessageObject(msgObj).getMessageOwner();
+-                    owner.setFlags(owner.getFlags() | FLAG_DELETED);
++                    stampDeleted(owner);
+                 }
+             }
+             markMessagesDeletedForController(messagesController.getMessagesStorage(), 0, messages);
+diff --git a/app/src/main/java/com/my/televip/features/otherFeatures/ChatHook.java b/app/src/main/java/com/my/televip/features/otherFeatures/ChatHook.java
+index 9906d29..3fa28ea 100644
+--- a/app/src/main/java/com/my/televip/features/otherFeatures/ChatHook.java
++++ b/app/src/main/java/com/my/televip/features/otherFeatures/ChatHook.java
+@@ -56,6 +56,13 @@ public class ChatHook {
+ 
+                             headerItem.lazilyAddSubItem(8353848, drawableResource, Translator.get(Keys.ToTheMessage));
+ 
++                            if (ConfigManager.chatLock != null && ConfigManager.chatLock.isEnable()) {
++                                long lockDid = chatActivity.getDialogId();
++                                int lockIcon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE),
++                                        com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? "msg_unmute" : "msg_mute");
++                                headerItem.lazilyAddSubItem(8353851, lockIcon, Translator.get(
++                                        com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? Keys.UnlockThisChat : Keys.LockThisChat));
++                            }
+                             if (ConfigManager.isGhostMode()) {
+                                 long did = chatActivity.getDialogId();
+                                 int icon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "msg_markread");
+@@ -84,6 +91,8 @@ public class ChatHook {
+ 
+                         if (id == 8353847) {
+                             chat.scrollToMessageId(1, 0, true, 0, true, 0);
++                        } else if (id == 8353851) {
++                            com.my.televip.features.extra.ChatLock.toggle(chat.getDialogId());
+                         } else if (id == 8353849) {
+                             GhostExceptions.markAsReadNow(chat.getDialogId());
+                         } else if (id == 8353850) {
+diff --git a/app/src/main/java/com/my/televip/language/Keys.java b/app/src/main/java/com/my/televip/language/Keys.java
+index 5021aa2..ed7c444 100644
+--- a/app/src/main/java/com/my/televip/language/Keys.java
++++ b/app/src/main/java/com/my/televip/language/Keys.java
+@@ -133,4 +133,19 @@ public class Keys {
+     public static final String GhostIncludeChat = "GhostIncludeChat";
+     public static final String GhostExcludedToast = "GhostExcludedToast";
+     public static final String GhostIncludedToast = "GhostIncludedToast";
++    public static final String ShowDeletedTime = "ShowDeletedTime";
++    public static final String VoicePlaybackSpeed = "VoicePlaybackSpeed";
++    public static final String NoStoriesPreload = "NoStoriesPreload";
++    public static final String HideStoriesBar = "HideStoriesBar";
++    public static final String ChatLock = "ChatLock";
++    public static final String ChatLockPrompt = "ChatLockPrompt";
++    public static final String ChatLocked = "ChatLocked";
++    public static final String ChatUnlocked = "ChatUnlocked";
++    public static final String LockThisChat = "LockThisChat";
++    public static final String UnlockThisChat = "UnlockThisChat";
++    public static final String ViewEditsHistory = "ViewEditsHistory";
++    public static final String Search = "Search";
++    public static final String NoEditsSaved = "NoEditsSaved";
++    public static final String ExtraSettings = "ExtraSettings";
++    public static final String Version = "Version";
+ }
+diff --git a/app/src/main/java/com/my/televip/settings/controller/SettingsController.java b/app/src/main/java/com/my/televip/settings/controller/SettingsController.java
+index 41854cb..18f982b 100644
+--- a/app/src/main/java/com/my/televip/settings/controller/SettingsController.java
++++ b/app/src/main/java/com/my/televip/settings/controller/SettingsController.java
+@@ -45,7 +45,7 @@ public class SettingsController {
+             if (!ConfigPreferences.getBoolean("JTV")) {
+                 AlertDialog alertDialog = new AlertDialog(getContext());
+ 
+-                alertDialog.setTitle(Translator.get(Keys.GhostMode));
++                alertDialog.setTitle(com.my.televip.Branding.title());
+                 alertDialog.setMessage(Translator.get(Keys.JoinTeleVip));
+ 
+                 alertDialog.setPositiveButton(Translator.get(Keys.Join), AlertDialog.click(() -> {
+diff --git a/app/src/main/java/com/my/televip/settings/hook/SettingsHook.java b/app/src/main/java/com/my/televip/settings/hook/SettingsHook.java
+index e91ce3d..400264f 100644
+--- a/app/src/main/java/com/my/televip/settings/hook/SettingsHook.java
++++ b/app/src/main/java/com/my/televip/settings/hook/SettingsHook.java
+@@ -90,13 +90,13 @@ public class SettingsHook {
+                                     uItem = XposedHelpers.callStaticMethod(SettingsActivity$SettingCell$FactoryClass, Obfuscate.getMethodName("SettingsActivity$SettingCell$Factory", "of"),
+                                             new Class[]{int.class, int.class, int.class, int.class, CharSequence.class, CharSequence.class, CharSequence.class},
+                                             8353847, color1, color2, 8353847,
+-                                            Translator.get(Keys.GhostMode), Translator.get(Keys.ByMustafa), null);
++                                            com.my.televip.Branding.title(), Translator.get(Keys.ByMustafa), null);
+                                 } else {
+                                 uItem = XposedHelpers.callStaticMethod(SettingsActivity$SettingCell$FactoryClass, Obfuscate.getMethodName("SettingsActivity$SettingCell$Factory", "of"), 8353847,
+                                         color1,
+                                         color2,
+                                         8353847,
+-                                        Translator.get(Keys.GhostMode),
++                                        com.my.televip.Branding.title(),
+                                         Translator.get(Keys.ByMustafa));
+                                 }
+                                 for (int i = 0; i < arrayList.size(); i++) {
+@@ -155,7 +155,7 @@ public class SettingsHook {
+                                 itemConstructor.setAccessible(true);
+                             }
+ 
+-                            Object newItem = itemConstructor.newInstance(8353847, Translator.get(Keys.GhostMode), SettingsIconResolver.getIconSettings());
++                            Object newItem = itemConstructor.newInstance(8353847, com.my.televip.Branding.title(), SettingsIconResolver.getIconSettings());
+ 
+                             if (items instanceof ArrayList<?>) {
+                                 ArrayList<Object> typedItems = (ArrayList<Object>) items;
+diff --git a/app/src/main/java/com/my/televip/settings/ui/EditsViewer.java b/app/src/main/java/com/my/televip/settings/ui/EditsViewer.java
+new file mode 100644
+index 0000000..78bda98
+--- /dev/null
++++ b/app/src/main/java/com/my/televip/settings/ui/EditsViewer.java
+@@ -0,0 +1,120 @@
++package com.my.televip.settings.ui;
++
++import android.app.Activity;
++import android.app.AlertDialog;
++import android.content.Context;
++import android.graphics.Color;
++import android.text.Editable;
++import android.text.TextWatcher;
++import android.text.format.DateFormat;
++import android.view.Gravity;
++import android.view.View;
++import android.widget.EditText;
++import android.widget.LinearLayout;
++import android.widget.ScrollView;
++import android.widget.TextView;
++
++import com.my.televip.Database.MessageDatabase;
++import com.my.televip.language.Keys;
++import com.my.televip.language.Translator;
++import com.my.televip.logging.Logger;
++
++import java.util.Date;
++import java.util.List;
++
++/**
++ * Lightweight viewer for the locally-saved edited-message history, with a search box.
++ * Built with plain Android views so it does not depend on Telegram internals.
++ */
++public class EditsViewer {
++
++    public static void show(final Activity activity) {
++        try {
++            final Context ctx = activity;
++            LinearLayout root = new LinearLayout(ctx);
++            root.setOrientation(LinearLayout.VERTICAL);
++            int pad = dp(ctx, 16);
++            root.setPadding(pad, pad, pad, 0);
++
++            final EditText search = new EditText(ctx);
++            search.setHint(Translator.get(Keys.Search));
++            search.setSingleLine(true);
++            root.addView(search);
++
++            final ScrollView scroll = new ScrollView(ctx);
++            final LinearLayout list = new LinearLayout(ctx);
++            list.setOrientation(LinearLayout.VERTICAL);
++            scroll.addView(list);
++            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
++                    LinearLayout.LayoutParams.MATCH_PARENT, dp(ctx, 380));
++            lp.topMargin = dp(ctx, 8);
++            root.addView(scroll, lp);
++
++            final MessageDatabase db = new MessageDatabase(ctx);
++            render(ctx, list, db, null);
++
++            search.addTextChangedListener(new TextWatcher() {
++                public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
++                public void onTextChanged(CharSequence s, int a, int b, int c) {}
++                public void afterTextChanged(Editable e) {
++                    render(ctx, list, db, e.toString().trim());
++                }
++            });
++
++            new AlertDialog.Builder(activity)
++                    .setTitle(Translator.get(Keys.EditsHistory))
++                    .setView(root)
++                    .setPositiveButton(Translator.get(Keys.Done), null)
++                    .show();
++        } catch (Throwable t) {
++            Logger.e(t);
++        }
++    }
++
++    private static void render(Context ctx, LinearLayout list, MessageDatabase db, String filter) {
++        list.removeAllViews();
++        List<String[]> rows = db.queryRecent(filter, 200);
++        if (rows.isEmpty()) {
++            TextView empty = new TextView(ctx);
++            empty.setText(Translator.get(Keys.NoEditsSaved));
++            empty.setPadding(0, dp(ctx, 24), 0, dp(ctx, 24));
++            empty.setGravity(Gravity.CENTER);
++            list.addView(empty);
++            return;
++        }
++        for (String[] r : rows) {
++            LinearLayout item = new LinearLayout(ctx);
++            item.setOrientation(LinearLayout.VERTICAL);
++            item.setPadding(0, dp(ctx, 8), 0, dp(ctx, 8));
++
++            TextView meta = new TextView(ctx);
++            long date = safeLong(r[1]);
++            String when = date > 0 ? DateFormat.format("dd/MM/yyyy HH:mm:ss", new Date(date)).toString() : "";
++            String version = Translator.get(Keys.Version) + " " + r[2];
++            meta.setText(when + "  ·  " + version);
++            meta.setTextColor(Color.GRAY);
++            meta.setTextSize(12);
++
++            TextView body = new TextView(ctx);
++            body.setText(r[0]);
++            body.setTextSize(15);
++            body.setTextIsSelectable(true);
++
++            item.addView(meta);
++            item.addView(body);
++            list.addView(item);
++
++            View sep = new View(ctx);
++            sep.setBackgroundColor(0x22808080);
++            list.addView(sep, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(ctx, 1)));
++        }
++    }
++
++    private static long safeLong(String s) {
++        try { return Long.parseLong(s); } catch (Throwable t) { return 0; }
++    }
++
++    private static int dp(Context ctx, float v) {
++        return Math.round(v * ctx.getResources().getDisplayMetrics().density);
++    }
++}
+diff --git a/app/src/main/java/com/my/televip/settings/ui/SettingsActivity.java b/app/src/main/java/com/my/televip/settings/ui/SettingsActivity.java
+index d159a9f..93c0a14 100644
+--- a/app/src/main/java/com/my/televip/settings/ui/SettingsActivity.java
++++ b/app/src/main/java/com/my/televip/settings/ui/SettingsActivity.java
+@@ -48,7 +48,7 @@ public class SettingsActivity {
+ 
+             toolbar.setColorTitle(ThemeColors.getTextToolBarColor());
+             toolbar.setRippleColor(ThemeColors.getToolBarRippleColor());
+-            toolbar.setTextTitle(Translator.get(Keys.GhostMode));
++            toolbar.setTextTitle(com.my.televip.Branding.title());
+ 
+             ArrowDrawable arrow = new ArrowDrawable();
+             toolbar.setImageDrawable(arrow);
+diff --git a/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java b/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java
+index acc2ba2..14cd33e 100644
+--- a/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java
++++ b/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java
+@@ -173,6 +173,9 @@ public class SettingsAdapter {
+                         case Keys.ImportSettings:
+                             BackupActions.importSettings((Activity) settingsController.getContext());
+                             break;
++                        case Keys.ViewEditsHistory:
++                            EditsViewer.show((Activity) settingsController.getContext());
++                            break;
+                         case Keys.ClearEditsHistory:
+                             BackupActions.clearEditsHistory((Activity) settingsController.getContext());
+                             break;
+diff --git a/tools/mapgen/README.md b/tools/mapgen/README.md
+index 8518f04..2c13d8b 100644
+--- a/tools/mapgen/README.md
++++ b/tools/mapgen/README.md
+@@ -29,3 +29,21 @@ descriptor inside the resolved class. Symbols in `org.telegram.messenger`,
+ changes an internal string or you add a new hook, add or adjust an entry
+ there. Anything the tool can't resolve is printed at the end of a run.
+ The hand-made `TelegramWeb-70999.json` remains the reference for 12.10.4.
++
++## Current coverage
++
++The generator auto-resolves the R8-renamed classes OpGram depends on most
++(ChatActivity, ChatMessageCell, TextCheckCell, ProfileActivity, PhotoViewer,
++SecretMediaViewer) and several members by descriptor. Two kinds of symbol
++still need help and are reported at the end of a run:
++
++- **Classes with no string constants** (small cells such as HeaderCell,
++  TextSettingsCell, SimpleTextView, UItem). They must be matched by
++  superclass + member descriptors; add those hints to `fingerprints.json`.
++- **Classes whose strings are shared** with a sibling (e.g. SettingsActivity
++  vs the debug-menu builder). Disambiguating them needs matching by the
++  *obfuscated* superclass, which is a planned enhancement.
++
++For these, keep using the hand-made `TelegramWeb-<versionCode>.json` as the
++reference. The generator never overwrites it (writes `.generated.json` unless
++`--force`).
+diff --git a/tools/mapgen/fingerprints.json b/tools/mapgen/fingerprints.json
+index 312f92c..d8647e9 100644
+--- a/tools/mapgen/fingerprints.json
++++ b/tools/mapgen/fingerprints.json
+@@ -54,7 +54,8 @@
+       "orig": "org.telegram.ui.SettingsActivity",
+       "strings": [
+         "DebugMenuClearMediaCache",
+-        "DebugMenuReadAllDialogs"
++        "DebugMenuReadAllDialogs",
++        "DebugMenuDisableCamera"
+       ],
+       "super": "org.telegram.ui.ActionBar.BaseFragment"
+     }
+@@ -79,6 +80,18 @@
+       "kind": "method",
+       "orig": "get",
+       "descriptor": "(J)Ljava/lang/Object;"
++    },
++    {
++      "class": "org.telegram.ui.SecretMediaViewer",
++      "kind": "method",
++      "orig": "closePhoto",
++      "descriptor": "(ZZ)V"
++    },
++    {
++      "class": "org.telegram.ui.Cells.ChatMessageCell",
++      "kind": "method",
++      "orig": "measureTime",
++      "descriptor": "(Lorg/telegram/messenger/MessageObject;)V"
+     }
+   ]
+ }
+\ No newline at end of file

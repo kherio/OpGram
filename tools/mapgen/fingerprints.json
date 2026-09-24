@@ -54,7 +54,8 @@
       "orig": "org.telegram.ui.SettingsActivity",
       "strings": [
         "DebugMenuClearMediaCache",
-        "DebugMenuReadAllDialogs"
+        "DebugMenuReadAllDialogs",
+        "DebugMenuDisableCamera"
       ],
       "super": "org.telegram.ui.ActionBar.BaseFragment"
     }
@@ -79,6 +80,18 @@
       "kind": "method",
       "orig": "get",
       "descriptor": "(J)Ljava/lang/Object;"
+    },
+    {
+      "class": "org.telegram.ui.SecretMediaViewer",
+      "kind": "method",
+      "orig": "closePhoto",
+      "descriptor": "(ZZ)V"
+    },
+    {
+      "class": "org.telegram.ui.Cells.ChatMessageCell",
+      "kind": "method",
+      "orig": "measureTime",
+      "descriptor": "(Lorg/telegram/messenger/MessageObject;)V"
     }
   ]
 }

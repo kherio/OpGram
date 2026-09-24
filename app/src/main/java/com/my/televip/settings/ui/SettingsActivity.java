@@ -48,7 +48,7 @@ public class SettingsActivity {
 
             toolbar.setColorTitle(ThemeColors.getTextToolBarColor());
             toolbar.setRippleColor(ThemeColors.getToolBarRippleColor());
-            toolbar.setTextTitle(Translator.get(Keys.GhostMode));
+            toolbar.setTextTitle(com.my.televip.Branding.title());
 
             ArrowDrawable arrow = new ArrowDrawable();
             toolbar.setImageDrawable(arrow);

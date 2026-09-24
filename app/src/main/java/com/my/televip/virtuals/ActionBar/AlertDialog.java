@@ -89,7 +89,17 @@ public class AlertDialog {
     }
 
     public Runnable getDismissRunnable() {
-        return (Runnable) XposedHelpers.callMethod(alertDialog, Obfuscate.getMethodName("AlertDialog$Builder", "getDismissRunnable"));
+        try {
+            return (Runnable) XposedHelpers.callMethod(alertDialog, Obfuscate.getMethodName("AlertDialog$Builder", "getDismissRunnable"));
+        } catch (Throwable t) {
+            // getDismissRunnable() may be removed by R8; dismiss the dialog directly
+            return () -> {
+                try {
+                    Dialog d = getAlertDialog();
+                    if (d != null) d.dismiss();
+                } catch (Throwable ignored) {}
+            };
+        }
     }
 
 }

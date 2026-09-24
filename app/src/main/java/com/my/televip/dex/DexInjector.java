@@ -12,7 +12,7 @@ public class DexInjector {
     public static ClassLoader classLoader;
 
     public static void injectDex(ClassLoader classLoader) {
-        if (ClientManager.is(ClientManager.Client.Nekogram) || ClientManager.is(ClientManager.Client.Cherrygram)) return;
+        if (ClientManager.is(ClientManager.Client.Nekogram) || ClientManager.is(ClientManager.Client.Cherrygram) || ClientManager.is(ClientManager.Client.TelegramWeb)) return;
         try {
             byte[] dexBytes = DexHolder.DEX_BYTES;
 

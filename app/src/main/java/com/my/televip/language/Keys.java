@@ -32,6 +32,7 @@ public class Keys {
     public static final String RestartApp = "RestartApp";
     public static final String RestartRequired = "RestartRequired";
     public static final String DisableNumberRounding = "DisableNumberRounding";
+    public static final String ExactLastSeen = "ExactLastSeen";
     public static final String EditsHistory = "EditsHistory";
     public static final String SaveEditsHistory = "SaveEditsHistory";
     public static final String StoriesSettings = "StoriesSettings";
@@ -105,4 +106,23 @@ public class Keys {
     public static final String ApproximateCreationDateNotice = "ApproximateCreationDateNotice";
     public static final String TeleVip = "TeleVip";
     public static final String EnableVoiceMessageSaving = "EnableVoiceMessageSaving";
+    public static final String ShowSecondsInTime = "ShowSecondsInTime";
+    public static final String HideSponsoredMessages = "HideSponsoredMessages";
+    public static final String ConfirmSending = "ConfirmSending";
+    public static final String ConfirmSendingTitle = "ConfirmSendingTitle";
+    public static final String ConfirmSticker = "ConfirmSticker";
+    public static final String ConfirmGif = "ConfirmGif";
+    public static final String ConfirmVoice = "ConfirmVoice";
+    public static final String ConfirmRound = "ConfirmRound";
+    public static final String Send = "Send";
+    public static final String BackupSettings = "BackupSettings";
+    public static final String ExportSettings = "ExportSettings";
+    public static final String ImportSettings = "ImportSettings";
+    public static final String SettingsExported = "SettingsExported";
+    public static final String SettingsImported = "SettingsImported";
+    public static final String ImportInvalid = "ImportInvalid";
+    public static final String ClearEditsHistory = "ClearEditsHistory";
+    public static final String ClearEditsHistoryConfirm = "ClearEditsHistoryConfirm";
+    public static final String EditsHistoryCleared = "EditsHistoryCleared";
+    public static final String VersionMismatch = "VersionMismatch";
 }

@@ -1,0 +1,5 @@
+{
+  "methodAlias": {
+    "MessagesController#storyEntitiesAllowed2": "storyEntitiesAllowed"
+  }
+}

@@ -167,6 +167,15 @@ public class SettingsAdapter {
                             ((Activity) settingsController.getContext()).finishAffinity();
                             android.os.Process.killProcess(android.os.Process.myPid());
                             break;
+                        case Keys.ExportSettings:
+                            BackupActions.exportSettings((Activity) settingsController.getContext());
+                            break;
+                        case Keys.ImportSettings:
+                            BackupActions.importSettings((Activity) settingsController.getContext());
+                            break;
+                        case Keys.ClearEditsHistory:
+                            BackupActions.clearEditsHistory((Activity) settingsController.getContext());
+                            break;
                         case Keys.Calendar:
                             Dialog dlg = DialogUtils.createSingleChoiceDialog((Activity) settingsController.getContext(), new String[]{
                                             Translator.get(Keys.Gregorian), Translator.get(Keys.Hijri), Translator.get(Keys.Persian)},

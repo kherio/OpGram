@@ -4,6 +4,9 @@ import com.my.televip.Clients.ClientManager;
 import com.my.televip.Clients.Telegraph;
 import com.my.televip.features.ui.DisableChannelSwipeBack;
 import com.my.televip.features.ui.DisableNumberRounding;
+import com.my.televip.features.ui.ExactLastSeen;
+import com.my.televip.features.extra.ConfirmSending;
+import com.my.televip.features.extra.HideSponsoredMessages;
 import com.my.televip.features.ui.DisableProfileSwipeBack;
 import com.my.televip.features.stories.DisableStories;
 import com.my.televip.features.connections.DownloadSpeed;
@@ -89,6 +92,14 @@ public class ConfigManager {
     public static ConfigItem removesContentSaving;
     public static ConfigItem telegramPremium;
     public static ConfigItem disableNumberRounding;
+    public static ConfigItem exactLastSeen;
+    public static ConfigItem showSecondsInTime;
+    public static ConfigItem hideSponsoredMessages;
+    public static ConfigItem confirmSending;
+    public static ConfigItem backupHeader;
+    public static ConfigItem btnExportSettings;
+    public static ConfigItem btnImportSettings;
+    public static ConfigItem btnClearEditsHistory;
     public static ConfigItem hideUpdateApp;
     public static ConfigItem fixTLError;
 
@@ -138,6 +149,11 @@ public class ConfigManager {
         items.add(onlineInfo);
 
         shadows = new ConfigItem(ConfigItem.DIVIDER);
+        if (!ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram)) {
+            exactLastSeen = new ConfigItem(ConfigItem.SWITCH, Keys.ExactLastSeen, "14:32 -> 23/09/2026 14:32:07", ConfigPreferences.getBoolean(Keys.ExactLastSeen), ExactLastSeen::init);
+            items.add(exactLastSeen);
+        }
+
         items.add(shadows);
 
         // Stories
@@ -164,6 +180,15 @@ public class ConfigManager {
         saveEditsHistory = new ConfigItem(ConfigItem.SWITCH, Keys.SaveEditsHistory, ConfigPreferences.getBoolean(Keys.SaveEditsHistory), SaveEditsHistory::init);
         items.add(saveEditsHistory);
 
+        showSecondsInTime = new ConfigItem(ConfigItem.SWITCH, Keys.ShowSecondsInTime, "14:32 -> 14:32:07", ConfigPreferences.getBoolean(Keys.ShowSecondsInTime), MessageTimeModifier::init);
+        items.add(showSecondsInTime);
+
+        confirmSending = new ConfigItem(ConfigItem.SWITCH, Keys.ConfirmSending, ConfigPreferences.getBoolean(Keys.ConfirmSending), ConfirmSending::init);
+        items.add(confirmSending);
+
+        hideSponsoredMessages = new ConfigItem(ConfigItem.SWITCH, Keys.HideSponsoredMessages, ConfigPreferences.getBoolean(Keys.HideSponsoredMessages), HideSponsoredMessages::init);
+        items.add(hideSponsoredMessages);
+
         items.add(shadows);
 
         // Connections
@@ -179,7 +204,7 @@ public class ConfigManager {
         media = new ConfigItem(ConfigItem.HEADER, Keys.MediaSettings);
         items.add(media);
 
-        if (!ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram)) {
+        if (!ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram) && !ClientManager.is(ClientManager.Client.TelegramWeb)) {
             secretMediaSave = new ConfigItem(ConfigItem.SWITCH, Keys.SecretMediaSave, ConfigPreferences.getBoolean(Keys.SecretMediaSave), SecretMediaSave::init);
             items.add(secretMediaSave);
         }
@@ -212,8 +237,10 @@ public class ConfigManager {
         items.add(hideProxySponsor);
 
         if (!ClientManager.is(ClientManager.Client.Telegraph) && !ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram)) {
-            showUserID = new ConfigItem(ConfigItem.SWITCH, Keys.ShowUserID, ConfigPreferences.getBoolean(Keys.ShowUserID), EditOnlineTextView::init);
-            items.add(showUserID);
+            if (!ClientManager.is(ClientManager.Client.TelegramWeb)) {
+                showUserID = new ConfigItem(ConfigItem.SWITCH, Keys.ShowUserID, ConfigPreferences.getBoolean(Keys.ShowUserID), EditOnlineTextView::init);
+                items.add(showUserID);
+            }
             customCalendar = new ConfigItem(ConfigItem.TEXT, Keys.Calendar, true, HijriDate::init);
             items.add(customCalendar);
         }
@@ -246,6 +273,17 @@ public class ConfigManager {
 
         items.add(shadows);
 
+        backupHeader = new ConfigItem(ConfigItem.HEADER, Keys.BackupSettings);
+        items.add(backupHeader);
+        btnExportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ExportSettings);
+        items.add(btnExportSettings);
+        btnImportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ImportSettings);
+        items.add(btnImportSettings);
+        btnClearEditsHistory = new ConfigItem(ConfigItem.TEXT, Keys.ClearEditsHistory);
+        items.add(btnClearEditsHistory);
+
+        items.add(shadows);
+
         btnRestartApp = new ConfigItem(ConfigItem.TEXT, Keys.RestartApp);
         items.add(btnRestartApp);
 
@@ -267,7 +305,7 @@ public class ConfigManager {
                 if (item.isEnable()) item.run();
             }
 
-            if (!ClientManager.is(ClientManager.Client.Telegraph) && !ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram)) {
+            if (!ClientManager.is(ClientManager.Client.Telegraph) && !ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram) && !ClientManager.is(ClientManager.Client.TelegramWeb)) {
                 FeatureInitializer.init();
                 CopyNameHook.init();
                 EditOnlineTextView.init();

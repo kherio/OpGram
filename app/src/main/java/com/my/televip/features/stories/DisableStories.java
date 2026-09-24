@@ -35,7 +35,7 @@ public class DisableStories {
                     }));
                 }
 
-                if (ClassLoad.getClass(ClassNames.STORIES_CONTROLLER) != null) {
+                if (ClassLoad.getClass(ClassNames.STORIES_CONTROLLER) != null && !ClientManager.is(ClientManager.Client.TelegramWeb)) {
                     if (ClientManager.is(ClientManager.Client.NagramX)) {
                         HMethod.hookMethod(ClassLoad.getClass(ClassNames.STORIES_CONTROLLER),"hasStories", long.class, new BaseMethodHook() {
                             @Override

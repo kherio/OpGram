@@ -8,7 +8,7 @@ public class ClientManager {
 
     public enum Client {
         Telegram("org.telegram.messenger"),
-        TelegramWeb("org.telegram.messenger.web"),
+        TelegramWeb("org.telegram.messenger.web", com.my.televip.Clients.TelegramWeb.class),
         TelegramPlus("org.telegram.plus"),
         TGConnect("com.tgconnect.android"),
         Nagram("xyz.nextalone.nagram", com.my.televip.Clients.Nagram.class),

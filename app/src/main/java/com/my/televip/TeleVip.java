@@ -26,6 +26,7 @@ public class TeleVip {
             Bridge.init(settingsController);
             ConfigManager.loadAndRead();
             SettingsManager.init(settingsController);
+            com.my.televip.features.extra.VersionGuard.check();
 
         } catch (Throwable e){
             Logger.e(e);

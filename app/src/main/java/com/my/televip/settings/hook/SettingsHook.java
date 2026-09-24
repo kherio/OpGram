@@ -38,6 +38,31 @@ public class SettingsHook {
 
             GhostDrawable ghostDrawable = new GhostDrawable();
 
+            if (ClientManager.is(ClientManager.Client.TelegramWeb)) {
+                // SettingCell.set() is inlined into Factory.bindView() in R8 builds
+                for (Method m : SettingsActivity$SettingCell$FactoryClass.getDeclaredMethods()) {
+                    if (!m.getName().equals("bindView")) continue;
+                    XposedBridge.hookMethod(m, new BaseMethodHook() {
+                        @Override
+                        protected void afterMethod(MethodHookParam param) {
+                            try {
+                                Object view = null, item = null;
+                                Class<?> uItemClass = ClassLoad.getClass(ClassNames.UITEM);
+                                for (Object a : param.args) {
+                                    if (a instanceof View && view == null) view = a;
+                                    else if (a != null && uItemClass != null && uItemClass.isInstance(a)) item = a;
+                                }
+                                if (view != null && item != null && new UItem(item).getID() == 8353847) {
+                                    ImageView iconView = (ImageView) XposedHelpers.getObjectField(view, Obfuscate.getFieldName("SettingsActivity$SettingCell", "iconView"));
+                                    iconView.setImageDrawable(ghostDrawable);
+                                }
+                            } catch (Throwable t) {
+                                Logger.e(t);
+                            }
+                        }
+                    });
+                }
+            } else
             HMethod.hookMethod(ClassLoad.getClass(ClassNames.SETTINGS_ACTIVITY_SETTING_CELL), Obfuscate.getMethodName("SettingsActivity$SettingCell", "set"), ArgsResolver.merge("set", new Class[]{int.class, int.class, int.class, CharSequence.class, CharSequence.class, CharSequence.class}, new BaseMethodHook() {
                 @Override
                 protected void afterMethod(MethodHookParam param) {
@@ -53,18 +78,27 @@ public class SettingsHook {
                     ArgsResolver.merge("fillItems", new Class[]{java.util.ArrayList.class, ClassLoad.getClass(ClassNames.UNIVERSAL_ADAPTER)}, new BaseMethodHook() {
                         @Override
                         protected void afterMethod(final MethodHookParam param) {
-                            ArrayList<Object> arrayList = (ArrayList<Object>) param.args[0];
+                            ArrayList<Object> arrayList = null;
+                            for (Object a : param.args) if (a instanceof ArrayList) { arrayList = (ArrayList<Object>) a; break; }
                             if (arrayList != null) {
 
                                 int color1 = 0xFFF46F6F;
                                 int color2 = 0xFFDF5555;
 
-                                Object uItem = XposedHelpers.callStaticMethod(SettingsActivity$SettingCell$FactoryClass, Obfuscate.getMethodName("SettingsActivity$SettingCell$Factory", "of"), 8353847,
+                                Object uItem;
+                                if (ClientManager.is(ClientManager.Client.TelegramWeb)) {
+                                    uItem = XposedHelpers.callStaticMethod(SettingsActivity$SettingCell$FactoryClass, Obfuscate.getMethodName("SettingsActivity$SettingCell$Factory", "of"),
+                                            new Class[]{int.class, int.class, int.class, int.class, CharSequence.class, CharSequence.class, CharSequence.class},
+                                            8353847, color1, color2, 8353847,
+                                            Translator.get(Keys.GhostMode), Translator.get(Keys.ByMustafa), null);
+                                } else {
+                                uItem = XposedHelpers.callStaticMethod(SettingsActivity$SettingCell$FactoryClass, Obfuscate.getMethodName("SettingsActivity$SettingCell$Factory", "of"), 8353847,
                                         color1,
                                         color2,
                                         8353847,
                                         Translator.get(Keys.GhostMode),
                                         Translator.get(Keys.ByMustafa));
+                                }
                                 for (int i = 0; i < arrayList.size(); i++) {
                                     UItem item = new UItem(arrayList.get(i));
 
@@ -86,7 +120,9 @@ public class SettingsHook {
                     Obfuscate.getMethodName("SettingsActivity", "onClick"), ArgsResolver.merge("onClick", new Class[]{UItemClass, View.class, int.class, float.class, float.class}, new BaseMethodHook() {
                         @Override
                         protected void afterMethod(final MethodHookParam param) {
-                            UItem uItem = new UItem(param.args[0]);
+                            Object uItemArg = param.args[0];
+                            for (Object a : param.args) if (a != null && UItemClass != null && UItemClass.isInstance(a)) { uItemArg = a; break; }
+                            UItem uItem = new UItem(uItemArg);
                             if (uItem.getUItem() != null) {
                                 if (uItem.getID() == 8353847) {
                                     settingsController.openView();

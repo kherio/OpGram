@@ -75,4 +75,56 @@ public class ConfigPreferences {
         }
     }
 
+
+    /** Exports every TeleVip preference as JSON (with type info) for backup. */
+    public static String exportJson() {
+        try {
+            org.json.JSONObject root = new org.json.JSONObject();
+            root.put("televip_backup", 1);
+            org.json.JSONObject values = new org.json.JSONObject();
+            for (java.util.Map.Entry<String, ?> e : sharedPreferences.getAll().entrySet()) {
+                Object v = e.getValue();
+                org.json.JSONObject item = new org.json.JSONObject();
+                if (v instanceof Boolean) item.put("t", "b");
+                else if (v instanceof Integer) item.put("t", "i");
+                else if (v instanceof Long) item.put("t", "l");
+                else if (v instanceof String) item.put("t", "s");
+                else continue;
+                item.put("v", v);
+                values.put(e.getKey(), item);
+            }
+            root.put("values", values);
+            return root.toString();
+        } catch (Throwable t) {
+            Logger.e(t);
+            return null;
+        }
+    }
+
+    /** Restores preferences from a backup made with exportJson(). Returns false if the text is not a valid backup. */
+    public static boolean importJson(String text) {
+        try {
+            if (text == null) return false;
+            org.json.JSONObject root = new org.json.JSONObject(text.trim());
+            if (!root.has("televip_backup")) return false;
+            org.json.JSONObject values = root.getJSONObject("values");
+            SharedPreferences.Editor ed = sharedPreferences.edit();
+            java.util.Iterator<String> keys = values.keys();
+            while (keys.hasNext()) {
+                String k = keys.next();
+                org.json.JSONObject item = values.getJSONObject(k);
+                switch (item.optString("t")) {
+                    case "b": ed.putBoolean(k, item.getBoolean("v")); break;
+                    case "i": ed.putInt(k, item.getInt("v")); break;
+                    case "l": ed.putLong(k, item.getLong("v")); break;
+                    case "s": ed.putString(k, item.getString("v")); break;
+                }
+            }
+            ed.apply();
+            return true;
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
 }

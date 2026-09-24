@@ -35,7 +35,17 @@ public class TextCheckCell {
     }
 
     public boolean isChecked(){
-        return (boolean) XposedHelpers.callMethod(textCell, Obfuscate.getMethodName("TextCheckCell","isChecked"));
+        try {
+            return (boolean) XposedHelpers.callMethod(textCell, Obfuscate.getMethodName("TextCheckCell","isChecked"));
+        } catch (Throwable t) {
+            // isChecked() may be inlined away by R8; ask the Switch directly
+            Object checkBox = XposedHelpers.callMethod(textCell, "getCheckBox");
+            try {
+                return (boolean) XposedHelpers.callMethod(checkBox, "isChecked");
+            } catch (Throwable t2) {
+                return XposedHelpers.getBooleanField(checkBox, Obfuscate.getFieldName("Switch", "isChecked"));
+            }
+        }
     }
 
     public TextView getTextView(){

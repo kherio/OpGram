@@ -1,0 +1,347 @@
+{
+  "classes": [
+    {
+      "o": "org.telegram.ui.ChatActivity",
+      "r": "org.telegram.ui.eo"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.Theme",
+      "r": "org.telegram.ui.ActionBar.o6"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.ActionBarMenuItem",
+      "r": "org.telegram.ui.ActionBar.x0"
+    },
+    {
+      "o": "org.telegram.ui.Cells.ChatMessageCell",
+      "r": "org.telegram.ui.Cells.v1"
+    },
+    {
+      "o": "org.telegram.ui.Cells.TextCheckCell",
+      "r": "org.telegram.ui.Cells.v8"
+    },
+    {
+      "o": "org.telegram.ui.Cells.HeaderCell",
+      "r": "org.telegram.ui.Cells.o4"
+    },
+    {
+      "o": "org.telegram.ui.Cells.TextSettingsCell",
+      "r": "org.telegram.ui.Cells.da"
+    },
+    {
+      "o": "org.telegram.ui.Cells.ShadowSectionCell",
+      "r": "org.telegram.ui.Cells.b7"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.SimpleTextView",
+      "r": "org.telegram.ui.ActionBar.q5"
+    },
+    {
+      "o": "org.telegram.ui.SettingsActivity",
+      "r": "org.telegram.ui.ca1"
+    },
+    {
+      "o": "org.telegram.ui.SettingsActivity$SettingCell",
+      "r": "org.telegram.ui.z91"
+    },
+    {
+      "o": "org.telegram.ui.SettingsActivity$SettingCell$Factory",
+      "r": "org.telegram.ui.y91"
+    },
+    {
+      "o": "org.telegram.ui.Components.UItem",
+      "r": "org.telegram.ui.Components.z51"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.AlertDialog.Builder",
+      "r": "org.telegram.ui.ActionBar.AlertDialog$Builder"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.AlertDialog$OnButtonClickListener",
+      "r": "org.telegram.ui.ActionBar.e2"
+    },
+    {
+      "o": "androidx.collection.LongSparseArray",
+      "r": "z.f"
+    },
+    {
+      "o": "org.telegram.ui.Stories.PeerStoriesView$StoryItemHolder",
+      "r": "vg.g3"
+    },
+    {
+      "o": "org.telegram.ui.Stories.StoriesController",
+      "r": "vg.o5"
+    },
+    {
+      "o": "org.telegram.messenger.browser.Browser",
+      "r": "he.f"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.BaseFragment",
+      "r": "org.telegram.ui.ActionBar.r2"
+    },
+    {
+      "o": "org.telegram.ui.Components.UniversalAdapter",
+      "r": "org.telegram.ui.Components.n61"
+    }
+  ],
+  "fields": [
+    {
+      "c": "ChatActivity",
+      "o": "headerItem",
+      "r": "g0"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "pinnedMessageView",
+      "r": "w2"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "selectedObject",
+      "r": "c5"
+    },
+    {
+      "c": "Theme",
+      "o": "chat_timePaint",
+      "r": "T2"
+    },
+    {
+      "c": "ChatMessageCell",
+      "o": "timeWidth",
+      "r": "ob"
+    },
+    {
+      "c": "ChatMessageCell",
+      "o": "timeTextWidth",
+      "r": "pb"
+    },
+    {
+      "c": "ChatMessageCell",
+      "o": "currentTimeString",
+      "r": "sb"
+    },
+    {
+      "c": "TextCheckCell",
+      "o": "textView",
+      "r": "c"
+    },
+    {
+      "c": "TextSettingsCell",
+      "o": "textView",
+      "r": "b"
+    },
+    {
+      "c": "SettingsActivity$SettingCell",
+      "o": "iconView",
+      "r": "d"
+    },
+    {
+      "c": "UItem",
+      "o": "id",
+      "r": "d"
+    },
+    {
+      "c": "UItem",
+      "o": "text",
+      "r": "l"
+    },
+    {
+      "c": "UItem",
+      "o": "subtext",
+      "r": "m"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "alertDialog",
+      "r": "a"
+    },
+    {
+      "c": "LaunchActivity",
+      "o": "frameLayout",
+      "r": "v0"
+    },
+    {
+      "c": "SecretMediaViewer",
+      "o": "onClose",
+      "r": "o1"
+    },
+    {
+      "c": "PhotoViewer",
+      "o": "galleryButton",
+      "r": "s0"
+    },
+    {
+      "c": "Switch",
+      "o": "isChecked",
+      "r": "h"
+    }
+  ],
+  "methods": [
+    {
+      "c": "ChatActivity",
+      "o": "createPinnedMessageView",
+      "r": "K7"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "updatePinnedMessageView",
+      "r": "yc"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "fillMessageMenu",
+      "r": "n8"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "processSelectedOption",
+      "r": "Ba"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "scrollToMessageId",
+      "r": "Xa"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "sendSecretMediaDelete",
+      "r": "O4"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "sendSecretMessageRead",
+      "r": "fb"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "hasSelectedNoforwardsMessage",
+      "r": "a9"
+    },
+    {
+      "c": "ActionBarMenuItem",
+      "o": "addSubItem",
+      "r": "e"
+    },
+    {
+      "c": "ActionBarMenuItem",
+      "o": "lazilyAddSubItem",
+      "r": "u"
+    },
+    {
+      "c": "Theme",
+      "o": "isCurrentThemeDark",
+      "r": "e1"
+    },
+    {
+      "c": "ChatMessageCell",
+      "o": "measureTime",
+      "r": "x3"
+    },
+    {
+      "c": "TextCheckCell",
+      "o": "setTextAndCheck",
+      "r": "f"
+    },
+    {
+      "c": "TextCheckCell",
+      "o": "setTextAndValueAndCheck",
+      "r": "g"
+    },
+    {
+      "c": "TextSettingsCell",
+      "o": "setText",
+      "r": "b"
+    },
+    {
+      "c": "TextSettingsCell",
+      "o": "setTextAndValue",
+      "r": "c"
+    },
+    {
+      "c": "SettingsActivity",
+      "o": "fillItems",
+      "r": "b0"
+    },
+    {
+      "c": "SettingsActivity",
+      "o": "onClick",
+      "r": "f0"
+    },
+    {
+      "c": "SettingsActivity$SettingCell$Factory",
+      "o": "of",
+      "r": "a"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "create",
+      "r": "a"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "show",
+      "r": "o"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setView",
+      "r": "n"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setTitle",
+      "r": "l"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setMessage",
+      "r": "g"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setPositiveButton",
+      "r": "k"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setNegativeButton",
+      "r": "h"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setNeutralButton",
+      "r": "i"
+    },
+    {
+      "c": "AlertDialog$OnButtonClickListener",
+      "o": "onClick",
+      "r": "k"
+    },
+    {
+      "c": "LongSparseArray",
+      "o": "get",
+      "r": "f"
+    },
+    {
+      "c": "SecretMediaViewer",
+      "o": "closePhoto",
+      "r": "e"
+    },
+    {
+      "c": "PhotoViewer",
+      "o": "setIsAboutToSwitchToIndex",
+      "r": "F2"
+    },
+    {
+      "c": "PeerStoriesView$StoryItemHolder",
+      "o": "allowScreenshots",
+      "r": "d"
+    },
+    {
+      "c": "Browser",
+      "o": "openUrl",
+      "r": "s"
+    }
+  ]
+}

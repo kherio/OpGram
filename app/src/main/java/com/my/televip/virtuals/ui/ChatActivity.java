@@ -28,6 +28,13 @@ public class ChatActivity {
     }
 
     public void scrollToMessageId(int id, int fromMessageId, boolean select, int loadIndex, boolean forceScroll, int forcePinnedMessageId){
+        if (com.my.televip.Clients.ClientManager.is(com.my.televip.Clients.ClientManager.Client.TelegramWeb)) {
+            // R8 build only keeps the 9-parameter variant
+            XposedHelpers.callMethod(chatActivity, Obfuscate.getMethodName("ChatActivity", "scrollToMessageId"),
+                    new Class[]{int.class, int.class, boolean.class, int.class, boolean.class, int.class, Integer.class, byte[].class, Runnable.class},
+                    id, fromMessageId, select, loadIndex, forceScroll, forcePinnedMessageId, null, null, null);
+            return;
+        }
         XposedHelpers.callMethod(chatActivity, Obfuscate.getMethodName("ChatActivity", "scrollToMessageId"), id, fromMessageId, select, loadIndex, forceScroll, forcePinnedMessageId);
     }
 

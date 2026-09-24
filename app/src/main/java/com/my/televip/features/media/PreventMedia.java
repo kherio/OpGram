@@ -1,5 +1,7 @@
 package com.my.televip.features.media;
 
+import com.my.televip.Clients.ClientManager;
+
 import com.my.televip.Class.ClassNames;
 import com.my.televip.Configs.ConfigManager;
 import com.my.televip.base.BaseMethodHook;
@@ -37,7 +39,7 @@ public class PreventMedia {
                 }
 
                 if (ClassLoad.getClass(ClassNames.SECRET_MEDIA_VIEWER) != null) {
-                    SecretMediaViewer.openMedia();
+                    if (!ClientManager.is(ClientManager.Client.TelegramWeb)) SecretMediaViewer.openMedia();
                     HMethod.hookMethod(ClassLoad.getClass(ClassNames.SECRET_MEDIA_VIEWER), Obfuscate.getMethodName("SecretMediaViewer", "closePhoto"), ArgsResolver.merge("closePhoto", new Class[]{boolean.class, boolean.class}, new BaseMethodHook() {
                         @Override
                         protected void beforeMethod(MethodHookParam param) {

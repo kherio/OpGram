@@ -65,6 +65,18 @@ public class MessageTimeModifier {
                 ConfigManager.showDeletedMessages != null &&
                         ConfigManager.showDeletedMessages.isEnable();
 
+        boolean seconds =
+                ConfigManager.showSecondsInTime != null &&
+                        ConfigManager.showSecondsInTime.isEnable();
+
+        if (seconds) {
+            try {
+                addSeconds(cellObject, messageObject);
+            } catch (Throwable e) {
+                Logger.e(e);
+            }
+        }
+
         if (!id && !deleted)
             return;
 
@@ -96,6 +108,34 @@ public class MessageTimeModifier {
             Logger.e(e);
         }
 
+    }
+
+    private static final java.util.regex.Pattern TIME = java.util.regex.Pattern.compile("(\\d{1,2}:\\d{2})(?![:\\d])");
+
+    /** Inserts ":ss" after the first HH:mm in the bubble time (works for 12h and 24h formats). */
+    private static void addSeconds(Object cellObject, Object messageObject) {
+        Object owner = de.robv.android.xposed.XposedHelpers.getObjectField(messageObject, "messageOwner");
+        if (owner == null) return;
+        int date = de.robv.android.xposed.XposedHelpers.getIntField(owner, "date");
+        if (date <= 0) return;
+
+        ChatMessageCell cell = new ChatMessageCell(cellObject);
+        SpannableStringBuilder time = convertToStringBuilder(cell.getCurrentTimeString());
+        if (time == null) return;
+
+        java.util.regex.Matcher m = TIME.matcher(time);
+        if (!m.find()) return;
+
+        String sec = String.format(java.util.Locale.US, ":%02d", date % 60);
+        time.insert(m.end(1), sec);
+        cell.setCurrentTimeString(time);
+
+        TextPaint paint = Theme.getTextPaint();
+        if (paint != null) {
+            int ceil = (int) Math.ceil(paint.measureText(sec));
+            cell.setTimeTextWidth(ceil + cell.getTimeTextWidth());
+            cell.setTimeWidth(ceil + cell.getTimeWidth());
+        }
     }
 
     public static SpannableStringBuilder convertToStringBuilder(CharSequence charSequence) {

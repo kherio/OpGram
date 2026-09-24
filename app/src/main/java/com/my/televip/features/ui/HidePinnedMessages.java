@@ -31,7 +31,7 @@ public class HidePinnedMessages {
                                     }
                                 }
                             });
-                    HMethod.hookMethod(ClassLoad.getClass(ClassNames.CHAT_ACTIVITY), Obfuscate.getMethodName("ChatActivity", "updatePinnedMessageView"), boolean.class, int.class, new BaseMethodHook() {
+                    HMethod.hookMethod(ClassLoad.getClass(ClassNames.CHAT_ACTIVITY), Obfuscate.getMethodName("ChatActivity", "updatePinnedMessageView"), ArgsResolver.merge("updatePinnedMessageView", new Class[]{boolean.class, int.class}, new BaseMethodHook() {
                         @Override
                         protected void afterMethod(MethodHookParam param) {
                             if (ConfigManager.hidePinnedMessages.isEnable()) {
@@ -40,7 +40,7 @@ public class HidePinnedMessages {
                                     button.setVisibility(View.GONE);
                             }
                         }
-                    });
+                    }));
                 }
             }
         } catch (Throwable e){

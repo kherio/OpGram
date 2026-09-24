@@ -1,103 +1,105 @@
-# TeleVip LSPosed
+# OpGram
 
-<p>
-  <img src="https://img.shields.io/badge/Platform-Android-green">
-  <img src="https://img.shields.io/badge/Framework-LSPosed-blue">
-  <img src="https://img.shields.io/badge/License-GPL--3.0-orange">
-</p>
+OpGram is an Xposed/LSPosed module that adds a large set of features to Telegram.
+It is a fork of **TeleVip**, originally created by **@m_1_iq**
+(https://github.com/mustafa1dev/TeleVip-Lsposed). TeleVip is GPL-licensed and the
+attribution to the original author is kept throughout the module.
 
-A powerful LSPosed module that adds advanced customization features to Telegram clients.
+## Features
 
-## ✨ Features
+### Advanced Mode (privacy)
+- Hide *seen* / read receipts, in private chats and in channels/groups.
+- Hide *typing…*, and separately hide *recording audio/video* and *sending…*.
+- Hide *online* status (reduces how often you appear online).
+- Hide story views, and hide your phone number.
+- Local Telegram Premium (client-side).
+- Don't send *listened* for voice notes and round video messages.
+- Per-chat exceptions: excluded chats behave like normal Telegram.
+- "Mark as read now" for a single chat while Advanced Mode is on.
 
-### Privacy
-- Hide "Seen" status in:
-    - Private chats
-    - Channels and Groups
-- Hide "Typing..." indicator
-- Hide online status
-- Hide phone number
-- Hide story view status
-- Show deleted messages
-- Prevent deletion of secret media
+### Deleted & edited messages
+- Keep messages that were deleted, so you can still read them.
+- Save the edit history of messages.
+- Show the exact deletion time next to the "deleted" tag.
+- Built-in viewer for the saved edit history, with search.
+- Alerts when a message is deleted or edited.
+- Clear the saved edit history.
 
-### Media & Stories
-- Save protected stories to gallery
-- Save voice messages
-- Enable secret media
-- Save message edit history
+### Message time & status
+- Show seconds in the message time.
+- Show the exact last-seen date and time (when the other user shares it).
+- Show the user ID and the message ID.
+- Copy a profile name with one tap.
+- Disable number rounding (show exact counts).
 
-### Telegram Modifications
-- Remove content saving restrictions
-- Disable stories
-- Hide pinned messages
-- Disable channel swipe
-- Disable profile swipe
-- Disable update notifications
-- Disable number rounding
+### Media & files
+- Save secret ("view once") media and media from restricted chats.
+- Allow saving stories and voice messages.
+- Remove the "content saving restricted" limit.
+- Set a default playback speed for voice notes and round videos.
+- Confirm before sending stickers, GIFs and voice messages.
+- Faster downloads.
 
-### Performance
-- Boost Telegram download speed
+### Privacy & security
+- Hide sponsored messages (channel ads).
+- Hide the proxy sponsor.
+- Lock selected chats behind the device fingerprint/credential (Android 9+).
 
-### Premium
-- Enable Local Premium
+### Interface
+- Hide pinned messages, disable swipe-back in chats and profiles, hide update
+  prompts, hide TL errors.
+- Searchable settings with collapsible sections (tap a header to fold it).
 
+### Battery & data
+- Don't preload stories in the background.
+- Hide the stories bar in the chat list.
 
-> More features are available but not listed here.
+### Backup & updates
+- Export / import OpGram settings.
+- Built-in updater: checks GitHub Releases, shows the changelog, and downloads
+  and installs new versions.
+- Safe mode: if Telegram crashes several times on startup, OpGram disables its
+  hooks and offers to re-enable them.
 
+## Install
 
-# 📱 Supported Clients
+1. Install OpGram.
+2. Enable it in LSPosed/Vector and select Telegram in its scope.
+3. Force-stop Telegram and open it again.
 
-| Client | Version |
-|---|---|
-| Telegram | 12.8.3 (69222) |
-| Telegram Beta | 12.9.0 (69579) |
-| Telegram Web | 12.8.3 (69229) |
-| TG Connect | 11.13.1 (11130109) |
-| Plus Messenger | 12.8.1.0 (22350) |
-| Nagram | 12.8.1 (1239) |
-| NagramX | 12.8.1-2bcd1bd (1253) |
-| Nagram XF | 12.7.3 (1245) |
-| Nekogram | 12.8.1 (69160) |
-| Cherrygram | 12.8.1 (69160) |
-| Nicegram | 1.55.0 (2139) |
-| iMe | 12.8.1 (12080102) |
-| iMe Direct | 12.8.1 (12080109) |
-| X Plus | 12.0.1 (61669) |
-| ForkClient | 12.8.4.0 (691908) |
-| ForkClient Beta | 12.8.4.0 (691909) |
-| Skygram | 10.20.6 (40639) |
-| Teegra | 10.3.2 (41469) |
-| Telegraph | 12.8.1.1 (69172) |
-| Telega | 2.4.3 (107) |
-| Momogram | 12.6.4 |
-| Forkgram Classic | 12.8.10.0 |
-| Turrit | 1.8.9.9.5 |
+Open **Settings → Advanced Mode** inside Telegram to configure OpGram.
 
+## Updating
 
-# 📢 Updates
+OpGram checks GitHub Releases for a newer version and can download and install it
+(**Settings → Check for updates**, or automatically). In-place updates require
+that **every release is signed with the same key**.
 
-All TeleVip updates are published on Telegram:
+## Building
 
-➡️ https://t.me/t_l0_e
+Standard Gradle project:
 
+```
+./gradlew :app:assembleRelease
+```
 
-# ⚠️ Warning
-> This module is intended for educational purposes only. Its use may result in issues with your Telegram account, including the risk of banning or suspension. Use it at your own risk.
+CI (`.github/workflows/build.yml`) builds on every push, on pull requests and on
+release. Add the signing secrets described in `.github/README-CI.md` to have CI
+produce a signed APK and attach it to releases.
 
+## Mapping (for new Telegram versions)
 
-# 📄 License
+Telegram ships R8-obfuscated, so each release renames the classes OpGram hooks.
+The mapping lives in `app/src/main/assets/clients/TelegramWeb-<versionCode>.json`
+and OpGram loads the file matching the installed Telegram, falling back to the
+generic one. `tools/mapgen/` contains a generator that resolves the renamed
+classes automatically from a new APK; see `tools/mapgen/README.md`.
 
-This project is licensed under the **GNU General Public License v3.0 (GPLv3)**.
+## Credits
 
-See the [LICENSE](./LICENSE) file for more information.
+- Original module: **TeleVip** by @m_1_iq — https://github.com/mustafa1dev/TeleVip-Lsposed
+- This fork: OpGram — https://github.com/kherio/OpGram
 
+## License
 
-# Credits
-
-Partially based on:
-
-- [Re-Telegram](https://github.com/Sakion-Team/Re-Telegram).
-
-
-Developed by **@mustafa1dev**
+GPL, inherited from TeleVip. Keep the attribution to the original author.

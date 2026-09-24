@@ -1,0 +1,628 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+new file mode 100644
+index 0000000..89ce9f3
+--- /dev/null
++++ b/CHANGELOG.md
+@@ -0,0 +1,24 @@
++# Changelog
++
++All notable changes to OpGram are documented here.
++
++## 1.1
++
++Added
++- Telegram Web 12.10.4 support (R8 obfuscation mapping + parameter resolver).
++- Advanced Mode extras: per-chat exceptions, "mark as read now".
++- Don't send "listened" for voice/round videos; hide "recording"/"sending".
++- Exact last-seen date/time; seconds in message time; deletion time.
++- Default voice/round-video playback speed.
++- Confirm before sending stickers, GIFs and voice.
++- Hide sponsored messages.
++- Chat lock with fingerprint/credential (Android 9+).
++- Battery savers: don't preload stories, hide the stories bar.
++- Saved-edits viewer with search; export/import settings; clear edits history.
++- In-app updater (checks GitHub Releases) and safe mode against crash loops.
++- Mapping generator (`tools/mapgen`) and GitHub Actions CI.
++
++Changed
++- Rebranded from TeleVip to OpGram (original credit to @m_1_iq kept).
++- Panel header and system app name show "OpGram <version>".
++- "Ghost Mode" renamed to "Advanced Mode".
+diff --git a/README.md b/README.md
+index f9f0cc4..c9af753 100755
+--- a/README.md
++++ b/README.md
+@@ -1,103 +1,69 @@
+-# TeleVip LSPosed
++# OpGram
+ 
+-<p>
+-  <img src="https://img.shields.io/badge/Platform-Android-green">
+-  <img src="https://img.shields.io/badge/Framework-LSPosed-blue">
+-  <img src="https://img.shields.io/badge/License-GPL--3.0-orange">
+-</p>
++OpGram is an Xposed/LSPosed module that adds features to Telegram. It is a fork
++of **TeleVip**, originally created by **@m_1_iq**
++(https://github.com/mustafa1dev/TeleVip-Lsposed). TeleVip is GPL-licensed and the
++attribution to the original author is kept throughout the module.
+ 
+-A powerful LSPosed module that adds advanced customization features to Telegram clients.
++> Tested with **Telegram Web (`org.telegram.messenger.web`) 12.10.4 (70999)** on
++> LSPosed/Vector. Other Telegram builds are R8-obfuscated differently; see
++> *Mapping* below.
+ 
+-## ✨ Features
++## Features
+ 
+-### Privacy
+-- Hide "Seen" status in:
+-    - Private chats
+-    - Channels and Groups
+-- Hide "Typing..." indicator
+-- Hide online status
+-- Hide phone number
+-- Hide story view status
+-- Show deleted messages
+-- Prevent deletion of secret media
++- **Advanced Mode (ghost mode):** hide *seen*, *typing*, *online*, *recording*
++  and story views; local Premium; per-chat exceptions; "mark as read now".
++- **Deleted & edited messages:** keep deleted messages, save edit history, show
++  the deletion time, and a built-in viewer with search.
++- **Message time:** show seconds; exact last-seen date/time (when the other user
++  shares it).
++- **Media:** save secret media, default voice/round-video playback speed,
++  confirm before sending stickers/GIFs/voice.
++- **Privacy & UI:** hide sponsored messages, show user ID, copy profile name,
++  chat lock with fingerprint/credential (Android 9+).
++- **Battery:** don't preload stories, hide the stories bar.
++- **Backup:** export/import OpGram settings; check for updates from GitHub.
+ 
+-### Media & Stories
+-- Save protected stories to gallery
+-- Save voice messages
+-- Enable secret media
+-- Save message edit history
++## Install
+ 
+-### Telegram Modifications
+-- Remove content saving restrictions
+-- Disable stories
+-- Hide pinned messages
+-- Disable channel swipe
+-- Disable profile swipe
+-- Disable update notifications
+-- Disable number rounding
++1. Install a compatible Telegram build (see above).
++2. Install the OpGram APK.
++3. Enable OpGram in LSPosed/Vector and select Telegram in its scope.
++4. Force-stop Telegram and open it again.
+ 
+-### Performance
+-- Boost Telegram download speed
++Open **Settings → Advanced Mode** inside Telegram to configure OpGram.
+ 
+-### Premium
+-- Enable Local Premium
++## Updating
+ 
++OpGram checks GitHub Releases for a newer version and can download and install it
++(**Settings → Check for updates**, or automatically). In-place updates require
++that **every release is signed with the same key**.
+ 
+-> More features are available but not listed here.
++## Building
+ 
++Standard Gradle project:
+ 
+-# 📱 Supported Clients
++```
++./gradlew :app:assembleRelease
++```
+ 
+-| Client | Version |
+-|---|---|
+-| Telegram | 12.8.3 (69222) |
+-| Telegram Beta | 12.9.0 (69579) |
+-| Telegram Web | 12.8.3 (69229) |
+-| TG Connect | 11.13.1 (11130109) |
+-| Plus Messenger | 12.8.1.0 (22350) |
+-| Nagram | 12.8.1 (1239) |
+-| NagramX | 12.8.1-2bcd1bd (1253) |
+-| Nagram XF | 12.7.3 (1245) |
+-| Nekogram | 12.8.1 (69160) |
+-| Cherrygram | 12.8.1 (69160) |
+-| Nicegram | 1.55.0 (2139) |
+-| iMe | 12.8.1 (12080102) |
+-| iMe Direct | 12.8.1 (12080109) |
+-| X Plus | 12.0.1 (61669) |
+-| ForkClient | 12.8.4.0 (691908) |
+-| ForkClient Beta | 12.8.4.0 (691909) |
+-| Skygram | 10.20.6 (40639) |
+-| Teegra | 10.3.2 (41469) |
+-| Telegraph | 12.8.1.1 (69172) |
+-| Telega | 2.4.3 (107) |
+-| Momogram | 12.6.4 |
+-| Forkgram Classic | 12.8.10.0 |
+-| Turrit | 1.8.9.9.5 |
++CI (`.github/workflows/build.yml`) builds on every push, on pull requests and on
++release. Add the signing secrets described in `.github/README-CI.md` to have CI
++produce a signed APK and attach it to releases.
+ 
++## Mapping (for new Telegram versions)
+ 
+-# 📢 Updates
++Telegram ships R8-obfuscated, so each release renames the classes OpGram hooks.
++The mapping lives in `app/src/main/assets/clients/TelegramWeb-<versionCode>.json`
++and OpGram loads the file matching the installed Telegram, falling back to the
++generic one. `tools/mapgen/` contains a generator that resolves the renamed
++classes automatically from a new APK; see `tools/mapgen/README.md`.
+ 
+-All TeleVip updates are published on Telegram:
++## Credits
+ 
+-➡️ https://t.me/t_l0_e
++- Original module: **TeleVip** by @m_1_iq — https://github.com/mustafa1dev/TeleVip-Lsposed
++- This fork: OpGram — https://github.com/kherio/OpGram
+ 
++## License
+ 
+-# ⚠️ Warning
+-> This module is intended for educational purposes only. Its use may result in issues with your Telegram account, including the risk of banning or suspension. Use it at your own risk.
+-
+-
+-# 📄 License
+-
+-This project is licensed under the **GNU General Public License v3.0 (GPLv3)**.
+-
+-See the [LICENSE](./LICENSE) file for more information.
+-
+-
+-# Credits
+-
+-Partially based on:
+-
+-- [Re-Telegram](https://github.com/Sakion-Team/Re-Telegram).
+-
+-
+-Developed by **@mustafa1dev**
+\ No newline at end of file
++GPL, inherited from TeleVip. Keep the attribution to the original author.
+diff --git a/RELEASE_NOTES.md b/RELEASE_NOTES.md
+new file mode 100644
+index 0000000..128c11b
+--- /dev/null
++++ b/RELEASE_NOTES.md
+@@ -0,0 +1,17 @@
++## OpGram 1.1
++
++Fork of TeleVip (by @m_1_iq) with support for **Telegram Web 12.10.4**.
++
++**Highlights**
++- Full Telegram Web 12.10.4 support.
++- Advanced Mode with per-chat exceptions and "mark as read now".
++- Exact last-seen and deletion times; seconds in message time.
++- Default voice playback speed; confirm before sending stickers/GIFs/voice.
++- Hide sponsored messages; chat lock with fingerprint (Android 9+).
++- Battery savers; saved-edits viewer; settings backup; in-app updater.
++
++**Install:** install the APK, enable OpGram in LSPosed/Vector, select Telegram in
++its scope, then force-stop and reopen Telegram. Configure it in
++**Settings → Advanced Mode**.
++
++> In-place updates require every release to be signed with the same key.
+diff --git a/app/src/main/assets/lang/ar.json b/app/src/main/assets/lang/ar.json
+index 7aebb49..0ac29fe 100644
+--- a/app/src/main/assets/lang/ar.json
++++ b/app/src/main/assets/lang/ar.json
+@@ -122,5 +122,13 @@
+   "Search": "Search",
+   "NoEditsSaved": "No saved edits yet",
+   "ExtraSettings": "Extra",
+-  "Version": "Version"
++  "Version": "Version",
++  "CheckForUpdates": "Check for updates",
++  "UpdateAvailable": "A new version is available: OpGram %1$s. Do you want to download and install it?",
++  "UpdateDownload": "Download",
++  "UpdateDownloading": "Downloading update…",
++  "UpdateSkip": "Skip this version",
++  "UpdateUpToDate": "You already have the latest version",
++  "UpdateCheckFailed": "Could not check for updates",
++  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/assets/lang/en.json b/app/src/main/assets/lang/en.json
+index 658b572..a2ae306 100644
+--- a/app/src/main/assets/lang/en.json
++++ b/app/src/main/assets/lang/en.json
+@@ -149,5 +149,13 @@
+   "Search": "Search",
+   "NoEditsSaved": "No saved edits yet",
+   "ExtraSettings": "Extra",
+-  "Version": "Version"
++  "Version": "Version",
++  "CheckForUpdates": "Check for updates",
++  "UpdateAvailable": "A new version is available: OpGram %1$s. Do you want to download and install it?",
++  "UpdateDownload": "Download",
++  "UpdateDownloading": "Downloading update…",
++  "UpdateSkip": "Skip this version",
++  "UpdateUpToDate": "You already have the latest version",
++  "UpdateCheckFailed": "Could not check for updates",
++  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/assets/lang/es.json b/app/src/main/assets/lang/es.json
+index 4306d45..563d2db 100644
+--- a/app/src/main/assets/lang/es.json
++++ b/app/src/main/assets/lang/es.json
+@@ -149,5 +149,13 @@
+   "Search": "Buscar",
+   "NoEditsSaved": "Aún no hay ediciones guardadas",
+   "ExtraSettings": "Extra",
+-  "Version": "Versión"
++  "Version": "Versión",
++  "CheckForUpdates": "Buscar actualizaciones",
++  "UpdateAvailable": "Hay una versión nueva: OpGram %1$s. ¿Quieres descargarla e instalarla?",
++  "UpdateDownload": "Descargar",
++  "UpdateDownloading": "Descargando actualización…",
++  "UpdateSkip": "Omitir esta versión",
++  "UpdateUpToDate": "Ya tienes la última versión",
++  "UpdateCheckFailed": "No se pudo comprobar si hay actualizaciones",
++  "UpdateAllowInstall": "Permite instalar apps para Telegram y pulsa Descargar otra vez"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/assets/lang/fa.json b/app/src/main/assets/lang/fa.json
+index 554c08e..f8a240f 100644
+--- a/app/src/main/assets/lang/fa.json
++++ b/app/src/main/assets/lang/fa.json
+@@ -122,5 +122,13 @@
+   "Search": "Search",
+   "NoEditsSaved": "No saved edits yet",
+   "ExtraSettings": "Extra",
+-  "Version": "Version"
++  "Version": "Version",
++  "CheckForUpdates": "Check for updates",
++  "UpdateAvailable": "A new version is available: OpGram %1$s. Do you want to download and install it?",
++  "UpdateDownload": "Download",
++  "UpdateDownloading": "Downloading update…",
++  "UpdateSkip": "Skip this version",
++  "UpdateUpToDate": "You already have the latest version",
++  "UpdateCheckFailed": "Could not check for updates",
++  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/assets/lang/zh.json b/app/src/main/assets/lang/zh.json
+index 8d66895..2f40f27 100644
+--- a/app/src/main/assets/lang/zh.json
++++ b/app/src/main/assets/lang/zh.json
+@@ -122,5 +122,13 @@
+   "Search": "Search",
+   "NoEditsSaved": "No saved edits yet",
+   "ExtraSettings": "Extra",
+-  "Version": "Version"
++  "Version": "Version",
++  "CheckForUpdates": "Check for updates",
++  "UpdateAvailable": "A new version is available: OpGram %1$s. Do you want to download and install it?",
++  "UpdateDownload": "Download",
++  "UpdateDownloading": "Downloading update…",
++  "UpdateSkip": "Skip this version",
++  "UpdateUpToDate": "You already have the latest version",
++  "UpdateCheckFailed": "Could not check for updates",
++  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again"
+ }
+\ No newline at end of file
+diff --git a/app/src/main/java/com/my/televip/Configs/ConfigManager.java b/app/src/main/java/com/my/televip/Configs/ConfigManager.java
+index 6138ef9..892dc28 100755
+--- a/app/src/main/java/com/my/televip/Configs/ConfigManager.java
++++ b/app/src/main/java/com/my/televip/Configs/ConfigManager.java
+@@ -109,6 +109,7 @@ public class ConfigManager {
+     public static ConfigItem backupHeader;
+     public static ConfigItem btnExportSettings;
+     public static ConfigItem btnImportSettings;
++    public static ConfigItem btnCheckUpdate;
+     public static ConfigItem btnViewEditsHistory;
+     public static ConfigItem btnClearEditsHistory;
+     public static ConfigItem hideUpdateApp;
+@@ -305,6 +306,8 @@ public class ConfigManager {
+ 
+         backupHeader = new ConfigItem(ConfigItem.HEADER, Keys.BackupSettings);
+         items.add(backupHeader);
++        btnCheckUpdate = new ConfigItem(ConfigItem.TEXT, Keys.CheckForUpdates);
++        items.add(btnCheckUpdate);
+         btnExportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ExportSettings);
+         items.add(btnExportSettings);
+         btnImportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ImportSettings);
+diff --git a/app/src/main/java/com/my/televip/Configs/ConfigPreferences.java b/app/src/main/java/com/my/televip/Configs/ConfigPreferences.java
+index 7135900..cef08e3 100644
+--- a/app/src/main/java/com/my/televip/Configs/ConfigPreferences.java
++++ b/app/src/main/java/com/my/televip/Configs/ConfigPreferences.java
+@@ -31,6 +31,21 @@ public class ConfigPreferences {
+             sharedPreferences.edit().remove(key).apply();
+         }
+     }
++    public static long getLong(String key) {
++        try {
++            return sharedPreferences.getLong(key, 0L);
++        } catch (Throwable t) {
++            return 0L;
++        }
++    }
++
++    public static void putLong(String key, long v) {
++        try {
++            sharedPreferences.edit().putLong(key, v).apply();
++        } catch (Throwable ignored) {
++        }
++    }
++
+     public static int getInt(String key) {
+         try {
+             return sharedPreferences.getInt(key, 0);
+diff --git a/app/src/main/java/com/my/televip/TeleVip.java b/app/src/main/java/com/my/televip/TeleVip.java
+index 31e398f..d21ec56 100644
+--- a/app/src/main/java/com/my/televip/TeleVip.java
++++ b/app/src/main/java/com/my/televip/TeleVip.java
+@@ -27,6 +27,7 @@ public class TeleVip {
+             ConfigManager.loadAndRead();
+             SettingsManager.init(settingsController);
+             com.my.televip.features.extra.VersionGuard.check();
++            com.my.televip.features.extra.Updater.checkAsync(false);
+ 
+         } catch (Throwable e){
+             Logger.e(e);
+diff --git a/app/src/main/java/com/my/televip/features/extra/Updater.java b/app/src/main/java/com/my/televip/features/extra/Updater.java
+new file mode 100644
+index 0000000..fd548de
+--- /dev/null
++++ b/app/src/main/java/com/my/televip/features/extra/Updater.java
+@@ -0,0 +1,210 @@
++package com.my.televip.features.extra;
++
++import android.app.Activity;
++import android.app.AlertDialog;
++import android.app.DownloadManager;
++import android.content.BroadcastReceiver;
++import android.content.Context;
++import android.content.Intent;
++import android.content.IntentFilter;
++import android.net.Uri;
++import android.os.Build;
++import android.os.Environment;
++import android.widget.Toast;
++
++import com.my.televip.Branding;
++import com.my.televip.Configs.ConfigPreferences;
++import com.my.televip.language.Keys;
++import com.my.televip.language.Translator;
++import com.my.televip.logging.Logger;
++import com.my.televip.utils.Utils;
++
++import org.json.JSONArray;
++import org.json.JSONObject;
++
++import java.net.HttpURLConnection;
++import java.net.URL;
++
++/**
++ * Checks the GitHub releases of the OpGram repo for a newer version and offers to
++ * download and install it. Requires that every release is signed with the SAME key,
++ * otherwise Android refuses to update in place.
++ *
++ * Runs inside Telegram's process, so it uses Telegram's INTERNET permission.
++ */
++public class Updater {
++
++    private static final String LATEST_API = "https://api.github.com/repos/kherio/OpGram/releases/latest";
++    private static final String LAST_CHECK = "OpGramLastUpdateCheck";
++    private static final String SKIP_TAG = "OpGramSkipTag";
++    private static final long CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000L; // twice a day at most
++
++    public static void checkAsync(final boolean manual) {
++        new Thread(() -> {
++            try {
++                if (!manual) {
++                    long last = ConfigPreferences.getLong(LAST_CHECK);
++                    if (System.currentTimeMillis() - last < CHECK_INTERVAL_MS) return;
++                }
++                ConfigPreferences.putLong(LAST_CHECK, System.currentTimeMillis());
++
++                Release r = fetchLatest();
++                if (r == null) {
++                    if (manual) toast(Translator.get(Keys.UpdateCheckFailed));
++                    return;
++                }
++
++                String current = Branding.version();
++                if (!isNewer(r.version, current)) {
++                    if (manual) toast(Translator.get(Keys.UpdateUpToDate));
++                    return;
++                }
++                if (!manual && r.tag.equals(ConfigPreferences.getString(SKIP_TAG))) return;
++
++                promptOnUi(r);
++            } catch (Throwable t) {
++                Logger.e(t);
++                if (manual) toast(Translator.get(Keys.UpdateCheckFailed));
++            }
++        }).start();
++    }
++
++    private static Release fetchLatest() throws Exception {
++        HttpURLConnection c = (HttpURLConnection) new URL(LATEST_API).openConnection();
++        c.setRequestProperty("Accept", "application/vnd.github+json");
++        c.setRequestProperty("User-Agent", "OpGram");
++        c.setConnectTimeout(10000);
++        c.setReadTimeout(10000);
++        if (c.getResponseCode() != 200) return null;
++
++        StringBuilder sb = new StringBuilder();
++        java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(c.getInputStream()));
++        String line;
++        while ((line = in.readLine()) != null) sb.append(line);
++        in.close();
++
++        JSONObject o = new JSONObject(sb.toString());
++        Release r = new Release();
++        r.tag = o.optString("tag_name");
++        r.version = r.tag.replaceAll("[^0-9.]", "");
++        r.notes = o.optString("body");
++        JSONArray assets = o.optJSONArray("assets");
++        if (assets != null) {
++            for (int i = 0; i < assets.length(); i++) {
++                JSONObject a = assets.getJSONObject(i);
++                String name = a.optString("name");
++                if (name.toLowerCase().endsWith(".apk")) {
++                    r.apkUrl = a.optString("browser_download_url");
++                    r.apkName = name;
++                    break;
++                }
++            }
++        }
++        return r.apkUrl != null ? r : null;
++    }
++
++    /** True if remote is strictly newer than local (dotted numeric compare). */
++    static boolean isNewer(String remote, String local) {
++        if (remote == null || remote.isEmpty()) return false;
++        if (local == null || local.isEmpty()) return true;
++        String[] a = remote.split("\\.");
++        String[] b = local.split("\\.");
++        int n = Math.max(a.length, b.length);
++        for (int i = 0; i < n; i++) {
++            int x = i < a.length ? parse(a[i]) : 0;
++            int y = i < b.length ? parse(b[i]) : 0;
++            if (x != y) return x > y;
++        }
++        return false;
++    }
++
++    private static int parse(String s) {
++        try { return Integer.parseInt(s.trim()); } catch (Throwable t) { return 0; }
++    }
++
++    private static void promptOnUi(final Release r) {
++        final Activity activity = Utils.getCurrentActivity();
++        if (activity == null) return;
++        activity.runOnUiThread(() -> {
++            try {
++                String msg = Translator.get(Keys.UpdateAvailable, r.version);
++                if (r.notes != null && !r.notes.isEmpty()) {
++                    msg += "\n\n" + (r.notes.length() > 500 ? r.notes.substring(0, 500) + "…" : r.notes);
++                }
++                new AlertDialog.Builder(activity)
++                        .setTitle(Branding.NAME)
++                        .setMessage(msg)
++                        .setPositiveButton(Translator.get(Keys.UpdateDownload), (d, w) -> download(activity, r))
++                        .setNegativeButton(Translator.get(Keys.Cancel), null)
++                        .setNeutralButton(Translator.get(Keys.UpdateSkip),
++                                (d, w) -> ConfigPreferences.putString(SKIP_TAG, r.tag))
++                        .show();
++            } catch (Throwable t) {
++                Logger.e(t);
++            }
++        });
++    }
++
++    private static void download(final Activity activity, final Release r) {
++        try {
++            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
++                    && !activity.getPackageManager().canRequestPackageInstalls()) {
++                Intent settings = new Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
++                        Uri.parse("package:" + activity.getPackageName()));
++                settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
++                activity.startActivity(settings);
++                toast(Translator.get(Keys.UpdateAllowInstall));
++                return;
++            }
++
++            final DownloadManager dm = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
++            DownloadManager.Request req = new DownloadManager.Request(Uri.parse(r.apkUrl));
++            req.setTitle(Branding.NAME + " " + r.version);
++            req.setMimeType("application/vnd.android.package-archive");
++            req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
++            req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, r.apkName);
++            final long id = dm.enqueue(req);
++            toast(Translator.get(Keys.UpdateDownloading));
++
++            activity.registerReceiver(new BroadcastReceiver() {
++                @Override
++                public void onReceive(Context ctx, Intent intent) {
++                    long done = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
++                    if (done != id) return;
++                    try { activity.unregisterReceiver(this); } catch (Throwable ignored) {}
++                    install(activity, dm, id);
++                }
++            }, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
++                    Build.VERSION.SDK_INT >= 34 ? Context.RECEIVER_EXPORTED : 0);
++        } catch (Throwable t) {
++            Logger.e(t);
++            toast(Translator.get(Keys.UpdateCheckFailed));
++        }
++    }
++
++    private static void install(Activity activity, DownloadManager dm, long id) {
++        try {
++            // DownloadManager hands back a content:// URI that any installer can read, so
++            // OpGram does not need to declare its own FileProvider in the manifest.
++            Uri uri = dm.getUriForDownloadedFile(id);
++            if (uri == null) { toast(Translator.get(Keys.UpdateCheckFailed)); return; }
++            Intent i = new Intent(Intent.ACTION_VIEW);
++            i.setDataAndType(uri, "application/vnd.android.package-archive");
++            i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
++            activity.startActivity(i);
++        } catch (Throwable t) {
++            Logger.e(t);
++        }
++    }
++
++    private static void toast(final String text) {
++        try {
++            final Activity a = Utils.getCurrentActivity();
++            if (a != null) a.runOnUiThread(() -> Toast.makeText(a, text, Toast.LENGTH_LONG).show());
++        } catch (Throwable ignored) {}
++    }
++
++    private static class Release {
++        String tag, version, notes, apkUrl, apkName;
++    }
++}
+diff --git a/app/src/main/java/com/my/televip/language/Keys.java b/app/src/main/java/com/my/televip/language/Keys.java
+index ed7c444..713996c 100644
+--- a/app/src/main/java/com/my/televip/language/Keys.java
++++ b/app/src/main/java/com/my/televip/language/Keys.java
+@@ -148,4 +148,12 @@ public class Keys {
+     public static final String NoEditsSaved = "NoEditsSaved";
+     public static final String ExtraSettings = "ExtraSettings";
+     public static final String Version = "Version";
++    public static final String CheckForUpdates = "CheckForUpdates";
++    public static final String UpdateAvailable = "UpdateAvailable";
++    public static final String UpdateDownload = "UpdateDownload";
++    public static final String UpdateDownloading = "UpdateDownloading";
++    public static final String UpdateSkip = "UpdateSkip";
++    public static final String UpdateUpToDate = "UpdateUpToDate";
++    public static final String UpdateCheckFailed = "UpdateCheckFailed";
++    public static final String UpdateAllowInstall = "UpdateAllowInstall";
+ }
+diff --git a/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java b/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java
+index 14cd33e..2b96774 100644
+--- a/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java
++++ b/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java
+@@ -173,6 +173,9 @@ public class SettingsAdapter {
+                         case Keys.ImportSettings:
+                             BackupActions.importSettings((Activity) settingsController.getContext());
+                             break;
++                        case Keys.CheckForUpdates:
++                            com.my.televip.features.extra.Updater.checkAsync(true);
++                            break;
+                         case Keys.ViewEditsHistory:
+                             EditsViewer.show((Activity) settingsController.getContext());
+                             break;
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+index 19ad2aa..2caaccd 100755
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -1,3 +1,3 @@
+ <resources>
+-    <string name="app_name">OpGram</string>
++    <string name="app_name">OpGram 1.1</string>
+ </resources>
+\ No newline at end of file

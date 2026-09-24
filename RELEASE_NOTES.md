@@ -1,14 +1,12 @@
-## OpGram 1.1
+## OpGram 1.2
 
-Fork of TeleVip (by @m_1_iq) with support for **Telegram Web 12.10.4**.
+Fork of TeleVip (by @m_1_iq) for **Telegram Web 12.10.4**.
 
-**Highlights**
-- Full Telegram Web 12.10.4 support.
-- Advanced Mode with per-chat exceptions and "mark as read now".
-- Exact last-seen and deletion times; seconds in message time.
-- Default voice playback speed; confirm before sending stickers/GIFs/voice.
-- Hide sponsored messages; chat lock with fingerprint (Android 9+).
-- Battery savers; saved-edits viewer; settings backup; in-app updater.
+**New**
+- Searchable settings with collapsible sections.
+- Alerts when a message is deleted or edited.
+- Update dialog shows the release changelog.
+- Smarter mapping generator (survives more Telegram updates).
 
 **Install:** install the APK, enable OpGram in LSPosed/Vector, select Telegram in
 its scope, then force-stop and reopen Telegram. Configure it in

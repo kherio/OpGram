@@ -1,12 +1,23 @@
 diff --git a/CHANGELOG.md b/CHANGELOG.md
 new file mode 100644
-index 0000000..89ce9f3
+index 0000000..ef32607
 --- /dev/null
 +++ b/CHANGELOG.md
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,35 @@
 +# Changelog
 +
 +All notable changes to OpGram are documented here.
++
++## 1.2
++
++Added
++- Searchable settings with collapsible sections (tap a header to fold it).
++- Alerts when a message is deleted or edited.
++- Update dialog now shows the release changelog.
++
++Improved
++- Mapping generator: multi-pass resolution and matching by obfuscated
++  superclass / method descriptors, disambiguating more classes.
 +
 +## 1.1
 +
@@ -188,33 +199,51 @@ index f9f0cc4..c9af753 100755
 \ No newline at end of file
 +GPL, inherited from TeleVip. Keep the attribution to the original author.
 diff --git a/RELEASE_NOTES.md b/RELEASE_NOTES.md
-new file mode 100644
-index 0000000..128c11b
---- /dev/null
+index 128c11b..2d79106 100644
+--- a/RELEASE_NOTES.md
 +++ b/RELEASE_NOTES.md
-@@ -0,0 +1,17 @@
-+## OpGram 1.1
-+
-+Fork of TeleVip (by @m_1_iq) with support for **Telegram Web 12.10.4**.
-+
-+**Highlights**
-+- Full Telegram Web 12.10.4 support.
-+- Advanced Mode with per-chat exceptions and "mark as read now".
-+- Exact last-seen and deletion times; seconds in message time.
-+- Default voice playback speed; confirm before sending stickers/GIFs/voice.
-+- Hide sponsored messages; chat lock with fingerprint (Android 9+).
-+- Battery savers; saved-edits viewer; settings backup; in-app updater.
-+
-+**Install:** install the APK, enable OpGram in LSPosed/Vector, select Telegram in
-+its scope, then force-stop and reopen Telegram. Configure it in
-+**Settings → Advanced Mode**.
-+
-+> In-place updates require every release to be signed with the same key.
+@@ -1,14 +1,12 @@
+-## OpGram 1.1
++## OpGram 1.2
+ 
+-Fork of TeleVip (by @m_1_iq) with support for **Telegram Web 12.10.4**.
++Fork of TeleVip (by @m_1_iq) for **Telegram Web 12.10.4**.
+ 
+-**Highlights**
+-- Full Telegram Web 12.10.4 support.
+-- Advanced Mode with per-chat exceptions and "mark as read now".
+-- Exact last-seen and deletion times; seconds in message time.
+-- Default voice playback speed; confirm before sending stickers/GIFs/voice.
+-- Hide sponsored messages; chat lock with fingerprint (Android 9+).
+-- Battery savers; saved-edits viewer; settings backup; in-app updater.
++**New**
++- Searchable settings with collapsible sections.
++- Alerts when a message is deleted or edited.
++- Update dialog shows the release changelog.
++- Smarter mapping generator (survives more Telegram updates).
+ 
+ **Install:** install the APK, enable OpGram in LSPosed/Vector, select Telegram in
+ its scope, then force-stop and reopen Telegram. Configure it in
+diff --git a/app/build.gradle b/app/build.gradle
+index d17ab77..ef76a98 100755
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -8,8 +8,8 @@ android {
+         applicationId "com.my.televip"
+         minSdk 27
+         targetSdk 36
+-        versionCode 1100
+-        versionName "1.1"
++        versionCode 1200
++        versionName "1.2"
+ 
+         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+         vectorDrawables {
 diff --git a/app/src/main/assets/lang/ar.json b/app/src/main/assets/lang/ar.json
-index 7aebb49..0ac29fe 100644
+index 7aebb49..9fe6d2c 100644
 --- a/app/src/main/assets/lang/ar.json
 +++ b/app/src/main/assets/lang/ar.json
-@@ -122,5 +122,13 @@
+@@ -122,5 +122,17 @@
    "Search": "Search",
    "NoEditsSaved": "No saved edits yet",
    "ExtraSettings": "Extra",
@@ -227,14 +256,18 @@ index 7aebb49..0ac29fe 100644
 +  "UpdateSkip": "Skip this version",
 +  "UpdateUpToDate": "You already have the latest version",
 +  "UpdateCheckFailed": "Could not check for updates",
-+  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again"
++  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again",
++  "AlertDeleted": "Alert when a message is deleted",
++  "AlertEdited": "Alert when a message is edited",
++  "AlertDeletedToast": "A message was deleted",
++  "AlertEditedToast": "A message was edited"
  }
 \ No newline at end of file
 diff --git a/app/src/main/assets/lang/en.json b/app/src/main/assets/lang/en.json
-index 658b572..a2ae306 100644
+index 658b572..2818563 100644
 --- a/app/src/main/assets/lang/en.json
 +++ b/app/src/main/assets/lang/en.json
-@@ -149,5 +149,13 @@
+@@ -149,5 +149,17 @@
    "Search": "Search",
    "NoEditsSaved": "No saved edits yet",
    "ExtraSettings": "Extra",
@@ -247,14 +280,18 @@ index 658b572..a2ae306 100644
 +  "UpdateSkip": "Skip this version",
 +  "UpdateUpToDate": "You already have the latest version",
 +  "UpdateCheckFailed": "Could not check for updates",
-+  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again"
++  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again",
++  "AlertDeleted": "Alert when a message is deleted",
++  "AlertEdited": "Alert when a message is edited",
++  "AlertDeletedToast": "A message was deleted",
++  "AlertEditedToast": "A message was edited"
  }
 \ No newline at end of file
 diff --git a/app/src/main/assets/lang/es.json b/app/src/main/assets/lang/es.json
-index 4306d45..563d2db 100644
+index 4306d45..26691eb 100644
 --- a/app/src/main/assets/lang/es.json
 +++ b/app/src/main/assets/lang/es.json
-@@ -149,5 +149,13 @@
+@@ -149,5 +149,17 @@
    "Search": "Buscar",
    "NoEditsSaved": "Aún no hay ediciones guardadas",
    "ExtraSettings": "Extra",
@@ -267,14 +304,18 @@ index 4306d45..563d2db 100644
 +  "UpdateSkip": "Omitir esta versión",
 +  "UpdateUpToDate": "Ya tienes la última versión",
 +  "UpdateCheckFailed": "No se pudo comprobar si hay actualizaciones",
-+  "UpdateAllowInstall": "Permite instalar apps para Telegram y pulsa Descargar otra vez"
++  "UpdateAllowInstall": "Permite instalar apps para Telegram y pulsa Descargar otra vez",
++  "AlertDeleted": "Avisar cuando se borra un mensaje",
++  "AlertEdited": "Avisar cuando se edita un mensaje",
++  "AlertDeletedToast": "Se ha borrado un mensaje",
++  "AlertEditedToast": "Se ha editado un mensaje"
  }
 \ No newline at end of file
 diff --git a/app/src/main/assets/lang/fa.json b/app/src/main/assets/lang/fa.json
-index 554c08e..f8a240f 100644
+index 554c08e..75f1272 100644
 --- a/app/src/main/assets/lang/fa.json
 +++ b/app/src/main/assets/lang/fa.json
-@@ -122,5 +122,13 @@
+@@ -122,5 +122,17 @@
    "Search": "Search",
    "NoEditsSaved": "No saved edits yet",
    "ExtraSettings": "Extra",
@@ -287,14 +328,18 @@ index 554c08e..f8a240f 100644
 +  "UpdateSkip": "Skip this version",
 +  "UpdateUpToDate": "You already have the latest version",
 +  "UpdateCheckFailed": "Could not check for updates",
-+  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again"
++  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again",
++  "AlertDeleted": "Alert when a message is deleted",
++  "AlertEdited": "Alert when a message is edited",
++  "AlertDeletedToast": "A message was deleted",
++  "AlertEditedToast": "A message was edited"
  }
 \ No newline at end of file
 diff --git a/app/src/main/assets/lang/zh.json b/app/src/main/assets/lang/zh.json
-index 8d66895..2f40f27 100644
+index 8d66895..2b20fae 100644
 --- a/app/src/main/assets/lang/zh.json
 +++ b/app/src/main/assets/lang/zh.json
-@@ -122,5 +122,13 @@
+@@ -122,5 +122,17 @@
    "Search": "Search",
    "NoEditsSaved": "No saved edits yet",
    "ExtraSettings": "Extra",
@@ -307,14 +352,35 @@ index 8d66895..2f40f27 100644
 +  "UpdateSkip": "Skip this version",
 +  "UpdateUpToDate": "You already have the latest version",
 +  "UpdateCheckFailed": "Could not check for updates",
-+  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again"
++  "UpdateAllowInstall": "Allow installing apps for Telegram, then tap Download again",
++  "AlertDeleted": "Alert when a message is deleted",
++  "AlertEdited": "Alert when a message is edited",
++  "AlertDeletedToast": "A message was deleted",
++  "AlertEditedToast": "A message was edited"
  }
 \ No newline at end of file
 diff --git a/app/src/main/java/com/my/televip/Configs/ConfigManager.java b/app/src/main/java/com/my/televip/Configs/ConfigManager.java
-index 6138ef9..892dc28 100755
+index 6138ef9..cd34b96 100755
 --- a/app/src/main/java/com/my/televip/Configs/ConfigManager.java
 +++ b/app/src/main/java/com/my/televip/Configs/ConfigManager.java
-@@ -109,6 +109,7 @@ public class ConfigManager {
+@@ -34,6 +34,7 @@ import com.my.televip.features.otherFeatures.CopyNameHook;
+ import com.my.televip.features.otherFeatures.EditOnlineTextView;
+ import com.my.televip.features.otherFeatures.FeatureInitializer;
+ import com.my.televip.language.Keys;
++import com.my.televip.language.Translator;
+ import com.my.televip.logging.Logger;
+ 
+ import java.util.ArrayList;
+@@ -102,6 +103,8 @@ public class ConfigManager {
+     public static ConfigItem hideSponsoredMessages;
+     public static ConfigItem confirmSending;
+     public static ConfigItem showDeletedTime;
++    public static ConfigItem alertDeleted;
++    public static ConfigItem alertEdited;
+     public static ConfigItem voicePlaybackSpeed;
+     public static ConfigItem noStoriesPreload;
+     public static ConfigItem hideStoriesBar;
+@@ -109,6 +112,7 @@ public class ConfigManager {
      public static ConfigItem backupHeader;
      public static ConfigItem btnExportSettings;
      public static ConfigItem btnImportSettings;
@@ -322,7 +388,20 @@ index 6138ef9..892dc28 100755
      public static ConfigItem btnViewEditsHistory;
      public static ConfigItem btnClearEditsHistory;
      public static ConfigItem hideUpdateApp;
-@@ -305,6 +306,8 @@ public class ConfigManager {
+@@ -203,6 +207,12 @@ public class ConfigManager {
+         showDeletedTime = new ConfigItem(ConfigItem.SWITCH, Keys.ShowDeletedTime, ConfigPreferences.getBoolean(Keys.ShowDeletedTime), MessageTimeModifier::init);
+         items.add(showDeletedTime);
+ 
++        alertDeleted = new ConfigItem(ConfigItem.SWITCH, Keys.AlertDeleted, ConfigPreferences.getBoolean(Keys.AlertDeleted), null);
++        items.add(alertDeleted);
++
++        alertEdited = new ConfigItem(ConfigItem.SWITCH, Keys.AlertEdited, ConfigPreferences.getBoolean(Keys.AlertEdited), null);
++        items.add(alertEdited);
++
+         voicePlaybackSpeed = new ConfigItem(ConfigItem.SWITCH, Keys.VoicePlaybackSpeed, "1.5x", ConfigPreferences.getBoolean(Keys.VoicePlaybackSpeed), VoicePlaybackSpeed::init);
+         items.add(voicePlaybackSpeed);
+ 
+@@ -305,6 +315,8 @@ public class ConfigManager {
  
          backupHeader = new ConfigItem(ConfigItem.HEADER, Keys.BackupSettings);
          items.add(backupHeader);
@@ -331,6 +410,76 @@ index 6138ef9..892dc28 100755
          btnExportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ExportSettings);
          items.add(btnExportSettings);
          btnImportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ImportSettings);
+@@ -325,10 +337,68 @@ public class ConfigManager {
+ 
+     }
+ 
++    // ---- Search & collapsible sections (view over the full item list) ----
++    private static String searchQuery = "";
++    private static final java.util.Set<String> collapsed = new java.util.HashSet<>();
++    private static final List<ConfigItem> viewItems = new ArrayList<>();
++
++    public static void setSearchQuery(String q) {
++        searchQuery = q == null ? "" : q.trim().toLowerCase();
++        rebuildView();
++    }
++
++    public static String getSearchQuery() { return searchQuery; }
++
++    public static boolean isCollapsed(String headerKey) { return collapsed.contains(headerKey); }
++
++    public static void toggleCollapseByKey(String headerKey) {
++        if (headerKey == null) return;
++        if (!collapsed.remove(headerKey)) collapsed.add(headerKey);
++        rebuildView();
++    }
++
++    /** Rebuilds the visible list from the full one, applying the search filter and collapsed sections. */
++    public static void rebuildView() {
++        viewItems.clear();
++        boolean searching = !searchQuery.isEmpty();
++        String currentHeader = null;
++        boolean currentHidden = false;
++        for (ConfigItem it : items) {
++            int type = it.getType();
++            if (type == ConfigItem.HEADER) {
++                currentHeader = it.getKey();
++                currentHidden = !searching && collapsed.contains(currentHeader);
++                if (searching) {
++                    // headers are added lazily only if a child matches (handled below)
++                    continue;
++                }
++                viewItems.add(it);
++                continue;
++            }
++            if (searching) {
++                if (!matches(it)) continue;
++                viewItems.add(it);
++            } else {
++                if (currentHidden) continue;
++                viewItems.add(it);
++            }
++        }
++    }
++
++    private static boolean matches(ConfigItem it) {
++        String label = Translator.get(it.getKey());
++        if (label != null && label.toLowerCase().contains(searchQuery)) return true;
++        String key = it.getKey();
++        return key != null && key.toLowerCase().contains(searchQuery);
++    }
++
+     public static List<ConfigItem> getItems() {
+-        return items;
++        if (viewItems.isEmpty() && searchQuery.isEmpty() && collapsed.isEmpty()) return items;
++        return viewItems;
+     }
+ 
++    public static List<ConfigItem> getAllItems() { return items; }
++
+     public static void readFeature() {
+         try {
+             for (ConfigItem item : items) {
 diff --git a/app/src/main/java/com/my/televip/Configs/ConfigPreferences.java b/app/src/main/java/com/my/televip/Configs/ConfigPreferences.java
 index 7135900..cef08e3 100644
 --- a/app/src/main/java/com/my/televip/Configs/ConfigPreferences.java
@@ -369,6 +518,48 @@ index 31e398f..d21ec56 100644
  
          } catch (Throwable e){
              Logger.e(e);
+diff --git a/app/src/main/java/com/my/televip/features/extra/EditDeleteAlerts.java b/app/src/main/java/com/my/televip/features/extra/EditDeleteAlerts.java
+new file mode 100644
+index 0000000..917a564
+--- /dev/null
++++ b/app/src/main/java/com/my/televip/features/extra/EditDeleteAlerts.java
+@@ -0,0 +1,36 @@
++package com.my.televip.features.extra;
++
++import android.app.Activity;
++import android.widget.Toast;
++
++import com.my.televip.Configs.ConfigManager;
++import com.my.televip.language.Keys;
++import com.my.televip.language.Translator;
++import com.my.televip.utils.Utils;
++
++/**
++ * Lightweight in-app alerts when a message is deleted or edited. Both call sites
++ * (ShowDeletedMessages.stampDeleted and SaveEditsHistory) already run in the
++ * messenger path, so no obfuscated hook is needed here. Alerts are shown as a
++ * toast to stay non-intrusive and avoid depending on Telegram's notification UI.
++ */
++public class EditDeleteAlerts {
++
++    public static void onDeleted() {
++        if (ConfigManager.alertDeleted == null || !ConfigManager.alertDeleted.isEnable()) return;
++        toast(Translator.get(Keys.AlertDeletedToast));
++    }
++
++    public static void onEdited() {
++        if (ConfigManager.alertEdited == null || !ConfigManager.alertEdited.isEnable()) return;
++        toast(Translator.get(Keys.AlertEditedToast));
++    }
++
++    private static void toast(final String text) {
++        try {
++            final Activity a = Utils.getCurrentActivity();
++            if (a != null) a.runOnUiThread(() -> Toast.makeText(a, text, Toast.LENGTH_SHORT).show());
++        } catch (Throwable ignored) {
++        }
++    }
++}
 diff --git a/app/src/main/java/com/my/televip/features/extra/Updater.java b/app/src/main/java/com/my/televip/features/extra/Updater.java
 new file mode 100644
 index 0000000..fd548de
@@ -585,11 +776,35 @@ index 0000000..fd548de
 +        String tag, version, notes, apkUrl, apkName;
 +    }
 +}
+diff --git a/app/src/main/java/com/my/televip/features/messages/SaveEditsHistory.java b/app/src/main/java/com/my/televip/features/messages/SaveEditsHistory.java
+index cf5fe96..d70dd33 100644
+--- a/app/src/main/java/com/my/televip/features/messages/SaveEditsHistory.java
++++ b/app/src/main/java/com/my/televip/features/messages/SaveEditsHistory.java
+@@ -232,6 +232,7 @@ public class SaveEditsHistory {
+                                                                 if (oldMessage.getFrom_id() != null && (!oldMessage.getMessage().equals(message.getMessage()))) {
+                                                                     if (getDialogId(message.getFrom_id()) != 0) {
+                                                                         messageDatabase.addMessage(getDialogId(message.getFrom_id()), oldMessage.getId(), oldMessage.getMessage());
++                                                                        com.my.televip.features.extra.EditDeleteAlerts.onEdited();
+                                                                     }
+                                                                 }
+                                                             }
+diff --git a/app/src/main/java/com/my/televip/features/messages/ShowDeletedMessages.java b/app/src/main/java/com/my/televip/features/messages/ShowDeletedMessages.java
+index 24f8ee5..f1f1246 100644
+--- a/app/src/main/java/com/my/televip/features/messages/ShowDeletedMessages.java
++++ b/app/src/main/java/com/my/televip/features/messages/ShowDeletedMessages.java
+@@ -33,6 +33,7 @@ public class ShowDeletedMessages {
+             de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField(owner.get_Message(), DELETED_AT, System.currentTimeMillis());
+         } catch (Throwable ignored) {
+         }
++        com.my.televip.features.extra.EditDeleteAlerts.onDeleted();
+     }
+ 
+     public static long getDeletedAt(TLRPC.Message owner) {
 diff --git a/app/src/main/java/com/my/televip/language/Keys.java b/app/src/main/java/com/my/televip/language/Keys.java
-index ed7c444..713996c 100644
+index ed7c444..6e35774 100644
 --- a/app/src/main/java/com/my/televip/language/Keys.java
 +++ b/app/src/main/java/com/my/televip/language/Keys.java
-@@ -148,4 +148,12 @@ public class Keys {
+@@ -148,4 +148,16 @@ public class Keys {
      public static final String NoEditsSaved = "NoEditsSaved";
      public static final String ExtraSettings = "ExtraSettings";
      public static final String Version = "Version";
@@ -601,12 +816,104 @@ index ed7c444..713996c 100644
 +    public static final String UpdateUpToDate = "UpdateUpToDate";
 +    public static final String UpdateCheckFailed = "UpdateCheckFailed";
 +    public static final String UpdateAllowInstall = "UpdateAllowInstall";
++    public static final String AlertDeleted = "AlertDeleted";
++    public static final String AlertEdited = "AlertEdited";
++    public static final String AlertDeletedToast = "AlertDeletedToast";
++    public static final String AlertEditedToast = "AlertEditedToast";
  }
+diff --git a/app/src/main/java/com/my/televip/settings/controller/SettingsController.java b/app/src/main/java/com/my/televip/settings/controller/SettingsController.java
+index 18f982b..a4bf07a 100644
+--- a/app/src/main/java/com/my/televip/settings/controller/SettingsController.java
++++ b/app/src/main/java/com/my/televip/settings/controller/SettingsController.java
+@@ -76,6 +76,17 @@ public class SettingsController {
+         target.bringToFront();
+     }
+ 
++    /** Rebuilds the settings list after a search/collapse change. */
++    public void refreshList() {
++        try {
++            if (settingsActivity != null && settingsActivity.listView != null) {
++                settingsActivity.listView.getAdapter().notifyDataSetChanged();
++            }
++        } catch (Throwable e) {
++            Logger.e(e);
++        }
++    }
++
+     public void hide() {
+         LaunchActivity launchActivity = new LaunchActivity(settingsView.getContext());
+         for (int i = 0; i < launchActivity.frameLayout.getChildCount(); i++) {
+diff --git a/app/src/main/java/com/my/televip/settings/ui/SettingsActivity.java b/app/src/main/java/com/my/televip/settings/ui/SettingsActivity.java
+index 93c0a14..7335695 100644
+--- a/app/src/main/java/com/my/televip/settings/ui/SettingsActivity.java
++++ b/app/src/main/java/com/my/televip/settings/ui/SettingsActivity.java
+@@ -18,6 +18,7 @@ import com.my.televip.language.Keys;
+ import com.my.televip.language.Translator;
+ import com.my.televip.logging.Logger;
+ import com.my.televip.obfuscate.Obfuscate;
++import com.my.televip.Configs.ConfigManager;
+ import com.my.televip.settings.adapter.ListAdapter;
+ import com.my.televip.settings.controller.SettingsController;
+ import com.my.televip.ui.ThemeColors;
+@@ -56,6 +57,19 @@ public class SettingsActivity {
+ 
+             layout.addView(toolbar);
+ 
++            // Search box over the settings list
++            ConfigManager.setSearchQuery("");
++            final android.widget.EditText search = new android.widget.EditText(context);
++            search.setHint(Translator.get(Keys.Search));
++            search.setSingleLine(true);
++            search.setTextColor(ThemeColors.getTextToolBarColor());
++            int sp = Math.round(12 * context.getResources().getDisplayMetrics().density);
++            search.setPadding(sp, sp / 2, sp, sp / 2);
++            LinearLayout.LayoutParams searchParams = new LinearLayout.LayoutParams(
++                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
++            searchParams.setMargins(10, 6, 10, 0);
++            layout.addView(search, searchParams);
++
+             listView = new RecyclerListView(context);
+             if (DexInjector.classLoader != null) {
+                 Object adapter = XposedHelpers.newInstance(
+@@ -82,6 +96,15 @@ public class SettingsActivity {
+ 
+             layout.addView(listView.getRecyclerListView(), recyclerParams);
+ 
++            search.addTextChangedListener(new android.text.TextWatcher() {
++                public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
++                public void onTextChanged(CharSequence s, int a, int b, int c) {}
++                public void afterTextChanged(android.text.Editable e) {
++                    ConfigManager.setSearchQuery(e.toString());
++                    settingsController.refreshList();
++                }
++            });
++
+         } catch (Throwable e) {
+             Logger.e(e);
+         }
 diff --git a/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java b/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java
-index 14cd33e..2b96774 100644
+index 14cd33e..ff41fde 100644
 --- a/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java
 +++ b/app/src/main/java/com/my/televip/settings/ui/SettingsAdapter.java
-@@ -173,6 +173,9 @@ public class SettingsAdapter {
+@@ -45,7 +45,16 @@ public class SettingsAdapter {
+             switch (viewType) {
+                 case ConfigItem.HEADER:
+                     HeaderCellHolder headerCell = new HeaderCellHolder(holder);
+-                    headerCell.cell.setText(Translator.get(item.getKey()));
++                    String hkey = item.getKey();
++                    String arrow = ConfigManager.getSearchQuery().isEmpty()
++                            ? (ConfigManager.isCollapsed(hkey) ? "  ▸" : "  ▾") : "";
++                    headerCell.cell.setText(Translator.get(hkey) + arrow);
++                    if (ConfigManager.getSearchQuery().isEmpty()) {
++                        headerCell.cell.getView().setOnClickListener(v -> {
++                            ConfigManager.toggleCollapseByKey(hkey);
++                            settingsController.refreshList();
++                        });
++                    }
+                     break;
+ 
+                 case ConfigItem.SWITCH:
+@@ -173,6 +182,9 @@ public class SettingsAdapter {
                          case Keys.ImportSettings:
                              BackupActions.importSettings((Activity) settingsController.getContext());
                              break;
@@ -616,13 +923,140 @@ index 14cd33e..2b96774 100644
                          case Keys.ViewEditsHistory:
                              EditsViewer.show((Activity) settingsController.getContext());
                              break;
+diff --git a/app/src/main/java/com/my/televip/virtuals/androidx/Adapter.java b/app/src/main/java/com/my/televip/virtuals/androidx/Adapter.java
+index 7bc4a0e..ab81d14 100644
+--- a/app/src/main/java/com/my/televip/virtuals/androidx/Adapter.java
++++ b/app/src/main/java/com/my/televip/virtuals/androidx/Adapter.java
+@@ -17,4 +17,8 @@ public class Adapter {
+         XposedHelpers.callMethod(adapter, Obfuscate.getMethodName("RecyclerListView", "notifyItemChanged"), position);
+     }
+ 
++    public void notifyDataSetChanged() {
++        XposedHelpers.callMethod(adapter, "notifyDataSetChanged");
++    }
++
+ }
 diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
-index 19ad2aa..2caaccd 100755
+index 19ad2aa..5aa3deb 100755
 --- a/app/src/main/res/values/strings.xml
 +++ b/app/src/main/res/values/strings.xml
 @@ -1,3 +1,3 @@
  <resources>
 -    <string name="app_name">OpGram</string>
-+    <string name="app_name">OpGram 1.1</string>
++    <string name="app_name">OpGram 1.2</string>
  </resources>
 \ No newline at end of file
+diff --git a/tools/mapgen/README.md b/tools/mapgen/README.md
+index 2c13d8b..c0731cd 100644
+--- a/tools/mapgen/README.md
++++ b/tools/mapgen/README.md
+@@ -47,3 +47,16 @@ still need help and are reported at the end of a run:
+ For these, keep using the hand-made `TelegramWeb-<versionCode>.json` as the
+ reference. The generator never overwrites it (writes `.generated.json` unless
+ `--force`).
++
++
++## v1.2 improvements
++
++The generator now runs in several passes and can match a class by its
++*obfuscated* superclass once that super has been resolved, plus by method
++descriptor sets (`methodDescriptors` in a fingerprint). This disambiguates
++many classes that share strings.
++
++Still hard, and left to the hand-made reference mapping:
++- Classes whose superclass is `Object` and that carry no distinctive strings
++  (e.g. SettingsActivity vs the debug-menu builder share the same debug
++  strings). These need call-graph analysis, planned for later.
+diff --git a/tools/mapgen/fingerprints.json b/tools/mapgen/fingerprints.json
+index d8647e9..d3a6dbf 100644
+--- a/tools/mapgen/fingerprints.json
++++ b/tools/mapgen/fingerprints.json
+@@ -55,9 +55,9 @@
+       "strings": [
+         "DebugMenuClearMediaCache",
+         "DebugMenuReadAllDialogs",
+-        "DebugMenuDisableCamera"
+-      ],
+-      "super": "org.telegram.ui.ActionBar.BaseFragment"
++        "DebugMenuDisableCamera",
++        "DebugMenuResetDialogs"
++      ]
+     }
+   ],
+   "members": [
+diff --git a/tools/mapgen/mapgen.py b/tools/mapgen/mapgen.py
+index 1f61719..7b5328f 100644
+--- a/tools/mapgen/mapgen.py
++++ b/tools/mapgen/mapgen.py
+@@ -74,23 +74,36 @@ def load_apk(path):
+     return version, pkg, classes, strings_by_class
+ 
+ 
+-def resolve_class(fp, classes, strings_by_class):
++def resolve_class(fp, classes, strings_by_class, resolved=None):
++    """Resolve one class. `resolved` maps already-known original->obfuscated names,
++    used to match by the *obfuscated* superclass and to break string ties."""
++    resolved = resolved or {}
+     want = set(fp.get("strings", []))
++    # obfuscated name expected for the declared super, if we already resolved it
++    want_super_ob = resolved.get(fp.get("super")) if fp.get("super") else None
++    want_descs = set(fp.get("methodDescriptors", []))
+     cands = []
+     for name, info in classes.items():
+         score = 0
+         if want:
+             hit = len(want & strings_by_class.get(name, set()))
+-            if hit == 0:
+-                continue
+-            score += hit * 10
+-        if fp.get("super") and info["super"] == fp["super"]:
++            if hit:
++                score += hit * 10
++        if want_super_ob and info["super"] == want_super_ob:
++            score += 6
++        elif fp.get("super") and info["super"] == fp["super"]:
+             score += 3
++        if want_descs:
++            have = {m[1] for m in info["methods"]}
++            matched = len(want_descs & have)
++            if matched:
++                score += matched * 4
+         if fp.get("hasMethod"):
+-            mn, desc = _split_sig(fp["hasMethod"])
++            mn, _ = _split_sig(fp["hasMethod"])
+             if any(m[0] == mn for m in info["methods"]):
+                 score += 2
+-        cands.append((score, name))
++        if score > 0:
++            cands.append((score, name))
+     if not cands:
+         return None
+     cands.sort(reverse=True)
+@@ -109,13 +122,20 @@ def main():
+     print("Telegram package %s, versionCode %d, %d classes" % (pkg, version, len(classes)))
+ 
+     resolved = {}
+-    missing = []
+-    for fp in FP["classes"]:
+-        r = resolve_class(fp, classes, sbc)
+-        if r:
+-            resolved[fp["orig"]] = r
+-        else:
+-            missing.append(fp["orig"])
++    # Pass 1: classes anchored by strings (unambiguous first).
++    pending = list(FP["classes"])
++    for _ in range(3):  # a few passes let newly-resolved supers help the rest
++        still = []
++        for fp in pending:
++            r = resolve_class(fp, classes, sbc, resolved)
++            if r and fp["orig"] not in resolved:
++                resolved[fp["orig"]] = r
++            elif fp["orig"] not in resolved:
++                still.append(fp)
++        if len(still) == len(pending):
++            break
++        pending = still
++    missing = [fp["orig"] for fp in pending if fp["orig"] not in resolved]
+ 
+     out_classes = [{"o": o, "r": r} for o, r in resolved.items()]
+     out_methods, out_fields = [], []

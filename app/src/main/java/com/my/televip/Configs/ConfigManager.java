@@ -93,6 +93,8 @@ public class ConfigManager {
     public static ConfigItem telegramPremium;
     public static ConfigItem disableNumberRounding;
     public static ConfigItem exactLastSeen;
+    public static ConfigItem hideListened;
+    public static ConfigItem hideRecording;
     public static ConfigItem showSecondsInTime;
     public static ConfigItem hideSponsoredMessages;
     public static ConfigItem confirmSending;
@@ -135,6 +137,12 @@ public class ConfigManager {
 
         hideTyping = new ConfigItem(ConfigItem.SWITCH, Keys.HideTyping, ConfigPreferences.getBoolean(Keys.HideTyping), GhostMode::init);
         items.add(hideTyping);
+
+        hideRecording = new ConfigItem(ConfigItem.SWITCH, Keys.HideRecording, ConfigPreferences.getBoolean(Keys.HideRecording), GhostMode::init);
+        items.add(hideRecording);
+
+        hideListened = new ConfigItem(ConfigItem.SWITCH, Keys.HideListened, ConfigPreferences.getBoolean(Keys.HideListened), GhostMode::init);
+        items.add(hideListened);
 
         hideStoryView = new ConfigItem(ConfigItem.SWITCH, Keys.HideStoryView, ConfigPreferences.getBoolean(Keys.HideStoryView), GhostMode::init);
         items.add(hideStoryView);
@@ -204,7 +212,7 @@ public class ConfigManager {
         media = new ConfigItem(ConfigItem.HEADER, Keys.MediaSettings);
         items.add(media);
 
-        if (!ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram) && !ClientManager.is(ClientManager.Client.TelegramWeb)) {
+        if (!ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram)) {
             secretMediaSave = new ConfigItem(ConfigItem.SWITCH, Keys.SecretMediaSave, ConfigPreferences.getBoolean(Keys.SecretMediaSave), SecretMediaSave::init);
             items.add(secretMediaSave);
         }
@@ -237,10 +245,8 @@ public class ConfigManager {
         items.add(hideProxySponsor);
 
         if (!ClientManager.is(ClientManager.Client.Telegraph) && !ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram)) {
-            if (!ClientManager.is(ClientManager.Client.TelegramWeb)) {
-                showUserID = new ConfigItem(ConfigItem.SWITCH, Keys.ShowUserID, ConfigPreferences.getBoolean(Keys.ShowUserID), EditOnlineTextView::init);
-                items.add(showUserID);
-            }
+            showUserID = new ConfigItem(ConfigItem.SWITCH, Keys.ShowUserID, ConfigPreferences.getBoolean(Keys.ShowUserID), EditOnlineTextView::init);
+            items.add(showUserID);
             customCalendar = new ConfigItem(ConfigItem.TEXT, Keys.Calendar, true, HijriDate::init);
             items.add(customCalendar);
         }
@@ -305,7 +311,7 @@ public class ConfigManager {
                 if (item.isEnable()) item.run();
             }
 
-            if (!ClientManager.is(ClientManager.Client.Telegraph) && !ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram) && !ClientManager.is(ClientManager.Client.TelegramWeb)) {
+            if (!ClientManager.is(ClientManager.Client.Telegraph) && !ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram)) {
                 FeatureInitializer.init();
                 CopyNameHook.init();
                 EditOnlineTextView.init();
@@ -321,6 +327,8 @@ public class ConfigManager {
 
     public static boolean isGhostMode(){
         return hideSeen.isEnable() ||
+                (hideListened != null && hideListened.isEnable()) ||
+                (hideRecording != null && hideRecording.isEnable()) ||
                 hideStoryView.isEnable() ||
                 hideTyping.isEnable() ||
                 hideOnline.isEnable() ||

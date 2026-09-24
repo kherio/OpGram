@@ -9,7 +9,7 @@
   "ChangeTo": "تم التغيير الى",
   "NameDeleted": "تم حذف الاسم",
   "GhostMode": "وضع الشبح 👻",
-  "ByMustafa": "تم تطوير من قبل @m_1_iq",
+  "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
   "HideSeen": "اخفاء علامة الاستلام",
   "HideStoryView": "اخفاء مشاهدة قصة",
   "HideTyping": "اخفاء مؤشر الكتابة",
@@ -18,7 +18,7 @@
   "EnableSavingStories": "السماح بحفظ القصص",
   "GhostModeSettings": "وضع الشبح",
   "Save": "حفظ",
-  "DeveloperChannel": "قناة المطور",
+  "DeveloperChannel": "OpGram on GitHub",
   "HideOnline": "إخفاء حالة الاتصال بالإنترنت",
   "PreventMedia": "تعطيل حذف الوسائط السرية",
   "HidePhone": "اخفاء رقم هاتف",
@@ -28,8 +28,8 @@
   "UserOffline": "لست متصلاً بالإنترنت",
   "DisableStories": "اخفاء القصص",
   "HideUpdateApp": "اخفاء تحديث تطبيق",
-  "JoinTeleVip": "انضم إلى قناة TeleVip لتكون أول من يحصل على أحدث التحديثات والميزات الجديدة أولاً بأول",
-  "Join": "انضم",
+  "JoinTeleVip": "Check the OpGram releases on GitHub to get the latest updates and new features",
+  "Join": "Open",
   "DontShowAgain": "لا تظهر مرة اخرى",
   "RestartApp": "إعادة تشغيل التطبيق",
   "RestartRequired": "إعادة التشغيل مطلوبة",
@@ -106,5 +106,6 @@
   "Age": "العمر",
   "ApproximateCreationDateNotice": "يعتمد هذا التاريخ على تقدير مستند إلى معرف تيليجرام، وقد لا يكون مطابقًا لتاريخ الإنشاء الفعلي.",
   "EnableVoiceMessageSaving": "السماح بحفظ الرسائل الصوتية",
-  "ExactLastSeen": "وقت آخر ظهور بالضبط"
+  "ExactLastSeen": "وقت آخر ظهور بالضبط",
+  "TeleVip": "OpGram"
 }

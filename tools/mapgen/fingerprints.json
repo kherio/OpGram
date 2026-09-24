@@ -1,0 +1,84 @@
+{
+  "_comment": "Fingerprints for locating obfuscated Telegram classes/members. Each class is matched by string constants it references (strong) plus superclass/interface/member-count hints. Original->obfuscated names are then written to a per-version JSON. Edit here when Telegram changes internals; run mapgen.py to regenerate the mapping for a new APK.",
+  "classes": [
+    {
+      "orig": "org.telegram.ui.ChatActivity",
+      "strings": [
+        "need_remove_previous_same_chat_activity",
+        "AreYouSureShareMyContactInfoUser"
+      ],
+      "super": "org.telegram.ui.ActionBar.BaseFragment"
+    },
+    {
+      "orig": "org.telegram.ui.ProfileActivity",
+      "strings": [
+        "ProfileStoriesArchiveCount",
+        "HideStoriesFromAlbum",
+        "ProfileGiftsCount",
+        "AreYouSureBlockContact2",
+        "CommonGroups"
+      ],
+      "super": "org.telegram.ui.ActionBar.BaseFragment"
+    },
+    {
+      "orig": "org.telegram.ui.Cells.ChatMessageCell",
+      "strings": [
+        "CommentsNoNumber",
+        "ImportedMessage"
+      ]
+    },
+    {
+      "orig": "org.telegram.ui.Cells.TextCheckCell",
+      "super": "android.widget.FrameLayout",
+      "hasMethod": "setChecked(boolean)",
+      "strings": [
+        "animationProgress",
+        "paintDivider"
+      ]
+    },
+    {
+      "orig": "org.telegram.ui.PhotoViewer",
+      "strings": [
+        "AccDescrPhotoViewer",
+        "AccExitFullscreen"
+      ]
+    },
+    {
+      "orig": "org.telegram.ui.SecretMediaViewer",
+      "strings": [
+        "videoCrossfadeAlpha",
+        "viewoncehint"
+      ]
+    },
+    {
+      "orig": "org.telegram.ui.SettingsActivity",
+      "strings": [
+        "DebugMenuClearMediaCache",
+        "DebugMenuReadAllDialogs"
+      ],
+      "super": "org.telegram.ui.ActionBar.BaseFragment"
+    }
+  ],
+  "members": [
+    {
+      "class": "org.telegram.ui.ChatActivity",
+      "kind": "method",
+      "orig": "createView",
+      "descriptor": "(Landroid/content/Context;)Landroid/view/View;",
+      "overrides": "createView"
+    },
+    {
+      "class": "org.telegram.ui.PhotoViewer",
+      "kind": "method",
+      "orig": "getInstance",
+      "descriptor": "()Lorg/telegram/ui/PhotoViewer;",
+      "static": true
+    },
+    {
+      "class": "androidx.collection.LongSparseArray",
+      "kind": "method",
+      "orig": "get",
+      "descriptor": "(J)Ljava/lang/Object;"
+    }
+  ]
+}

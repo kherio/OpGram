@@ -1,5 +1,9 @@
 package com.my.televip.features.otherFeatures;
 
+import com.my.televip.Configs.ConfigManager;
+
+import com.my.televip.features.ghostMode.GhostExceptions;
+
 import android.content.Context;
 import android.text.InputType;
 import android.widget.EditText;
@@ -52,6 +56,15 @@ public class ChatHook {
 
                             headerItem.lazilyAddSubItem(8353848, drawableResource, Translator.get(Keys.ToTheMessage));
 
+                            if (ConfigManager.isGhostMode()) {
+                                long did = chatActivity.getDialogId();
+                                int icon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "msg_markread");
+                                headerItem.lazilyAddSubItem(8353849, icon, Translator.get(Keys.MarkAsReadNow));
+                                icon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "ghost");
+                                headerItem.lazilyAddSubItem(8353850, icon, Translator.get(
+                                        GhostExceptions.isExcluded(did) ? Keys.GhostIncludeChat : Keys.GhostExcludeChat));
+                            }
+
                         }
                     } catch (Throwable t){
                         Logger.e(t);
@@ -60,7 +73,7 @@ public class ChatHook {
                 }
             }));
 
-            XposedHelpers.findAndHookMethod(clazz, "onItemClick", int.class, new BaseMethodHook() {
+            XposedHelpers.findAndHookMethod(clazz, Obfuscate.getMethodName("ActionBar$ActionBarMenuOnItemClick", "onItemClick"), int.class, new BaseMethodHook() {
                 @Override
                 protected void afterMethod(MethodHookParam param) {
                     try {
@@ -71,6 +84,10 @@ public class ChatHook {
 
                         if (id == 8353847) {
                             chat.scrollToMessageId(1, 0, true, 0, true, 0);
+                        } else if (id == 8353849) {
+                            GhostExceptions.markAsReadNow(chat.getDialogId());
+                        } else if (id == 8353850) {
+                            GhostExceptions.toggle(chat.getDialogId());
                         } else if (id == 8353848) {
 
                             AlertDialog dialog = new AlertDialog(Utils.getCurrentActivity());

@@ -1,5 +1,7 @@
 package com.my.televip.features.media;
 
+import com.my.televip.Clients.ClientManager;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -82,7 +84,7 @@ public class SecretMediaSave {
                 }
 
 
-                if (ConfigManager.secretMediaSave.isEnable()) SecretMediaViewer.openMedia();
+                if (ConfigManager.secretMediaSave.isEnable() && !ClientManager.is(ClientManager.Client.TelegramWeb)) SecretMediaViewer.openMedia();
             }
         } catch (Throwable e){
             Logger.e(e);

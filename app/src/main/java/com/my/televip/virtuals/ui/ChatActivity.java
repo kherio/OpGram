@@ -38,4 +38,12 @@ public class ChatActivity {
         XposedHelpers.callMethod(chatActivity, Obfuscate.getMethodName("ChatActivity", "scrollToMessageId"), id, fromMessageId, select, loadIndex, forceScroll, forcePinnedMessageId);
     }
 
+
+    public long getDialogId() {
+        try {
+            return XposedHelpers.getLongField(chatActivity, Obfuscate.getFieldName("ChatActivity", "dialog_id"));
+        } catch (Throwable t) {
+            return 0;
+        }
+    }
 }

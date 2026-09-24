@@ -21,7 +21,12 @@ public class SimpleTextView {
     }
 
     public void setText(CharSequence text){
-        XposedHelpers.callMethod(simpleTextView, Obfuscate.getMethodName("SimpleTextView", "setText"), text);
+        try {
+            XposedHelpers.callMethod(simpleTextView, Obfuscate.getMethodName("SimpleTextView", "setText"), text);
+        } catch (Throwable t) {
+            // R8 builds only keep setText(CharSequence, boolean)
+            XposedHelpers.callMethod(simpleTextView, Obfuscate.getMethodName("SimpleTextView", "setText"), text, false);
+        }
     }
 
     public void setText(CharSequence text, boolean force){

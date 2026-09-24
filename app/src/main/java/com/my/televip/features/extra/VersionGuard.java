@@ -27,7 +27,8 @@ public class VersionGuard {
             if (activity == null) return;
             PackageInfo info = activity.getPackageManager().getPackageInfo(Utils.pkgName, 0);
             long code = Build.VERSION.SDK_INT >= 28 ? info.getLongVersionCode() : info.versionCode;
-            if (code == TELEGRAM_WEB_VERSION_CODE) return;
+            // A mapping made for this exact build exists (assets/clients/TelegramWeb-<versionCode>.json)
+            if (Utils.versionedMapping || code == TELEGRAM_WEB_VERSION_CODE) return;
 
             final String msg = Translator.get(Keys.VersionMismatch, TELEGRAM_WEB_VERSION_NAME, info.versionName);
             Logger.w(msg);

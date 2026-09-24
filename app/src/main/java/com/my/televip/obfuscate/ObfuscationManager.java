@@ -35,11 +35,24 @@ public class ObfuscationManager {
         if (cache.containsKey(type)) return cache.get(type);
 
         ClientObfuscationData data = null;
-        String clientPath = "assets/clients/" + type.name() + ".json";
-        String clientJson = JsonAssetReader.readRaw(clientPath, false);
+        String clientJson = null;
+        String clientAliasJson = null;
 
-        String clientAliasPath = "assets/clients/Alias/" + type.name() + ".json";
-        String clientAliasJson = JsonAssetReader.readRaw(clientAliasPath, false);
+        // Per-version mapping first (e.g. TelegramWeb-70999.json), then the generic one.
+        if (com.my.televip.utils.Utils.versionCode > 0) {
+            String suffix = "-" + com.my.televip.utils.Utils.versionCode + ".json";
+            clientJson = JsonAssetReader.readRaw("assets/clients/" + type.name() + suffix, false);
+            if (clientJson != null) {
+                com.my.televip.utils.Utils.versionedMapping = true;
+                clientAliasJson = JsonAssetReader.readRaw("assets/clients/Alias/" + type.name() + suffix, false);
+            }
+        }
+        if (clientJson == null) {
+            clientJson = JsonAssetReader.readRaw("assets/clients/" + type.name() + ".json", false);
+        }
+        if (clientAliasJson == null) {
+            clientAliasJson = JsonAssetReader.readRaw("assets/clients/Alias/" + type.name() + ".json", false);
+        }
 
         if (clientJson != null && clientAliasJson != null)
             data = ClientObfuscationData.parse(clientJson, clientAliasJson);

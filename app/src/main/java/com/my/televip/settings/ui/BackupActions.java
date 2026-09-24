@@ -25,7 +25,7 @@ public class BackupActions {
             String json = ConfigPreferences.exportJson();
             if (json == null) return;
             ClipboardManager cm = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setPrimaryClip(ClipData.newPlainText("TeleVip backup", json));
+            cm.setPrimaryClip(ClipData.newPlainText("OpGram backup", json));
 
             Intent send = new Intent(Intent.ACTION_SEND);
             send.setType("text/plain");

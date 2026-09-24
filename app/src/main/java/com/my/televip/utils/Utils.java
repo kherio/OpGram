@@ -14,7 +14,9 @@ public class Utils {
     public static String pkgName = null;
     public static String modulePath = null;
     public static ClassLoader classLoader = null;
-    public static final String issue = "Your Telegram client may be an incompatible version with TeleVip. Please download the latest version that is compatible with TeleVip.";
+    public static long versionCode = 0;
+    public static boolean versionedMapping = false;
+    public static final String issue = "Your Telegram client may be an incompatible version with OpGram. Please download the latest version that is compatible with OpGram.";
 
     private static WeakReference<Activity> currentActivity;
 

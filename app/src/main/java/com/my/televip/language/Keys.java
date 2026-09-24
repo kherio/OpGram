@@ -125,4 +125,12 @@ public class Keys {
     public static final String ClearEditsHistoryConfirm = "ClearEditsHistoryConfirm";
     public static final String EditsHistoryCleared = "EditsHistoryCleared";
     public static final String VersionMismatch = "VersionMismatch";
+    public static final String HideRecording = "HideRecording";
+    public static final String HideListened = "HideListened";
+    public static final String MarkAsReadNow = "MarkAsReadNow";
+    public static final String MarkedAsRead = "MarkedAsRead";
+    public static final String GhostExcludeChat = "GhostExcludeChat";
+    public static final String GhostIncludeChat = "GhostIncludeChat";
+    public static final String GhostExcludedToast = "GhostExcludedToast";
+    public static final String GhostIncludedToast = "GhostIncludedToast";
 }

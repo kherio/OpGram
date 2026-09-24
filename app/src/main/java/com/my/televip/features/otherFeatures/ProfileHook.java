@@ -51,7 +51,7 @@ public class ProfileHook {
             }
         }));
 
-        HMethod.hookMethod(clazz, "onItemClick", int.class, new BaseMethodHook() {
+        HMethod.hookMethod(clazz, Obfuscate.getMethodName("ActionBar$ActionBarMenuOnItemClick", "onItemClick"), int.class, new BaseMethodHook() {
             @Override
             protected void afterMethod(MethodHookParam param) {
 

@@ -1,5 +1,7 @@
 package com.my.televip.features.otherFeatures;
 
+import com.my.televip.Clients.ClientManager;
+
 import com.my.televip.Class.ClassLoad;
 import com.my.televip.Class.ClassNames;
 import com.my.televip.base.BaseMethodHook;
@@ -16,6 +18,12 @@ public class FeatureInitializer {
     public static void init() {
 
         try {
+            if (ClientManager.is(ClientManager.Client.TelegramWeb)) {
+                // R8 build: the menu listeners are anonymous classes with obfuscated names
+                ChatHook.init(Obfuscate.getClassName("org.telegram.ui.ChatActivity$MenuItemClick"));
+                ProfileHook.init(Obfuscate.getClassName("org.telegram.ui.ProfileActivity$MenuItemClick"));
+                return;
+            }
             if (!FeatureStateManager.isChatEnabled() || !FeatureStateManager.isProfileEnabled()) {
 
                 Class<?> actionBarClass = XposedHelpers.findClassIfExists(

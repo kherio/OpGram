@@ -38,6 +38,21 @@ public class GhostMode {
                                             XposedHelpers.setBooleanField(object, Obfuscate.getFieldName("TL_account$updateStatus", "offline"), true);
                                     }
 
+                                    // Per-chat exceptions: behave like normal Telegram in excluded chats
+                                    if (GhostExceptions.isExcludedRequest(object)) {
+                                        return;
+                                    }
+
+                                    if (ConfigManager.hideListened != null && ConfigManager.hideListened.isEnable() && isReadContentsRequest(object)) {
+                                        param.setResult(null);
+                                        return;
+                                    }
+
+                                    if (ConfigManager.hideRecording != null && ConfigManager.hideRecording.isEnable() && isRecordingAction(object)) {
+                                        param.setResult(null);
+                                        return;
+                                    }
+
                                     if (ConfigManager.hideSeen.isEnable() && HideSeen.isReadMessageRequest(object)) {
                                         HideSeen.sendFakeReadResponse(param.args[1]);
                                         param.setResult(null);
@@ -76,4 +91,23 @@ public class GhostMode {
         }
     }
 
+
+    /** "Listened/viewed" receipts for voice notes and round videos. */
+    public static boolean isReadContentsRequest(Object object) {
+        String n = object.getClass().getName();
+        return n.endsWith("TL_messages_readMessageContents") || n.endsWith("TL_channels_readMessageContents");
+    }
+
+    /** Typing requests whose action is not plain text typing: recording/uploading audio, video, photo, file... */
+    public static boolean isRecordingAction(Object object) {
+        if (!HideTyping.isTypingRequest(object)) return false;
+        try {
+            Object action = XposedHelpers.getObjectField(object, "action");
+            if (action == null) return false;
+            String a = action.getClass().getName();
+            return !(a.endsWith("TL_sendMessageTypingAction") || a.endsWith("TL_sendMessageCancelAction"));
+        } catch (Throwable t) {
+            return false;
+        }
+    }
 }

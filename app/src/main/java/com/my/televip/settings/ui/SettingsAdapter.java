@@ -152,7 +152,7 @@ public class SettingsAdapter {
                     switch (item.getKey()) {
                         case Keys.DeveloperChannel:
                             settingsController.hide();
-                            Browser.openUrl(settingsController.getContext(), "https://t.me/t_l0_e");
+                            Browser.openUrl(settingsController.getContext(), com.my.televip.Branding.RELEASES_URL);
                             break;
                         case Keys.RestartApp:
                             Intent intent = settingsController.getContext()

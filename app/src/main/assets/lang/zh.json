@@ -9,7 +9,7 @@
   "ChangeTo": "更改为",
   "NameDeleted": "名称已删除",
   "GhostMode": "幽灵模式 👻",
-  "ByMustafa": "by @m_1_iq",
+  "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
   "HideSeen": "隐藏“已查看”状态",
   "HideStoryView": "隐藏 '故事观看' 状态",
   "HideTyping": "隐藏正在输入...",
@@ -18,7 +18,7 @@
   "EnableSavingStories": "启用保存故事",
   "GhostModeSettings": "幽灵模式",
   "Save": "保存",
-  "DeveloperChannel": "开发者频道",
+  "DeveloperChannel": "OpGram on GitHub",
   "HideOnline": "隐藏 '在线' 状态",
   "PreventMedia": "防止删除秘密媒体",
   "HidePhone": "隐藏 '电话' 号码",
@@ -28,8 +28,8 @@
   "UserOffline": "您当前处于离线状态",
   "DisableStories": "禁用 故事",
   "HideUpdateApp": "隐藏应用更新",
-  "JoinTeleVip": "加入 TeleVip 频道，第一时间获取最新更新和新功能",
-  "Join": "加入",
+  "JoinTeleVip": "Check the OpGram releases on GitHub to get the latest updates and new features",
+  "Join": "Open",
   "DontShowAgain": "不再显示",
   "RestartApp": "重新启动应用",
   "RestartRequired": "需要重新启动",
@@ -106,5 +106,6 @@
   "Age": "账号年龄",
   "ApproximateCreationDateNotice": "此日期是根据 Telegram ID 推算得出的估计值，可能与实际创建日期不一致。",
   "EnableVoiceMessageSaving": "开启语音消息保存",
-  "ExactLastSeen": "精确的最后上线时间"
+  "ExactLastSeen": "精确的最后上线时间",
+  "TeleVip": "OpGram"
 }

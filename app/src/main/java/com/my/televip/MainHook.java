@@ -28,14 +28,28 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit {
 
         Utils.classLoader = lpparam.classLoader;
         Utils.pkgName = lpparam.packageName;
+        try {
+            if (lpparam.appInfo != null) {
+                Utils.versionCode = de.robv.android.xposed.XposedHelpers.getLongField(lpparam.appInfo, "longVersionCode");
+            }
+        } catch (Throwable ignored) {
+        }
+
+        boolean mainProcess = lpparam.processName == null || lpparam.processName.equals(lpparam.packageName);
+        if (mainProcess && lpparam.appInfo != null) SafeMode.onProcessStart(lpparam.appInfo.dataDir);
 
         HMethod.hookMethod(ClassLoad.getClass(ClassNames.LAUNCH_ACTIVITY), "onCreate", Bundle.class, new BaseMethodHook() {
             @Override
             protected void beforeMethod(MethodHookParam param) {
                 Utils.setCurrentActivity((Activity) param.thisObject);
+                if (SafeMode.active) {
+                    SafeMode.showDialog((Activity) param.thisObject);
+                    return;
+                }
                 if (!isStart) {
-                    TeleVip.startHook();
                     isStart = true;
+                    TeleVip.startHook();
+                    SafeMode.scheduleStableReset();
                 }
             }
         });

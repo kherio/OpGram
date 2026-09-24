@@ -24,7 +24,12 @@ public class PhotoViewer {
     }
 
     public void setParentActivity(Activity activity){
-        XposedHelpers.callMethod(photoViewer,  Obfuscate.getMethodName("PhotoViewer", "setParentActivity"), activity);
+        try {
+            XposedHelpers.callMethod(photoViewer,  Obfuscate.getMethodName("PhotoViewer", "setParentActivity"), activity);
+        } catch (Throwable t) {
+            // R8 builds only keep setParentActivity(Activity, BaseFragment, ResourcesProvider)
+            XposedHelpers.callMethod(photoViewer,  Obfuscate.getMethodName("PhotoViewer", "setParentActivity"), activity, null, null);
+        }
     }
 
     public void openPhoto(MessageObject messageObject, long l, long l2, long l3, PhotoViewerProvider provider, boolean b){

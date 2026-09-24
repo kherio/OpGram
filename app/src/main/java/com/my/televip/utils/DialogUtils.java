@@ -42,7 +42,7 @@ public class DialogUtils {
 
     public static void showQuranAlert(Context context){
         AlertDialog alertDialog = new AlertDialog(context);
-        alertDialog.setTitle("TeleVip");
+        alertDialog.setTitle(com.my.televip.Branding.NAME);
         alertDialog.setMessage(Translator.get(Keys.QuranNotification));
         alertDialog.setPositiveButton(Translator.get(Keys.Done), null);
         alertDialog.show();

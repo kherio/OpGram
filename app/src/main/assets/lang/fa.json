@@ -9,7 +9,7 @@
   "ChangeTo": "تغییر به",
   "NameDeleted": "اسم پاک شد",
   "GhostMode": "حالت شبح 👻",
-  "ByMustafa": "توسط @m_1_iq",
+  "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
   "HideSeen": "مخفی کردن وضعیت 'دیده شد'",
   "HideStoryView": "مخفی کردن 'دیده شدن استوری'",
   "HideTyping": "مخفی کردن 'در حال تایپ...'",
@@ -18,7 +18,7 @@
   "EnableSavingStories": "فعال کردن ذخیره استوری",
   "GhostModeSettings": "تنظیمات حالت شبح",
   "Save": "ذخیره",
-  "DeveloperChannel": "کانال توسعهدهنده",
+  "DeveloperChannel": "OpGram on GitHub",
   "HideOnline": "مخفی کردن وضعیت 'آنلاین'",
   "PreventMedia": "جلوگیری از پاک شدن مدیاهای مخفی",
   "HidePhone": "مخفی کردن شماره تلفن",
@@ -28,8 +28,8 @@
   "UserOffline": "الان آفلاینی",
   "DisableStories": "غیرفعال کردن استوری",
   "HideUpdateApp": "مخفی کردن پیام آپدیت برنامه",
-  "JoinTeleVip": "به کانال TeleVip بپیوند تا اولین نفری باشی که از آپدیتها و قابلیتهای جدید باخبر میشی",
-  "Join": "عضویت",
+  "JoinTeleVip": "Check the OpGram releases on GitHub to get the latest updates and new features",
+  "Join": "Open",
   "DontShowAgain": "دیگه نشون نده",
   "RestartApp": "برنامه رو مجدد راهاندازی کن",
   "RestartRequired": "نیاز به ریستارت داره",
@@ -106,5 +106,6 @@
   "Age": "سن",
   "ApproximateCreationDateNotice": "این تاریخ بر اساس تخمینی است که از شناسه تلگرام (Telegram ID) به دست آمده و ممکن است با تاریخ واقعی ایجاد حساب مطابقت نداشته باشد.",
   "EnableVoiceMessageSaving": "فعال کردن ذخیره پیام‌های صوتی",
-  "ExactLastSeen": "زمان دقیق آخرین بازدید"
+  "ExactLastSeen": "زمان دقیق آخرین بازدید",
+  "TeleVip": "OpGram"
 }

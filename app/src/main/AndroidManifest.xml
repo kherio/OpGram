@@ -15,7 +15,7 @@
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="اضافة مميزات جديده لتيلجرام" />
+            android:value="OpGram: mejoras para Telegram (basado en TeleVip de @m_1_iq)" />
         <meta-data
             android:name="xposedminversion"
             android:value="93+" />

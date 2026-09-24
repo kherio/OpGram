@@ -15,24 +15,24 @@ public class Logger {
 
     public static void w(String text)
     {
-        XposedBridge.log("[TeleVip] [Warning] pkgName: "+ pkgName + " " + text);
+        XposedBridge.log("[" + com.my.televip.Branding.NAME + "] [Warning] pkgName: "+ pkgName + " " + text);
     }
 
     public static void l(String text)
     {
-        XposedBridge.log("[TeleVip] pkgName: "+ pkgName +" " + text);
+        XposedBridge.log("[" + com.my.televip.Branding.NAME + "] pkgName: "+ pkgName +" " + text);
     }
 
     public static void e(String text)
     {
-        XposedBridge.log("[TeleVip] [Error] Ai: " + text);
+        XposedBridge.log("[" + com.my.televip.Branding.NAME + "] [Error] Ai: " + text);
     }
 
     public static void e(Throwable throwable) {
         try {
             StringBuilder log = new StringBuilder();
 
-            log.append("[TeleVip] [Error] pkgName: ").append(pkgName).append(" ").append(throwable).append("\n");
+            log.append("[" + com.my.televip.Branding.NAME + "] [Error] pkgName: ").append(pkgName).append(" ").append(throwable).append("\n");
             log.append("appName = ").append(ResolverRegistry.getResolverClass().getSimpleName()).append("\n");
 
             try {
@@ -53,7 +53,7 @@ public class Logger {
             log.append("Model: ").append(Build.MODEL).append("\n");
 
             for (StackTraceElement element : throwable.getStackTrace()) {
-                log.append("[TeleVip] at ").append(element.toString()).append("\n");
+                log.append("[" + com.my.televip.Branding.NAME + "] at ").append(element.toString()).append("\n");
             }
 
             XposedBridge.log(log.toString());

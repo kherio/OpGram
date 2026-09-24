@@ -1,0 +1,65 @@
+diff --git a/app/src/main/assets/lang/ar.json b/app/src/main/assets/lang/ar.json
+index 2d16e26..03cecc0 100644
+--- a/app/src/main/assets/lang/ar.json
++++ b/app/src/main/assets/lang/ar.json
+@@ -8,7 +8,7 @@
+   "Cancel": "إلغاء",
+   "ChangeTo": "تم التغيير الى",
+   "NameDeleted": "تم حذف الاسم",
+-  "GhostMode": "وضع الشبح 👻",
++  "GhostMode": "الوضع المتقدم",
+   "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
+   "HideSeen": "اخفاء علامة الاستلام",
+   "HideStoryView": "اخفاء مشاهدة قصة",
+diff --git a/app/src/main/assets/lang/en.json b/app/src/main/assets/lang/en.json
+index 484f274..27ba219 100644
+--- a/app/src/main/assets/lang/en.json
++++ b/app/src/main/assets/lang/en.json
+@@ -8,7 +8,7 @@
+   "Cancel": "Cancel",
+   "ChangeTo": "Change to",
+   "NameDeleted": "Name deleted",
+-  "GhostMode": "Ghost Mode 👻",
++  "GhostMode": "Advanced Mode",
+   "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
+   "HideSeen": "Hide 'Seen' status",
+   "HideStoryView": "Hide 'Story View' status",
+diff --git a/app/src/main/assets/lang/es.json b/app/src/main/assets/lang/es.json
+index 85698e0..942714e 100644
+--- a/app/src/main/assets/lang/es.json
++++ b/app/src/main/assets/lang/es.json
+@@ -8,7 +8,7 @@
+   "Cancel": "Cancelar",
+   "ChangeTo": "Cambiar a",
+   "NameDeleted": "Nombre eliminado",
+-  "GhostMode": "Modo fantasma 👻",
++  "GhostMode": "Modo avanzado",
+   "ByMustafa": "OpGram · basado en TeleVip de @m_1_iq",
+   "HideSeen": "Ocultar el estado 'Visto'",
+   "HideStoryView": "Ocultar que has visto historias",
+diff --git a/app/src/main/assets/lang/fa.json b/app/src/main/assets/lang/fa.json
+index 5d5c41a..1417374 100644
+--- a/app/src/main/assets/lang/fa.json
++++ b/app/src/main/assets/lang/fa.json
+@@ -8,7 +8,7 @@
+   "Cancel": "انصراف",
+   "ChangeTo": "تغییر به",
+   "NameDeleted": "اسم پاک شد",
+-  "GhostMode": "حالت شبح 👻",
++  "GhostMode": "حالت پیشرفته",
+   "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
+   "HideSeen": "مخفی کردن وضعیت 'دیده شد'",
+   "HideStoryView": "مخفی کردن 'دیده شدن استوری'",
+diff --git a/app/src/main/assets/lang/zh.json b/app/src/main/assets/lang/zh.json
+index 9ffb7dc..634d093 100644
+--- a/app/src/main/assets/lang/zh.json
++++ b/app/src/main/assets/lang/zh.json
+@@ -8,7 +8,7 @@
+   "Cancel": "取消",
+   "ChangeTo": "更改为",
+   "NameDeleted": "名称已删除",
+-  "GhostMode": "幽灵模式 👻",
++  "GhostMode": "高级模式",
+   "ByMustafa": "OpGram · based on TeleVip by @m_1_iq",
+   "HideSeen": "隐藏“已查看”状态",
+   "HideStoryView": "隐藏 '故事观看' 状态",

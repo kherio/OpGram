@@ -49,3 +49,4 @@ google-services.json
 # Android Profiling
 *.hprof
 >>>>>>> e9865a95eb7ed2d3a6e3c0283d94db23f9eefe06
+*.diff

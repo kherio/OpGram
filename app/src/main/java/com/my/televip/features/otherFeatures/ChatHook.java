@@ -56,6 +56,10 @@ public class ChatHook {
 
                             headerItem.lazilyAddSubItem(8353848, drawableResource, Translator.get(Keys.ToTheMessage));
 
+                            if (ConfigManager.reminders != null && ConfigManager.reminders.isEnable()) {
+                                int remIcon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "msg_calendar2");
+                                headerItem.lazilyAddSubItem(8353852, remIcon, Translator.get(Keys.RemindMe));
+                            }
                             if (ConfigManager.chatLock != null && ConfigManager.chatLock.isEnable()) {
                                 long lockDid = chatActivity.getDialogId();
                                 int lockIcon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE),
@@ -91,6 +95,8 @@ public class ChatHook {
 
                         if (id == 8353847) {
                             chat.scrollToMessageId(1, 0, true, 0, true, 0);
+                        } else if (id == 8353852) {
+                            com.my.televip.features.extra.Reminders.offer(chat.getDialogId(), Translator.get(Keys.RemindMe));
                         } else if (id == 8353851) {
                             com.my.televip.features.extra.ChatLock.toggle(chat.getDialogId());
                         } else if (id == 8353849) {

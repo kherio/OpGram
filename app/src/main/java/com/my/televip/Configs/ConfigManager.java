@@ -6,6 +6,7 @@ import com.my.televip.features.ui.DisableChannelSwipeBack;
 import com.my.televip.features.ui.DisableNumberRounding;
 import com.my.televip.features.ui.ExactLastSeen;
 import com.my.televip.features.extra.ConfirmSending;
+import com.my.televip.features.extra.UndoSend;
 import com.my.televip.features.extra.VoicePlaybackSpeed;
 import com.my.televip.features.extra.BatterySaver;
 import com.my.televip.features.extra.ChatLock;
@@ -34,6 +35,7 @@ import com.my.televip.features.otherFeatures.CopyNameHook;
 import com.my.televip.features.otherFeatures.EditOnlineTextView;
 import com.my.televip.features.otherFeatures.FeatureInitializer;
 import com.my.televip.language.Keys;
+import com.my.televip.language.Translator;
 import com.my.televip.logging.Logger;
 
 import java.util.ArrayList;
@@ -101,7 +103,11 @@ public class ConfigManager {
     public static ConfigItem showSecondsInTime;
     public static ConfigItem hideSponsoredMessages;
     public static ConfigItem confirmSending;
+    public static ConfigItem undoSend;
+    public static ConfigItem reminders;
     public static ConfigItem showDeletedTime;
+    public static ConfigItem alertDeleted;
+    public static ConfigItem alertEdited;
     public static ConfigItem voicePlaybackSpeed;
     public static ConfigItem noStoriesPreload;
     public static ConfigItem hideStoriesBar;
@@ -109,7 +115,9 @@ public class ConfigManager {
     public static ConfigItem backupHeader;
     public static ConfigItem btnExportSettings;
     public static ConfigItem btnImportSettings;
+    public static ConfigItem btnCheckUpdate;
     public static ConfigItem btnViewEditsHistory;
+    public static ConfigItem btnQuickReplies;
     public static ConfigItem btnClearEditsHistory;
     public static ConfigItem hideUpdateApp;
     public static ConfigItem fixTLError;
@@ -203,6 +211,12 @@ public class ConfigManager {
         showDeletedTime = new ConfigItem(ConfigItem.SWITCH, Keys.ShowDeletedTime, ConfigPreferences.getBoolean(Keys.ShowDeletedTime), MessageTimeModifier::init);
         items.add(showDeletedTime);
 
+        alertDeleted = new ConfigItem(ConfigItem.SWITCH, Keys.AlertDeleted, ConfigPreferences.getBoolean(Keys.AlertDeleted), null);
+        items.add(alertDeleted);
+
+        alertEdited = new ConfigItem(ConfigItem.SWITCH, Keys.AlertEdited, ConfigPreferences.getBoolean(Keys.AlertEdited), null);
+        items.add(alertEdited);
+
         voicePlaybackSpeed = new ConfigItem(ConfigItem.SWITCH, Keys.VoicePlaybackSpeed, "1.5x", ConfigPreferences.getBoolean(Keys.VoicePlaybackSpeed), VoicePlaybackSpeed::init);
         items.add(voicePlaybackSpeed);
 
@@ -217,6 +231,12 @@ public class ConfigManager {
 
         confirmSending = new ConfigItem(ConfigItem.SWITCH, Keys.ConfirmSending, ConfigPreferences.getBoolean(Keys.ConfirmSending), ConfirmSending::init);
         items.add(confirmSending);
+
+        undoSend = new ConfigItem(ConfigItem.SWITCH, Keys.UndoSend, ConfigPreferences.getBoolean(Keys.UndoSend), UndoSend::init);
+        items.add(undoSend);
+
+        reminders = new ConfigItem(ConfigItem.SWITCH, Keys.Reminders, ConfigPreferences.getBoolean(Keys.Reminders), null);
+        items.add(reminders);
 
         hideSponsoredMessages = new ConfigItem(ConfigItem.SWITCH, Keys.HideSponsoredMessages, ConfigPreferences.getBoolean(Keys.HideSponsoredMessages), HideSponsoredMessages::init);
         items.add(hideSponsoredMessages);
@@ -305,12 +325,16 @@ public class ConfigManager {
 
         backupHeader = new ConfigItem(ConfigItem.HEADER, Keys.BackupSettings);
         items.add(backupHeader);
+        btnCheckUpdate = new ConfigItem(ConfigItem.TEXT, Keys.CheckForUpdates);
+        items.add(btnCheckUpdate);
         btnExportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ExportSettings);
         items.add(btnExportSettings);
         btnImportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ImportSettings);
         items.add(btnImportSettings);
         btnViewEditsHistory = new ConfigItem(ConfigItem.TEXT, Keys.ViewEditsHistory);
         items.add(btnViewEditsHistory);
+        btnQuickReplies = new ConfigItem(ConfigItem.TEXT, Keys.QuickReplies);
+        items.add(btnQuickReplies);
         btnClearEditsHistory = new ConfigItem(ConfigItem.TEXT, Keys.ClearEditsHistory);
         items.add(btnClearEditsHistory);
 
@@ -325,9 +349,67 @@ public class ConfigManager {
 
     }
 
-    public static List<ConfigItem> getItems() {
-        return items;
+    // ---- Search & collapsible sections (view over the full item list) ----
+    private static String searchQuery = "";
+    private static final java.util.Set<String> collapsed = new java.util.HashSet<>();
+    private static final List<ConfigItem> viewItems = new ArrayList<>();
+
+    public static void setSearchQuery(String q) {
+        searchQuery = q == null ? "" : q.trim().toLowerCase();
+        rebuildView();
     }
+
+    public static String getSearchQuery() { return searchQuery; }
+
+    public static boolean isCollapsed(String headerKey) { return collapsed.contains(headerKey); }
+
+    public static void toggleCollapseByKey(String headerKey) {
+        if (headerKey == null) return;
+        if (!collapsed.remove(headerKey)) collapsed.add(headerKey);
+        rebuildView();
+    }
+
+    /** Rebuilds the visible list from the full one, applying the search filter and collapsed sections. */
+    public static void rebuildView() {
+        viewItems.clear();
+        boolean searching = !searchQuery.isEmpty();
+        String currentHeader = null;
+        boolean currentHidden = false;
+        for (ConfigItem it : items) {
+            int type = it.getType();
+            if (type == ConfigItem.HEADER) {
+                currentHeader = it.getKey();
+                currentHidden = !searching && collapsed.contains(currentHeader);
+                if (searching) {
+                    // headers are added lazily only if a child matches (handled below)
+                    continue;
+                }
+                viewItems.add(it);
+                continue;
+            }
+            if (searching) {
+                if (!matches(it)) continue;
+                viewItems.add(it);
+            } else {
+                if (currentHidden) continue;
+                viewItems.add(it);
+            }
+        }
+    }
+
+    private static boolean matches(ConfigItem it) {
+        String label = Translator.get(it.getKey());
+        if (label != null && label.toLowerCase().contains(searchQuery)) return true;
+        String key = it.getKey();
+        return key != null && key.toLowerCase().contains(searchQuery);
+    }
+
+    public static List<ConfigItem> getItems() {
+        if (viewItems.isEmpty() && searchQuery.isEmpty() && collapsed.isEmpty()) return items;
+        return viewItems;
+    }
+
+    public static List<ConfigItem> getAllItems() { return items; }
 
     public static void readFeature() {
         try {

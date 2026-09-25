@@ -74,23 +74,36 @@ def load_apk(path):
     return version, pkg, classes, strings_by_class
 
 
-def resolve_class(fp, classes, strings_by_class):
+def resolve_class(fp, classes, strings_by_class, resolved=None):
+    """Resolve one class. `resolved` maps already-known original->obfuscated names,
+    used to match by the *obfuscated* superclass and to break string ties."""
+    resolved = resolved or {}
     want = set(fp.get("strings", []))
+    # obfuscated name expected for the declared super, if we already resolved it
+    want_super_ob = resolved.get(fp.get("super")) if fp.get("super") else None
+    want_descs = set(fp.get("methodDescriptors", []))
     cands = []
     for name, info in classes.items():
         score = 0
         if want:
             hit = len(want & strings_by_class.get(name, set()))
-            if hit == 0:
-                continue
-            score += hit * 10
-        if fp.get("super") and info["super"] == fp["super"]:
+            if hit:
+                score += hit * 10
+        if want_super_ob and info["super"] == want_super_ob:
+            score += 6
+        elif fp.get("super") and info["super"] == fp["super"]:
             score += 3
+        if want_descs:
+            have = {m[1] for m in info["methods"]}
+            matched = len(want_descs & have)
+            if matched:
+                score += matched * 4
         if fp.get("hasMethod"):
-            mn, desc = _split_sig(fp["hasMethod"])
+            mn, _ = _split_sig(fp["hasMethod"])
             if any(m[0] == mn for m in info["methods"]):
                 score += 2
-        cands.append((score, name))
+        if score > 0:
+            cands.append((score, name))
     if not cands:
         return None
     cands.sort(reverse=True)
@@ -109,13 +122,20 @@ def main():
     print("Telegram package %s, versionCode %d, %d classes" % (pkg, version, len(classes)))
 
     resolved = {}
-    missing = []
-    for fp in FP["classes"]:
-        r = resolve_class(fp, classes, sbc)
-        if r:
-            resolved[fp["orig"]] = r
-        else:
-            missing.append(fp["orig"])
+    # Pass 1: classes anchored by strings (unambiguous first).
+    pending = list(FP["classes"])
+    for _ in range(3):  # a few passes let newly-resolved supers help the rest
+        still = []
+        for fp in pending:
+            r = resolve_class(fp, classes, sbc, resolved)
+            if r and fp["orig"] not in resolved:
+                resolved[fp["orig"]] = r
+            elif fp["orig"] not in resolved:
+                still.append(fp)
+        if len(still) == len(pending):
+            break
+        pending = still
+    missing = [fp["orig"] for fp in pending if fp["orig"] not in resolved]
 
     out_classes = [{"o": o, "r": r} for o, r in resolved.items()]
     out_methods, out_fields = [], []

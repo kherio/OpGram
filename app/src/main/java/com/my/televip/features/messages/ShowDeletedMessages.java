@@ -33,6 +33,7 @@ public class ShowDeletedMessages {
             de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField(owner.get_Message(), DELETED_AT, System.currentTimeMillis());
         } catch (Throwable ignored) {
         }
+        com.my.televip.features.extra.EditDeleteAlerts.onDeleted();
     }
 
     public static long getDeletedAt(TLRPC.Message owner) {

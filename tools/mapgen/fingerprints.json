@@ -55,9 +55,9 @@
       "strings": [
         "DebugMenuClearMediaCache",
         "DebugMenuReadAllDialogs",
-        "DebugMenuDisableCamera"
-      ],
-      "super": "org.telegram.ui.ActionBar.BaseFragment"
+        "DebugMenuDisableCamera",
+        "DebugMenuResetDialogs"
+      ]
     }
   ],
   "members": [

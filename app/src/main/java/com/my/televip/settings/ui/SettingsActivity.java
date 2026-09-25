@@ -18,6 +18,7 @@ import com.my.televip.language.Keys;
 import com.my.televip.language.Translator;
 import com.my.televip.logging.Logger;
 import com.my.televip.obfuscate.Obfuscate;
+import com.my.televip.Configs.ConfigManager;
 import com.my.televip.settings.adapter.ListAdapter;
 import com.my.televip.settings.controller.SettingsController;
 import com.my.televip.ui.ThemeColors;
@@ -56,6 +57,19 @@ public class SettingsActivity {
 
             layout.addView(toolbar);
 
+            // Search box over the settings list
+            ConfigManager.setSearchQuery("");
+            final android.widget.EditText search = new android.widget.EditText(context);
+            search.setHint(Translator.get(Keys.Search));
+            search.setSingleLine(true);
+            search.setTextColor(ThemeColors.getTextToolBarColor());
+            int sp = Math.round(12 * context.getResources().getDisplayMetrics().density);
+            search.setPadding(sp, sp / 2, sp, sp / 2);
+            LinearLayout.LayoutParams searchParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            searchParams.setMargins(10, 6, 10, 0);
+            layout.addView(search, searchParams);
+
             listView = new RecyclerListView(context);
             if (DexInjector.classLoader != null) {
                 Object adapter = XposedHelpers.newInstance(
@@ -81,6 +95,15 @@ public class SettingsActivity {
             recyclerParams.setMargins(10, 10, 10, 0);
 
             layout.addView(listView.getRecyclerListView(), recyclerParams);
+
+            search.addTextChangedListener(new android.text.TextWatcher() {
+                public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
+                public void onTextChanged(CharSequence s, int a, int b, int c) {}
+                public void afterTextChanged(android.text.Editable e) {
+                    ConfigManager.setSearchQuery(e.toString());
+                    settingsController.refreshList();
+                }
+            });
 
         } catch (Throwable e) {
             Logger.e(e);

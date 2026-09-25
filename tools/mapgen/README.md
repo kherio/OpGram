@@ -47,3 +47,16 @@ still need help and are reported at the end of a run:
 For these, keep using the hand-made `TelegramWeb-<versionCode>.json` as the
 reference. The generator never overwrites it (writes `.generated.json` unless
 `--force`).
+
+
+## v1.2 improvements
+
+The generator now runs in several passes and can match a class by its
+*obfuscated* superclass once that super has been resolved, plus by method
+descriptor sets (`methodDescriptors` in a fingerprint). This disambiguates
+many classes that share strings.
+
+Still hard, and left to the hand-made reference mapping:
+- Classes whose superclass is `Object` and that carry no distinctive strings
+  (e.g. SettingsActivity vs the debug-menu builder share the same debug
+  strings). These need call-graph analysis, planned for later.

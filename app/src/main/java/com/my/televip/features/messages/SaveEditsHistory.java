@@ -232,6 +232,7 @@ public class SaveEditsHistory {
                                                                 if (oldMessage.getFrom_id() != null && (!oldMessage.getMessage().equals(message.getMessage()))) {
                                                                     if (getDialogId(message.getFrom_id()) != 0) {
                                                                         messageDatabase.addMessage(getDialogId(message.getFrom_id()), oldMessage.getId(), oldMessage.getMessage());
+                                                                        com.my.televip.features.extra.EditDeleteAlerts.onEdited();
                                                                     }
                                                                 }
                                                             }

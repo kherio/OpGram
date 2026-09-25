@@ -76,6 +76,17 @@ public class SettingsController {
         target.bringToFront();
     }
 
+    /** Rebuilds the settings list after a search/collapse change. */
+    public void refreshList() {
+        try {
+            if (settingsActivity != null && settingsActivity.listView != null) {
+                settingsActivity.listView.getAdapter().notifyDataSetChanged();
+            }
+        } catch (Throwable e) {
+            Logger.e(e);
+        }
+    }
+
     public void hide() {
         LaunchActivity launchActivity = new LaunchActivity(settingsView.getContext());
         for (int i = 0; i < launchActivity.frameLayout.getChildCount(); i++) {

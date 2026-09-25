@@ -45,7 +45,16 @@ public class SettingsAdapter {
             switch (viewType) {
                 case ConfigItem.HEADER:
                     HeaderCellHolder headerCell = new HeaderCellHolder(holder);
-                    headerCell.cell.setText(Translator.get(item.getKey()));
+                    String hkey = item.getKey();
+                    String arrow = ConfigManager.getSearchQuery().isEmpty()
+                            ? (ConfigManager.isCollapsed(hkey) ? "  ▸" : "  ▾") : "";
+                    headerCell.cell.setText(Translator.get(hkey) + arrow);
+                    if (ConfigManager.getSearchQuery().isEmpty()) {
+                        headerCell.cell.getView().setOnClickListener(v -> {
+                            ConfigManager.toggleCollapseByKey(hkey);
+                            settingsController.refreshList();
+                        });
+                    }
                     break;
 
                 case ConfigItem.SWITCH:
@@ -173,8 +182,14 @@ public class SettingsAdapter {
                         case Keys.ImportSettings:
                             BackupActions.importSettings((Activity) settingsController.getContext());
                             break;
+                        case Keys.CheckForUpdates:
+                            com.my.televip.features.extra.Updater.checkAsync(true);
+                            break;
                         case Keys.ViewEditsHistory:
                             EditsViewer.show((Activity) settingsController.getContext());
+                            break;
+                        case Keys.QuickReplies:
+                            com.my.televip.features.extra.QuickReplies.show((Activity) settingsController.getContext());
                             break;
                         case Keys.ClearEditsHistory:
                             BackupActions.clearEditsHistory((Activity) settingsController.getContext());

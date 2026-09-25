@@ -27,6 +27,7 @@ public class TeleVip {
             ConfigManager.loadAndRead();
             SettingsManager.init(settingsController);
             com.my.televip.features.extra.VersionGuard.check();
+            com.my.televip.features.extra.Updater.checkAsync(false);
 
         } catch (Throwable e){
             Logger.e(e);

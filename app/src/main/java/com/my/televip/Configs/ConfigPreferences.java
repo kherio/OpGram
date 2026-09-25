@@ -31,6 +31,21 @@ public class ConfigPreferences {
             sharedPreferences.edit().remove(key).apply();
         }
     }
+    public static long getLong(String key) {
+        try {
+            return sharedPreferences.getLong(key, 0L);
+        } catch (Throwable t) {
+            return 0L;
+        }
+    }
+
+    public static void putLong(String key, long v) {
+        try {
+            sharedPreferences.edit().putLong(key, v).apply();
+        } catch (Throwable ignored) {
+        }
+    }
+
     public static int getInt(String key) {
         try {
             return sharedPreferences.getInt(key, 0);

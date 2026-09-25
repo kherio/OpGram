@@ -17,4 +17,8 @@ public class Adapter {
         XposedHelpers.callMethod(adapter, Obfuscate.getMethodName("RecyclerListView", "notifyItemChanged"), position);
     }
 
+    public void notifyDataSetChanged() {
+        XposedHelpers.callMethod(adapter, "notifyDataSetChanged");
+    }
+
 }

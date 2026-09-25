@@ -1,14 +1,8 @@
-## OpGram 1.3
+## OpGram 1.3.1
 
-Fork of TeleVip (by @m_1_iq) for **Telegram Web 12.10.4**.
+Bugfix release.
 
-**New**
-- Undo send (a few seconds to cancel an outgoing message).
-- Message reminders (in 1 hour / tonight / tomorrow).
-- Saved quick-reply templates with variables.
+- Fixed the updater falsely reporting an available update on the latest version.
+- The panel header shows the installed version.
 
-**Install:** install the APK, enable OpGram in LSPosed/Vector, select Telegram in
-its scope, then force-stop and reopen Telegram. Configure it in
-**Settings → Advanced Mode**.
-
-> In-place updates require every release to be signed with the same key.
+Includes everything from 1.3 (undo send, reminders, quick replies).

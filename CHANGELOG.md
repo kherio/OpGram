@@ -2,6 +2,14 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.3.1
+
+Fixed
+- Updater no longer reports a new version when you are already up to date
+  (the local version is now read from a compiled-in constant instead of the
+  package info, which failed inside Telegram's process).
+- The panel header reliably shows the installed version ("OpGram <version>").
+
 ## 1.3
 
 Added

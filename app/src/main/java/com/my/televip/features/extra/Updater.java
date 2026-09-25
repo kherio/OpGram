@@ -106,7 +106,9 @@ public class Updater {
     /** True if remote is strictly newer than local (dotted numeric compare). */
     static boolean isNewer(String remote, String local) {
         if (remote == null || remote.isEmpty()) return false;
-        if (local == null || local.isEmpty()) return true;
+        // If we cannot determine the local version, do NOT assume an update exists
+        // (that caused "update available" to show even on the latest version).
+        if (local == null || local.isEmpty()) return false;
         String[] a = remote.split("\\.");
         String[] b = local.split("\\.");
         int n = Math.max(a.length, b.length);

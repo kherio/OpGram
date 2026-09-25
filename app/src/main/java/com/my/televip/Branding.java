@@ -16,12 +16,18 @@ import com.my.televip.utils.Utils;
  */
 public final class Branding {
     public static final String NAME = "OpGram";
+    /** Compiled-in version. Kept in sync with app versionName on every build. */
+    public static final String VERSION = "1.3.1";
     public static final String ORIGINAL_AUTHOR = "@m_1_iq";
     public static final String REPO_URL = "https://github.com/kherio/OpGram";
     public static final String RELEASES_URL = REPO_URL + "/releases";
 
     /** Reads the module's own versionName from its package (falls back if unavailable). */
     public static String version() {
+        // The compiled-in constant is the reliable source: reading the module's own
+        // package info from Telegram's process often fails and returned "" before,
+        // which made the updater think every version was outdated.
+        if (VERSION != null && !VERSION.isEmpty()) return VERSION;
         try {
             Context ctx = ApplicationLoaderHook.getApplicationContext();
             if (ctx != null) {

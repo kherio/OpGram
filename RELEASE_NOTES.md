@@ -1,12 +1,11 @@
-## OpGram 1.2
+## OpGram 1.3
 
 Fork of TeleVip (by @m_1_iq) for **Telegram Web 12.10.4**.
 
 **New**
-- Searchable settings with collapsible sections.
-- Alerts when a message is deleted or edited.
-- Update dialog shows the release changelog.
-- Smarter mapping generator (survives more Telegram updates).
+- Undo send (a few seconds to cancel an outgoing message).
+- Message reminders (in 1 hour / tonight / tomorrow).
+- Saved quick-reply templates with variables.
 
 **Install:** install the APK, enable OpGram in LSPosed/Vector, select Telegram in
 its scope, then force-stop and reopen Telegram. Configure it in

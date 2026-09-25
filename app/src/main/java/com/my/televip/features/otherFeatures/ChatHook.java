@@ -63,7 +63,7 @@ public class ChatHook {
                             if (ConfigManager.chatLock != null && ConfigManager.chatLock.isEnable()) {
                                 long lockDid = chatActivity.getDialogId();
                                 int lockIcon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE),
-                                        com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? "msg_unmute" : "msg_mute");
+                                        com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? "menu_unlock" : "msg_secret");
                                 headerItem.lazilyAddSubItem(8353851, lockIcon, Translator.get(
                                         com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? Keys.UnlockThisChat : Keys.LockThisChat));
                             }

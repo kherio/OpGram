@@ -1,0 +1,442 @@
+{
+  "classes": [
+    {
+      "o": "org.telegram.ui.ChatActivity",
+      "r": "org.telegram.ui.bo"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.Theme",
+      "r": "org.telegram.ui.ActionBar.o6"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.ActionBarMenuItem",
+      "r": "org.telegram.ui.ActionBar.y0"
+    },
+    {
+      "o": "org.telegram.ui.Cells.ChatMessageCell",
+      "r": "org.telegram.ui.Cells.u1"
+    },
+    {
+      "o": "org.telegram.ui.Cells.TextCheckCell",
+      "r": "org.telegram.ui.Cells.u8"
+    },
+    {
+      "o": "org.telegram.ui.Cells.HeaderCell",
+      "r": "org.telegram.ui.Cells.n4"
+    },
+    {
+      "o": "org.telegram.ui.Cells.TextSettingsCell",
+      "r": "org.telegram.ui.Cells.ca"
+    },
+    {
+      "o": "org.telegram.ui.Cells.ShadowSectionCell",
+      "r": "org.telegram.ui.Cells.a7"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.SimpleTextView",
+      "r": "org.telegram.ui.ActionBar.q5"
+    },
+    {
+      "o": "org.telegram.ui.SettingsActivity",
+      "r": "org.telegram.ui.v91"
+    },
+    {
+      "o": "org.telegram.ui.SettingsActivity$SettingCell",
+      "r": "org.telegram.ui.s91"
+    },
+    {
+      "o": "org.telegram.ui.SettingsActivity$SettingCell$Factory",
+      "r": "org.telegram.ui.r91"
+    },
+    {
+      "o": "org.telegram.ui.Components.UItem",
+      "r": "org.telegram.ui.Components.o61"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.AlertDialog.Builder",
+      "r": "org.telegram.ui.ActionBar.AlertDialog$Builder"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.AlertDialog$OnButtonClickListener",
+      "r": "org.telegram.ui.ActionBar.f2"
+    },
+    {
+      "o": "androidx.collection.LongSparseArray",
+      "r": "z.f"
+    },
+    {
+      "o": "org.telegram.ui.Stories.PeerStoriesView$StoryItemHolder",
+      "r": "vg.j3"
+    },
+    {
+      "o": "org.telegram.ui.Stories.StoriesController",
+      "r": "vg.s5"
+    },
+    {
+      "o": "org.telegram.messenger.browser.Browser",
+      "r": "he.f"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.BaseFragment",
+      "r": "org.telegram.ui.ActionBar.s2"
+    },
+    {
+      "o": "org.telegram.ui.Components.UniversalAdapter",
+      "r": "org.telegram.ui.Components.c71"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.ActionBar",
+      "r": "org.telegram.ui.ActionBar.l"
+    },
+    {
+      "o": "org.telegram.ui.ActionBar.ActionBar$ActionBarMenuOnItemClick",
+      "r": "org.telegram.ui.ActionBar.k"
+    },
+    {
+      "o": "org.telegram.ui.ChatActivity$MenuItemClick",
+      "r": "org.telegram.ui.nj"
+    },
+    {
+      "o": "org.telegram.ui.ProfileActivity$MenuItemClick",
+      "r": "org.telegram.ui.d01"
+    },
+    {
+      "o": "org.telegram.ui.ChatActivity$ChatMessageCellDelegate",
+      "r": "org.telegram.ui.nn"
+    }
+  ],
+  "fields": [
+    {
+      "c": "ChatActivity",
+      "o": "headerItem",
+      "r": "g0"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "pinnedMessageView",
+      "r": "w2"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "selectedObject",
+      "r": "c5"
+    },
+    {
+      "c": "Theme",
+      "o": "chat_timePaint",
+      "r": "T2"
+    },
+    {
+      "c": "ChatMessageCell",
+      "o": "timeWidth",
+      "r": "ob"
+    },
+    {
+      "c": "ChatMessageCell",
+      "o": "timeTextWidth",
+      "r": "pb"
+    },
+    {
+      "c": "ChatMessageCell",
+      "o": "currentTimeString",
+      "r": "sb"
+    },
+    {
+      "c": "TextCheckCell",
+      "o": "textView",
+      "r": "c"
+    },
+    {
+      "c": "TextSettingsCell",
+      "o": "textView",
+      "r": "b"
+    },
+    {
+      "c": "SettingsActivity$SettingCell",
+      "o": "iconView",
+      "r": "d"
+    },
+    {
+      "c": "UItem",
+      "o": "id",
+      "r": "d"
+    },
+    {
+      "c": "UItem",
+      "o": "text",
+      "r": "l"
+    },
+    {
+      "c": "UItem",
+      "o": "subtext",
+      "r": "m"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "alertDialog",
+      "r": "a"
+    },
+    {
+      "c": "LaunchActivity",
+      "o": "frameLayout",
+      "r": "v0"
+    },
+    {
+      "c": "SecretMediaViewer",
+      "o": "onClose",
+      "r": "o1"
+    },
+    {
+      "c": "PhotoViewer",
+      "o": "galleryButton",
+      "r": "s0"
+    },
+    {
+      "c": "Switch",
+      "o": "isChecked",
+      "r": "h"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "this$0",
+      "r": "b"
+    },
+    {
+      "c": "ProfileActivity",
+      "o": "this$0",
+      "r": "b"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "dialog_id",
+      "r": "S5"
+    },
+    {
+      "c": "ProfileActivity",
+      "o": "userId",
+      "r": "d1"
+    },
+    {
+      "c": "ProfileActivity",
+      "o": "chatId",
+      "r": "e1"
+    },
+    {
+      "c": "ProfileActivity",
+      "o": "nameTextView",
+      "r": "f"
+    },
+    {
+      "c": "ProfileActivity",
+      "o": "onlineTextView",
+      "r": "r"
+    },
+    {
+      "c": "ProfileActivity",
+      "o": "otherItem",
+      "r": "S0"
+    }
+  ],
+  "methods": [
+    {
+      "c": "ChatActivity",
+      "o": "createPinnedMessageView",
+      "r": "K7"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "updatePinnedMessageView",
+      "r": "yc"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "fillMessageMenu",
+      "r": "n8"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "processSelectedOption",
+      "r": "Ba"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "scrollToMessageId",
+      "r": "Xa"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "sendSecretMediaDelete",
+      "r": "O4"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "sendSecretMessageRead",
+      "r": "fb"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "hasSelectedNoforwardsMessage",
+      "r": "a9"
+    },
+    {
+      "c": "ActionBarMenuItem",
+      "o": "addSubItem",
+      "r": "e"
+    },
+    {
+      "c": "ActionBarMenuItem",
+      "o": "lazilyAddSubItem",
+      "r": "u"
+    },
+    {
+      "c": "Theme",
+      "o": "isCurrentThemeDark",
+      "r": "e1"
+    },
+    {
+      "c": "ChatMessageCell",
+      "o": "measureTime",
+      "r": "x3"
+    },
+    {
+      "c": "TextCheckCell",
+      "o": "setTextAndCheck",
+      "r": "f"
+    },
+    {
+      "c": "TextCheckCell",
+      "o": "setTextAndValueAndCheck",
+      "r": "g"
+    },
+    {
+      "c": "TextSettingsCell",
+      "o": "setText",
+      "r": "b"
+    },
+    {
+      "c": "TextSettingsCell",
+      "o": "setTextAndValue",
+      "r": "c"
+    },
+    {
+      "c": "SettingsActivity",
+      "o": "fillItems",
+      "r": "b0"
+    },
+    {
+      "c": "SettingsActivity",
+      "o": "onClick",
+      "r": "f0"
+    },
+    {
+      "c": "SettingsActivity$SettingCell$Factory",
+      "o": "of",
+      "r": "a"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "create",
+      "r": "a"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "show",
+      "r": "o"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setView",
+      "r": "n"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setTitle",
+      "r": "l"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setMessage",
+      "r": "g"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setPositiveButton",
+      "r": "k"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setNegativeButton",
+      "r": "h"
+    },
+    {
+      "c": "AlertDialog$Builder",
+      "o": "setNeutralButton",
+      "r": "i"
+    },
+    {
+      "c": "AlertDialog$OnButtonClickListener",
+      "o": "onClick",
+      "r": "k"
+    },
+    {
+      "c": "LongSparseArray",
+      "o": "get",
+      "r": "f"
+    },
+    {
+      "c": "SecretMediaViewer",
+      "o": "closePhoto",
+      "r": "e"
+    },
+    {
+      "c": "PhotoViewer",
+      "o": "setIsAboutToSwitchToIndex",
+      "r": "F2"
+    },
+    {
+      "c": "PeerStoriesView$StoryItemHolder",
+      "o": "allowScreenshots",
+      "r": "d"
+    },
+    {
+      "c": "Browser",
+      "o": "openUrl",
+      "r": "s"
+    },
+    {
+      "c": "ActionBar$ActionBarMenuOnItemClick",
+      "o": "onItemClick",
+      "r": "b"
+    },
+    {
+      "c": "ProfileActivity",
+      "o": "createActionBarMenu",
+      "r": "D3"
+    },
+    {
+      "c": "ProfileActivity",
+      "o": "updateProfileData",
+      "r": "i5"
+    },
+    {
+      "c": "ChatActivity$ChatMessageCellDelegate",
+      "o": "didPressImage",
+      "r": "t0"
+    },
+    {
+      "c": "PhotoViewer",
+      "o": "getInstance",
+      "r": "t1"
+    },
+    {
+      "c": "PhotoViewer",
+      "o": "setParentActivity",
+      "r": "J2"
+    },
+    {
+      "c": "SimpleTextView",
+      "o": "setText",
+      "r": "l"
+    }
+  ]
+}

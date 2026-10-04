@@ -2,6 +2,12 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.3.3
+
+Added
+- Support for Telegram Web 12.10.6 (versionCode 71129): new obfuscation mapping
+  `TelegramWeb-71129.json`. Telegram Web 12.10.4 keeps working with its own mapping.
+
 ## 1.3.2
 
 Fixed

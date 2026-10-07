@@ -44,9 +44,17 @@ tasks.register("copyLargestDexAsJava") {
     dependsOn(":settingsadapter:assembleDebug")
 
     doLast {
-        def apkFile = fileTree("$rootDir/settingsadapter/build/intermediates/apk/debug")
-                .matching { include "*.apk" }
-                .singleFile
+        // AGP 8.x writes the APK to build/outputs/apk/debug (older versions used
+        // build/intermediates/apk/debug), so look in both and fail with a clear message.
+        def apkFiles = []
+        ["outputs/apk/debug", "intermediates/apk/debug"].each { rel ->
+            apkFiles += fileTree("$rootDir/settingsadapter/build/$rel")
+                    .matching { include "*.apk" }.files
+        }
+        if (apkFiles.isEmpty()) {
+            throw new GradleException("settingsadapter debug APK not found under settingsadapter/build/{outputs,intermediates}/apk/debug")
+        }
+        def apkFile = apkFiles.first()
 
         def tempDir = new File(buildDir, "tmp/dexExtract")
         tempDir.mkdirs()

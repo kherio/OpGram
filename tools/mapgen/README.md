@@ -15,7 +15,32 @@ It writes `app/src/main/assets/clients/TelegramWeb-<versionCode>.json`
 (and its `Alias/` file). At runtime OpGram loads the file matching the
 installed Telegram versionCode, falling back to the generic `TelegramWeb.json`.
 
-## How it works
+## Porting from a known version (recommended): `portmap.py`
+
+`portmap.py` ports an existing, verified mapping to a new Telegram build by
+comparing class *structure* (method/field signatures, superclass, inner-class
+constructors) instead of strings. Reference fingerprints live in
+`tools/mapgen/refs/` (`TelegramWeb-<versionCode>.fp.json.gz`).
+
+```
+# port 12.10.6 (71129) to a new build, chaining the fingerprint for next time
+python3 tools/mapgen/portmap.py port \
+    --ref tools/mapgen/refs/TelegramWeb-71129.fp.json.gz \
+    --apk Telegram-new.apk \
+    --save-fp tools/mapgen/refs/TelegramWeb-<newVersionCode>.fp.json.gz
+```
+
+Output: `TelegramWeb-<versionCode>.json` (+ `Alias/`). Every class and member is
+marked OK / REVIEW / RENAMED; exit code 2 means something needs a manual look.
+An existing mapping is never overwritten unless `--force` is given.
+
+Validation: porting 70999 -> 71129 and 71129 -> 70999 reproduces the
+hand-verified mappings exactly (26 classes, 40 methods, 26 fields).
+
+To create a reference fingerprint from a known-good APK + mapping:
+`python3 tools/mapgen/portmap.py fingerprint --apk Telegram.apk --map <mapping.json> --out refs/<name>.fp.json.gz`
+
+## How `mapgen.py` works (string-based fallback)
 
 Each wanted class is located by the **string constants** it references
 (these survive obfuscation), with superclass and member hints as tie-breakers,

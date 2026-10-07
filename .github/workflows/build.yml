@@ -10,6 +10,9 @@ on:
 permissions:
   contents: write
 
+env:
+  KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,8 +40,6 @@ jobs:
 
       - name: Sign APK
         if: ${{ env.KEYSTORE_B64 != '' }}
-        env:
-          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
         run: |
           echo "$KEYSTORE_B64" | base64 -d > keystore.jks
           BT=$(ls -d "$ANDROID_SDK_ROOT"/build-tools/* | sort -V | tail -1)
@@ -55,12 +56,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: OpGram-apk
+          if-no-files-found: error
           path: |
             OpGram-release.apk
             app/build/outputs/apk/release/*.apk
 
       - name: Attach APK to release
-        if: github.event_name == 'release'
+        if: github.event_name == 'release' && env.KEYSTORE_B64 != ''
         uses: softprops/action-gh-release@v2
         with:
           files: OpGram-release.apk

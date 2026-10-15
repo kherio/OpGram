@@ -129,22 +129,57 @@ public class Updater {
         if (activity == null) return;
         activity.runOnUiThread(() -> {
             try {
-                String msg = Translator.get(Keys.UpdateAvailable, r.version);
-                if (r.notes != null && !r.notes.isEmpty()) {
-                    msg += "\n\n" + (r.notes.length() > 500 ? r.notes.substring(0, 500) + "…" : r.notes);
+                final float d = activity.getResources().getDisplayMetrics().density;
+                int pad = Math.round(20 * d);
+
+                // Scrollable body: version line + the full release notes
+                android.widget.ScrollView scroll = new android.widget.ScrollView(activity);
+                android.widget.LinearLayout box = new android.widget.LinearLayout(activity);
+                box.setOrientation(android.widget.LinearLayout.VERTICAL);
+                box.setPadding(pad, pad / 2, pad, 0);
+
+                android.widget.TextView head = new android.widget.TextView(activity);
+                head.setText(Translator.get(Keys.UpdateAvailable, r.version));
+                head.setTextSize(16);
+                box.addView(head);
+
+                if (r.notes != null && !r.notes.trim().isEmpty()) {
+                    android.widget.TextView title = new android.widget.TextView(activity);
+                    title.setText(Translator.get(Keys.UpdateNotes));
+                    title.setTextSize(13);
+                    title.setAllCaps(true);
+                    title.setPadding(0, Math.round(16 * d), 0, Math.round(4 * d));
+                    box.addView(title);
+
+                    android.widget.TextView notes = new android.widget.TextView(activity);
+                    notes.setText(cleanNotes(r.notes));
+                    notes.setTextSize(14);
+                    box.addView(notes);
                 }
+                scroll.addView(box);
+
                 new AlertDialog.Builder(activity)
                         .setTitle(Branding.NAME)
-                        .setMessage(msg)
-                        .setPositiveButton(Translator.get(Keys.UpdateDownload), (d, w) -> download(activity, r))
+                        .setView(scroll)
+                        .setPositiveButton(Translator.get(Keys.UpdateDownload), (dl, w) -> download(activity, r))
                         .setNegativeButton(Translator.get(Keys.Cancel), null)
                         .setNeutralButton(Translator.get(Keys.UpdateSkip),
-                                (d, w) -> ConfigPreferences.putString(SKIP_TAG, r.tag))
+                                (dl, w) -> ConfigPreferences.putString(SKIP_TAG, r.tag))
                         .show();
             } catch (Throwable t) {
                 Logger.e(t);
             }
         });
+    }
+
+    /** GitHub release bodies are Markdown; strip the most common markup so it reads well as plain text. */
+    static String cleanNotes(String md) {
+        String t = md.replace("\r", "");
+        t = t.replaceAll("(?m)^#{1,6}\\s*", "");
+        t = t.replaceAll("(?m)^\\s*[-*]\\s+", "\u2022 ");
+        t = t.replace("**", "").replace("__", "").replace("`", "");
+        t = t.replaceAll("\\[([^\\]]+)\\]\\([^)]*\\)", "$1");
+        return t.trim();
     }
 
     private static void download(final Activity activity, final Release r) {
@@ -166,22 +201,85 @@ public class Updater {
             req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
             req.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, r.apkName);
             final long id = dm.enqueue(req);
-            toast(Translator.get(Keys.UpdateDownloading));
 
-            activity.registerReceiver(new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context ctx, Intent intent) {
-                    long done = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                    if (done != id) return;
-                    try { activity.unregisterReceiver(this); } catch (Throwable ignored) {}
-                    install(activity, dm, id);
+            // Progress dialog, refreshed by polling the DownloadManager
+            final android.widget.ProgressBar bar = new android.widget.ProgressBar(activity, null,
+                    android.R.attr.progressBarStyleHorizontal);
+            bar.setMax(100);
+            final android.widget.TextView label = new android.widget.TextView(activity);
+            label.setText(Translator.get(Keys.UpdateDownloadProgress, 0));
+            final float d = activity.getResources().getDisplayMetrics().density;
+            int pad = Math.round(20 * d);
+            android.widget.LinearLayout box = new android.widget.LinearLayout(activity);
+            box.setOrientation(android.widget.LinearLayout.VERTICAL);
+            box.setPadding(pad, pad, pad, pad / 2);
+            box.addView(label);
+            box.addView(bar);
+
+            final boolean[] cancelled = {false};
+            final AlertDialog[] dialog = new AlertDialog[1];
+            activity.runOnUiThread(() -> {
+                dialog[0] = new AlertDialog.Builder(activity)
+                        .setTitle(Branding.NAME + " " + r.version)
+                        .setView(box)
+                        .setCancelable(false)
+                        .setNegativeButton(Translator.get(Keys.Cancel), (dl, w) -> {
+                            cancelled[0] = true;
+                            try { dm.remove(id); } catch (Throwable ignored) {}
+                        })
+                        .show();
+            });
+
+            new Thread(() -> {
+                try {
+                    while (!cancelled[0]) {
+                        android.database.Cursor c = dm.query(new DownloadManager.Query().setFilterById(id));
+                        if (c == null) break;
+                        int status = -1;
+                        long got = 0, total = 0;
+                        try {
+                            if (c.moveToFirst()) {
+                                status = c.getInt(c.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
+                                got = c.getLong(c.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                                total = c.getLong(c.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                            }
+                        } finally {
+                            c.close();
+                        }
+                        final int pct = total > 0 ? (int) (got * 100 / total) : 0;
+                        activity.runOnUiThread(() -> {
+                            bar.setProgress(pct);
+                            label.setText(Translator.get(Keys.UpdateDownloadProgress, pct));
+                        });
+                        if (status == DownloadManager.STATUS_SUCCESSFUL) {
+                            dismiss(activity, dialog[0]);
+                            activity.runOnUiThread(() -> install(activity, dm, id));
+                            return;
+                        }
+                        if (status == DownloadManager.STATUS_FAILED || status == -1) {
+                            dismiss(activity, dialog[0]);
+                            toast(Translator.get(Keys.UpdateDownloadFailed));
+                            return;
+                        }
+                        Thread.sleep(400);
+                    }
+                    dismiss(activity, dialog[0]);
+                } catch (Throwable t) {
+                    Logger.e(t);
+                    dismiss(activity, dialog[0]);
+                    toast(Translator.get(Keys.UpdateDownloadFailed));
                 }
-            }, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-                    Build.VERSION.SDK_INT >= 34 ? Context.RECEIVER_EXPORTED : 0);
+            }).start();
         } catch (Throwable t) {
             Logger.e(t);
             toast(Translator.get(Keys.UpdateCheckFailed));
         }
+    }
+
+    private static void dismiss(Activity activity, final AlertDialog dialog) {
+        activity.runOnUiThread(() -> {
+            try { if (dialog != null && dialog.isShowing()) dialog.dismiss(); } catch (Throwable ignored) {}
+        });
     }
 
     private static void install(Activity activity, DownloadManager dm, long id) {

@@ -1,0 +1,101 @@
+name: Port mapping to a new Telegram Web
+
+# Run manually: Actions > "Port mapping" > Run workflow, giving a direct URL to the
+# Telegram Web APK (org.telegram.messenger.web). The workflow ports the closest
+# reference mapping with tools/mapgen/portmap.py and opens a pull request with the
+# new TelegramWeb-<versionCode>.json for review.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apk_url:
+        description: 'Direct https URL of the new Telegram Web APK'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  port:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install androguard
+        run: pip install androguard
+
+      - name: Download APK
+        env:
+          APK_URL: ${{ inputs.apk_url }}
+        run: |
+          case "$APK_URL" in https://*) ;; *) echo "::error::apk_url must be an https URL"; exit 1;; esac
+          curl -fL --retry 3 -o new.apk "$APK_URL"
+          ls -la new.apk
+
+      - name: Detect version and closest reference
+        id: detect
+        run: |
+          python3 - <<'PY'
+          import glob, os, re, sys
+          from androguard.core.apk import APK
+          try:
+              from loguru import logger; logger.remove()
+          except Exception: pass
+          a = APK('new.apk')
+          vc = int(a.get_androidversion_code()); vn = a.get_androidversion_name()
+          if a.get_package() != 'org.telegram.messenger.web':
+              print('::error::not a Telegram Web APK: ' + a.get_package()); sys.exit(1)
+          refs = {}
+          for f in glob.glob('tools/mapgen/refs/TelegramWeb-*.fp.json.gz'):
+              m = re.search(r'TelegramWeb-(\d+)\.fp', f)
+              if m: refs[int(m.group(1))] = f
+          if not refs:
+              print('::error::no reference fingerprints in tools/mapgen/refs'); sys.exit(1)
+          best = min(refs, key=lambda k: abs(k - vc))
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as o:
+              o.write(f'vc={vc}\nvn={vn}\nref={refs[best]}\nrefvc={best}\n')
+          print(f'new {vn} ({vc}); closest reference {best}')
+          PY
+
+      - name: Port mapping
+        id: port
+        run: |
+          set +e
+          python3 tools/mapgen/portmap.py port \
+            --ref "${{ steps.detect.outputs.ref }}" \
+            --apk new.apk \
+            --version "${{ steps.detect.outputs.vc }}" \
+            --save-fp "tools/mapgen/refs/TelegramWeb-${{ steps.detect.outputs.vc }}.fp.json.gz" \
+            --force | tee port.log
+          code=${PIPESTATUS[0]}
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          { echo '### Port report'; echo '```'; grep -E "REVIEW|RENAMED|WEAK|MIEMBROS|TODO RESUELTO|a REVISAR" port.log; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          # exit code 2 = items to review: still open the PR, flagged
+          if [ "$code" != "0" ] && [ "$code" != "2" ]; then exit 1; fi
+
+      - name: Open pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VC="${{ steps.detect.outputs.vc }}"
+          VN="${{ steps.detect.outputs.vn }}"
+          BR="mapping/$VC"
+          git config user.name "kherio"
+          git config user.email "jvrsanjose@gmail.com"
+          git checkout -b "$BR"
+          git add app/src/main/assets/clients tools/mapgen/refs
+          git commit -m "Add Telegram Web $VN ($VC) obfuscation mapping"
+          git push -f origin "$BR"
+          NOTE="Ported from reference ${{ steps.detect.outputs.refvc }} with tools/mapgen/portmap.py."
+          if [ "${{ steps.port.outputs.code }}" = "2" ]; then NOTE="$NOTE Some items need manual review (see the job summary)."; fi
+          gh pr create --base main --head "$BR" \
+            --title "Telegram Web $VN ($VC) mapping" \
+            --body "$NOTE" || echo "PR already exists"

@@ -82,6 +82,7 @@ public class ConfigManager {
     public static ConfigItem preventMedia;
     public static ConfigItem enableSavingStories;
     public static ConfigItem enableVoiceMessageSaving;
+    public static ConfigItem batchDownload;
 
     //UI
     public static ConfigItem ui;
@@ -270,6 +271,9 @@ public class ConfigManager {
         enableVoiceMessageSaving = new ConfigItem(ConfigItem.SWITCH, Keys.EnableVoiceMessageSaving, ConfigPreferences.getBoolean(Keys.EnableVoiceMessageSaving), VoiceToMusicHook::init);
         items.add(enableVoiceMessageSaving);
 
+        batchDownload = new ConfigItem(ConfigItem.SWITCH, Keys.BatchDownload, ConfigPreferences.getBoolean(Keys.BatchDownload), null);
+        items.add(batchDownload);
+
         items.add(shadows);
 
         // UI
@@ -346,13 +350,51 @@ public class ConfigManager {
         items.add(shadows);
 
         readFeature();
+        rebuildView();
 
     }
 
-    // ---- Search & collapsible sections (view over the full item list) ----
+    // ---- View over the full item list: search, collapsible sections, favorites, restart banner ----
+    private static final String PREF_COLLAPSED = "OpGramCollapsed";
+    private static final String PREF_FAVORITES = "OpGramFavorites";
+
     private static String searchQuery = "";
     private static final java.util.Set<String> collapsed = new java.util.HashSet<>();
+    private static final java.util.Set<String> favorites = new java.util.LinkedHashSet<>();
     private static final List<ConfigItem> viewItems = new ArrayList<>();
+    private static boolean viewStateLoaded = false;
+    private static boolean restartPending = false;
+
+    private static ConfigItem restartBanner;
+    private static ConfigItem tipsItem;
+    private static ConfigItem favoritesHeader;
+
+    private static void loadViewState() {
+        if (viewStateLoaded) return;
+        viewStateLoaded = true;
+        String c = ConfigPreferences.getString(PREF_COLLAPSED);
+        if (c == null) {
+            // First run: every section starts collapsed so the page is short and scannable.
+            for (ConfigItem it : items) {
+                if (it.getType() == ConfigItem.HEADER) collapsed.add(it.getKey());
+            }
+            saveCollapsed();
+        } else {
+            for (String k : c.split(",")) if (!k.isEmpty()) collapsed.add(k);
+        }
+        String f = ConfigPreferences.getString(PREF_FAVORITES);
+        if (f != null) {
+            for (String k : f.split(",")) if (!k.isEmpty()) favorites.add(k);
+        }
+    }
+
+    private static void saveCollapsed() {
+        ConfigPreferences.putString(PREF_COLLAPSED, android.text.TextUtils.join(",", collapsed));
+    }
+
+    private static void saveFavorites() {
+        ConfigPreferences.putString(PREF_FAVORITES, android.text.TextUtils.join(",", favorites));
+    }
 
     public static void setSearchQuery(String q) {
         searchQuery = q == null ? "" : q.trim().toLowerCase();
@@ -366,32 +408,124 @@ public class ConfigManager {
     public static void toggleCollapseByKey(String headerKey) {
         if (headerKey == null) return;
         if (!collapsed.remove(headerKey)) collapsed.add(headerKey);
+        saveCollapsed();
         rebuildView();
     }
 
-    /** Rebuilds the visible list from the full one, applying the search filter and collapsed sections. */
+    // ---- favorites ----
+    public static boolean isFavorite(String key) { return favorites.contains(key); }
+
+    /** Toggles a favorite; returns true if the option is now a favorite. */
+    public static boolean toggleFavorite(String key) {
+        boolean now = !favorites.remove(key);
+        if (now) favorites.add(key);
+        saveFavorites();
+        rebuildView();
+        return now;
+    }
+
+    // ---- restart notice ----
+    public static boolean isRestartPending() { return restartPending; }
+
+    public static void setRestartPending(boolean v) {
+        restartPending = v;
+        rebuildView();
+    }
+
+    public static boolean isRestartBanner(ConfigItem it) { return it != null && it == restartBanner; }
+
+    // ---- reset a whole section ----
+    /** Items that belong to the section that starts at the given header key. */
+    private static List<ConfigItem> sectionItems(String headerKey) {
+        List<ConfigItem> out = new ArrayList<>();
+        boolean in = false;
+        for (ConfigItem it : items) {
+            if (it.getType() == ConfigItem.HEADER) {
+                if (in) break;
+                in = headerKey.equals(it.getKey());
+                continue;
+            }
+            if (in) out.add(it);
+        }
+        return out;
+    }
+
+    /** True if the section has at least one switch (backup/buttons sections cannot be reset). */
+    public static boolean isResettable(String headerKey) {
+        if (headerKey == null || (favoritesHeader != null && headerKey.equals(favoritesHeader.getKey()))) return false;
+        for (ConfigItem it : sectionItems(headerKey)) {
+            if (it.getType() == ConfigItem.SWITCH || it.getType() == ConfigItem.EXPANDABLE_SWITCH) return true;
+        }
+        return false;
+    }
+
+    /** Turns off every switch of the section. Returns true if anything changed. */
+    public static boolean resetSection(String headerKey) {
+        boolean changed = false;
+        for (ConfigItem it : sectionItems(headerKey)) {
+            if (it.getType() == ConfigItem.SWITCH && it.isEnable()) {
+                it.setEnable(false);
+                changed = true;
+            } else if (it.getType() == ConfigItem.EXPANDABLE_SWITCH) {
+                if (it.getChildren() != null) {
+                    for (ConfigItem child : it.getChildren()) {
+                        if (child.isEnable()) { child.setEnable(false); changed = true; }
+                    }
+                }
+                if (it.isEnable()) it.setEnable(false);
+            } else if (it.getType() == ConfigItem.TEXT && Keys.Calendar.equals(it.getKey()) && it.getCustomCalendar() != 0) {
+                it.setCustomCalendar(0);
+                changed = true;
+            }
+        }
+        if (changed) restartPending = true;
+        rebuildView();
+        return changed;
+    }
+
+    /** Rebuilds the visible list from the full one. */
     public static void rebuildView() {
+        loadViewState();
         viewItems.clear();
         boolean searching = !searchQuery.isEmpty();
-        String currentHeader = null;
+
+        if (restartPending) {
+            if (restartBanner == null) restartBanner = new ConfigItem(ConfigItem.TEXT, Keys.RestartPendingBanner);
+            viewItems.add(restartBanner);
+        }
+
+        if (!searching) {
+            if (tipsItem == null) tipsItem = new ConfigItem(ConfigItem.INFO, Keys.SettingsTips);
+            viewItems.add(tipsItem);
+
+            List<ConfigItem> favs = new ArrayList<>();
+            for (String k : favorites) {
+                for (ConfigItem it : items) {
+                    if (it.getType() == ConfigItem.SWITCH && k.equals(it.getKey())) { favs.add(it); break; }
+                }
+            }
+            if (!favs.isEmpty()) {
+                if (favoritesHeader == null) favoritesHeader = new ConfigItem(ConfigItem.HEADER, Keys.Favorites);
+                viewItems.add(favoritesHeader);
+                if (!collapsed.contains(Keys.Favorites)) viewItems.addAll(favs);
+                viewItems.add(shadows);
+            }
+        }
+
         boolean currentHidden = false;
         for (ConfigItem it : items) {
             int type = it.getType();
             if (type == ConfigItem.HEADER) {
-                currentHeader = it.getKey();
-                currentHidden = !searching && collapsed.contains(currentHeader);
-                if (searching) {
-                    // headers are added lazily only if a child matches (handled below)
-                    continue;
-                }
-                viewItems.add(it);
+                currentHidden = !searching && collapsed.contains(it.getKey());
+                if (!searching) viewItems.add(it);
                 continue;
             }
             if (searching) {
-                if (!matches(it)) continue;
+                if (type == ConfigItem.DIVIDER || !matches(it)) continue;
                 viewItems.add(it);
             } else {
-                if (currentHidden) continue;
+                // collapsed sections keep their trailing divider so the layout stays tidy
+                if (currentHidden && type != ConfigItem.DIVIDER) continue;
                 viewItems.add(it);
             }
         }
@@ -400,12 +534,14 @@ public class ConfigManager {
     private static boolean matches(ConfigItem it) {
         String label = Translator.get(it.getKey());
         if (label != null && label.toLowerCase().contains(searchQuery)) return true;
+        String desc = Translator.getOrNull(it.getKey() + "Desc");
+        if (desc != null && desc.toLowerCase().contains(searchQuery)) return true;
         String key = it.getKey();
         return key != null && key.toLowerCase().contains(searchQuery);
     }
 
     public static List<ConfigItem> getItems() {
-        if (viewItems.isEmpty() && searchQuery.isEmpty() && collapsed.isEmpty()) return items;
+        if (viewItems.isEmpty()) rebuildView();
         return viewItems;
     }
 

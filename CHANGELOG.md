@@ -2,6 +2,19 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.4.0
+
+Added
+- Settings: every option now has a one-line description (en, es, zh, ar, fa).
+- Settings: sections start collapsed and remember their state; long-press an option
+  to pin it to a **Favorites** section at the top; long-press a section title to reset it.
+- Settings: a "Restart Telegram to apply your changes" banner appears when a change needs it.
+- Updater: shows the full release notes, a download progress bar, and installs when done.
+- Chat menu: **Download chat media** (experimental, off by default) saves the latest
+  photos and videos of a chat to the gallery.
+- Tooling: a `Port mapping` GitHub Actions workflow ports the obfuscation mapping to a
+  new Telegram Web APK and opens a pull request.
+
 ## 1.3.4
 
 Added

@@ -66,6 +66,22 @@ public class Translator {
         return key;
     }
 
+    /** Like get(), but returns null when the key has no translation at all (used for optional texts). */
+    public static String getOrNull(String key) {
+        if (localeController == null) return null;
+        try {
+            if (localeController.getCurrentLocale() != null) {
+                JSONObject langJson = langMap.get(localeController.getCurrentLocale().getLanguage());
+                if (langJson != null && langJson.has(key)) return langJson.optString(key);
+                JSONObject enJson = langMap.get("en");
+                if (enJson != null && enJson.has(key)) return enJson.optString(key);
+            }
+        } catch (Throwable e) {
+            Logger.e(e);
+        }
+        return null;
+    }
+
     public static String get(String key, Object... args) {
         if (localeController == null) return key;
         try {

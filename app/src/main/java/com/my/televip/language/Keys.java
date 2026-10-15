@@ -177,4 +177,26 @@ public class Keys {
     public static final String QuickReplyHint = "QuickReplyHint";
     public static final String QuickReplyCopied = "QuickReplyCopied";
     public static final String Save = "Save";
+    public static final String Favorites = "Favorites";
+    public static final String FavoriteAdded = "FavoriteAdded";
+    public static final String FavoriteRemoved = "FavoriteRemoved";
+    public static final String SettingsTips = "SettingsTips";
+    public static final String ResetSection = "ResetSection";
+    public static final String ResetSectionConfirm = "ResetSectionConfirm";
+    public static final String ResetDone = "ResetDone";
+    public static final String Reset = "Reset";
+    public static final String RestartPendingBanner = "RestartPendingBanner";
+    public static final String UpdateNotes = "UpdateNotes";
+    public static final String UpdateInstallNow = "UpdateInstallNow";
+    public static final String UpdateDownloadProgress = "UpdateDownloadProgress";
+    public static final String UpdateDownloadFailed = "UpdateDownloadFailed";
+    public static final String UpdateReady = "UpdateReady";
+    public static final String BatchDownload = "BatchDownload";
+    public static final String BatchDownloadLast = "BatchDownloadLast";
+    public static final String BatchDownloadSearching = "BatchDownloadSearching";
+    public static final String BatchDownloadStarted = "BatchDownloadStarted";
+    public static final String BatchDownloadDone = "BatchDownloadDone";
+    public static final String BatchDownloadEmpty = "BatchDownloadEmpty";
+    public static final String BatchDownloadFailed = "BatchDownloadFailed";
+    public static final String BatchDownloadBusy = "BatchDownloadBusy";
 }

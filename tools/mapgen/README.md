@@ -91,3 +91,11 @@ Still hard, and left to the hand-made reference mapping:
 - Classes whose superclass is `Object` and that carry no distinctive strings
   (e.g. SettingsActivity vs the debug-menu builder share the same debug
   strings). These need call-graph analysis, planned for later.
+
+## Porting from GitHub (no local setup)
+
+Actions > **Port mapping** > Run workflow, with a direct https URL to the new Telegram Web APK.
+The workflow picks the closest reference fingerprint, runs `portmap.py`, and opens a pull request
+`mapping/<versionCode>` with the new mapping (items needing manual review are listed in the job
+summary). The repository setting *Settings > Actions > General > Allow GitHub Actions to create
+and approve pull requests* must be enabled for the PR step.

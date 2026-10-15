@@ -54,33 +54,26 @@ public class SettingsAdapter {
                             ConfigManager.toggleCollapseByKey(hkey);
                             settingsController.refreshList();
                         });
+                        if (ConfigManager.isResettable(hkey)) {
+                            headerCell.cell.getView().setOnLongClickListener(v -> {
+                                confirmReset(settingsController, hkey);
+                                return true;
+                            });
+                        } else {
+                            headerCell.cell.getView().setOnLongClickListener(null);
+                        }
                     }
                     break;
 
                 case ConfigItem.SWITCH:
                     TextCheckCellHolder textCheck = new TextCheckCellHolder(holder);
-                    if (item.getValue() != null) {
-                        textCheck.cell.setTextAndValueAndCheck(
-                                Translator.get(item.getKey()),
-                                item.getValue(),
-                                item.isEnable(),
-                                true,
-                                false
-                        );
-                    } else if (item.isRestartRequired()) {
-                        textCheck.cell.setTextAndValueAndCheck(
-                                Translator.get(item.getKey()),
-                                Translator.get(Keys.RestartRequired),
-                                item.isEnable(),
-                                true,
-                                false
-                        );
+                    String subtitle = buildSubtitle(item);
+                    String title = Translator.get(item.getKey());
+                    if (ConfigManager.isFavorite(item.getKey())) title = "\u2605 " + title;
+                    if (subtitle != null) {
+                        textCheck.cell.setTextAndValueAndCheck(title, subtitle, item.isEnable(), true, false);
                     } else {
-                        textCheck.cell.setTextAndCheck(
-                                Translator.get(item.getKey()),
-                                item.isEnable(),
-                                false
-                        );
+                        textCheck.cell.setTextAndCheck(title, item.isEnable(), false);
                     }
                     textCheck.cell.getTextView().setLines(0);
                     textCheck.cell.getTextView().setMaxLines(0);
@@ -120,6 +113,12 @@ public class SettingsAdapter {
                 case ConfigItem.INFO:
                     TextInfoCellHolder textInfoCell = new TextInfoCellHolder(holder);
                     TextView textView = textInfoCell.text.getTextView();
+                    if (!item.getKey().equals(Keys.OfflineVisibilityInfo)) {
+                        textView.setMaxLines(Integer.MAX_VALUE);
+                        textView.setEllipsize(null);
+                        textView.setText(Translator.get(item.getKey()));
+                        textView.setOnClickListener(null);
+                    }
                     if (item.getKey().equals(Keys.OfflineVisibilityInfo)) {
                         textView.setMaxLines(2);
                         textView.setEllipsize(TextUtils.TruncateAt.END);
@@ -145,6 +144,14 @@ public class SettingsAdapter {
             ViewHolder viewHolder = new ViewHolder(holder);
 
             viewHolder.getItemView().setOnLongClickListener(v -> {
+                if (viewType == ConfigItem.SWITCH) {
+                    boolean now = ConfigManager.toggleFavorite(item.getKey());
+                    android.widget.Toast.makeText(settingsController.getContext(),
+                            Translator.get(now ? Keys.FavoriteAdded : Keys.FavoriteRemoved),
+                            android.widget.Toast.LENGTH_SHORT).show();
+                    settingsController.refreshList();
+                    return true;
+                }
                 playAudio(settingsController.getContext());
                 return true;
             });
@@ -157,24 +164,21 @@ public class SettingsAdapter {
                     textCheck.cell.setChecked(checked);
                     item.setEnable(checked);
                     item.run();
+                    if (item.isRestartRequired() && !ConfigManager.isRestartPending()) {
+                        ConfigManager.setRestartPending(true);
+                        settingsController.refreshList();
+                    }
                 } else if (viewType == ConfigItem.TEXT) {
                     switch (item.getKey()) {
+                        case Keys.RestartPendingBanner:
+                            restartTelegram(settingsController);
+                            break;
                         case Keys.DeveloperChannel:
                             settingsController.hide();
                             Browser.openUrl(settingsController.getContext(), com.my.televip.Branding.RELEASES_URL);
                             break;
                         case Keys.RestartApp:
-                            Intent intent = settingsController.getContext()
-                                    .getPackageManager()
-                                    .getLaunchIntentForPackage(Utils.pkgName);
-
-                            if (intent != null) {
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                settingsController.getContext().startActivity(intent);
-                            }
-
-                            ((Activity) settingsController.getContext()).finishAffinity();
-                            android.os.Process.killProcess(android.os.Process.myPid());
+                            restartTelegram(settingsController);
                             break;
                         case Keys.ExportSettings:
                             BackupActions.exportSettings((Activity) settingsController.getContext());
@@ -214,6 +218,55 @@ public class SettingsAdapter {
             Logger.e(t);
         }
 
+    }
+
+    /** Subtitle under a switch: description, example value and/or "restart required". */
+    private static String buildSubtitle(ConfigItem item) {
+        StringBuilder sb = new StringBuilder();
+        String desc = Translator.getOrNull(item.getKey() + "Desc");
+        if (desc != null) sb.append(desc);
+        if (item.getValue() != null) {
+            if (sb.length() > 0) sb.append("\n");
+            sb.append(item.getValue());
+        }
+        if (item.isRestartRequired()) {
+            if (sb.length() > 0) sb.append("\n");
+            sb.append("\u21BB ").append(Translator.get(Keys.RestartRequired));
+        }
+        return sb.length() == 0 ? null : sb.toString();
+    }
+
+    private static void restartTelegram(SettingsController settingsController) {
+        Intent intent = settingsController.getContext()
+                .getPackageManager()
+                .getLaunchIntentForPackage(Utils.pkgName);
+
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            settingsController.getContext().startActivity(intent);
+        }
+
+        ((Activity) settingsController.getContext()).finishAffinity();
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    private static void confirmReset(SettingsController settingsController, String headerKey) {
+        try {
+            final Activity activity = (Activity) settingsController.getContext();
+            new android.app.AlertDialog.Builder(activity)
+                    .setTitle(Translator.get(Keys.ResetSection))
+                    .setMessage(Translator.get(Keys.ResetSectionConfirm, Translator.get(headerKey)))
+                    .setPositiveButton(Translator.get(Keys.Reset), (d, w) -> {
+                        ConfigManager.resetSection(headerKey);
+                        android.widget.Toast.makeText(activity, Translator.get(Keys.ResetDone),
+                                android.widget.Toast.LENGTH_SHORT).show();
+                        settingsController.refreshList();
+                    })
+                    .setNegativeButton(Translator.get(Keys.Cancel), null)
+                    .show();
+        } catch (Throwable t) {
+            Logger.e(t);
+        }
     }
 
     public static class HeaderCellHolder {

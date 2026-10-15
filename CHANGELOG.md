@@ -2,6 +2,12 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.4.1
+
+Fixed
+- Settings: section headers did not open/close and long-press on them did nothing useful.
+- Removed the leftover Quran audio/dialog that appeared on long-press of non-switch rows.
+
 ## 1.4.0
 
 Added

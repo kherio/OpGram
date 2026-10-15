@@ -141,6 +141,11 @@ public class SettingsAdapter {
                     }
                     break;
             }
+            // The header cell IS the row view: the generic listeners below would overwrite the
+            // collapse / reset listeners set above (headers then ignored taps and long-press
+            // played the original TeleVip audio easter egg).
+            if (viewType == ConfigItem.HEADER) return;
+
             ViewHolder viewHolder = new ViewHolder(holder);
 
             viewHolder.getItemView().setOnLongClickListener(v -> {
@@ -152,7 +157,6 @@ public class SettingsAdapter {
                     settingsController.refreshList();
                     return true;
                 }
-                playAudio(settingsController.getContext());
                 return true;
             });
 

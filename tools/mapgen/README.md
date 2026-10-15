@@ -34,6 +34,12 @@ Output: `TelegramWeb-<versionCode>.json` (+ `Alias/`). Every class and member is
 marked OK / REVIEW / RENAMED; exit code 2 means something needs a manual look.
 An existing mapping is never overwritten unless `--force` is given.
 
+Methods are matched by **body** (string constants, calls into non-obfuscated
+code, opcode sequence), so same-shaped methods inside a big class are told apart
+by what they do. Structurally identical twins (e.g. `setTitle`/`setMessage`) are
+reported as `WEAK` and keep their previous name. Regenerate reference
+fingerprints with `--apk` so they include these signatures.
+
 Validation: porting 70999 -> 71129 and 71129 -> 70999 reproduces the
 hand-verified mappings exactly (26 classes, 40 methods, 26 fields).
 

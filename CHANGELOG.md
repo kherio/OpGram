@@ -2,6 +2,14 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.3.4
+
+Added
+- Support for Telegram Web 13.0.2 (versionCode 71759): new obfuscation mapping
+  `TelegramWeb-71759.json`. 12.10.4 and 12.10.6 keep working with their own mappings.
+- `tools/mapgen/portmap.py` now compares method bodies (not just names and
+  signatures) to port a mapping, which catches methods renamed inside a class.
+
 ## 1.3.3
 
 Added

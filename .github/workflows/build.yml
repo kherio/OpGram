@@ -3,6 +3,7 @@ name: Build OpGram
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   workflow_dispatch:
   release:
     types: [ created ]
@@ -62,7 +63,8 @@ jobs:
             app/build/outputs/apk/release/*.apk
 
       - name: Attach APK to release
-        if: github.event_name == 'release' && env.KEYSTORE_B64 != ''
+        if: ${{ (github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')) && env.KEYSTORE_B64 != '' }}
         uses: softprops/action-gh-release@v2
         with:
           files: OpGram-release.apk
+          generate_release_notes: true

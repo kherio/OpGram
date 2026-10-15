@@ -103,6 +103,101 @@ def load_index(apk=None, index=None):
     return ix
 
 
+_UNOBF_OWNER = re.compile(r"^(org\.telegram\.(messenger|tgnet)|android|java|androidx|com\.google)")
+
+
+def body_sigs(apk, wanted):
+    """Behavioural signature (string constants, calls into non-obfuscated code, opcode
+    sequence) of methods, so that same-shaped methods can be told apart by what they DO.
+    wanted: {dotted class: set(method names)} -> {class: {"name|descriptor": sig}}"""
+    from androguard.core.dex import DEX
+    try:
+        from loguru import logger
+        logger.remove()
+    except Exception:
+        pass
+    out = {}
+    z = zipfile.ZipFile(apk)
+    for n in z.namelist():
+        if not (n.startswith("classes") and n.endswith(".dex")):
+            continue
+        d = DEX(z.read(n))
+        for c in d.get_classes():
+            name = c.get_name()[1:-1].replace("/", ".")
+            if name not in wanted:
+                continue
+            for m in c.get_methods():
+                if m.get_name() not in wanted[name]:
+                    continue
+                strs, calls, ops = set(), set(), []
+                code = m.get_code()
+                if code:
+                    for ins in code.get_bc().get_instructions():
+                        op, o = ins.get_name(), ins.get_output()
+                        ops.append(op)
+                        if op.startswith("const-string"):
+                            strs.add(o.split(",", 1)[-1].strip())
+                        elif op.startswith(("invoke", "iget", "iput", "sget", "sput")):
+                            mm = re.search(r"(L[\w/$]+;)->([\w$<>]+)", o)
+                            if mm:
+                                own = dot(mm.group(1))
+                                if _UNOBF_OWNER.match(own):
+                                    calls.add(own + "." + mm.group(2))
+                out.setdefault(name, {})["%s|%s" % (m.get_name(), m.get_descriptor().replace(" ", ""))] = {
+                    "s": sorted(strs), "i": sorted(calls), "o": ",".join(ops), "l": len(ops)}
+        del d
+    return out
+
+
+def _sigs_of_class(c):
+    res = {}
+    for m in c.get_methods():
+        strs, calls, ops = set(), set(), []
+        code = m.get_code()
+        if code:
+            for ins in code.get_bc().get_instructions():
+                op, o = ins.get_name(), ins.get_output()
+                ops.append(op)
+                if op.startswith("const-string"):
+                    strs.add(o.split(",", 1)[-1].strip())
+                elif op.startswith(("invoke", "iget", "iput", "sget", "sput")):
+                    mm = re.search(r"(L[\w/$]+;)->([\w$<>]+)", o)
+                    if mm:
+                        own = dot(mm.group(1))
+                        if _UNOBF_OWNER.match(own):
+                            calls.add(own + "." + mm.group(2))
+        res["%s|%s" % (m.get_name(), m.get_descriptor().replace(" ", ""))] = {
+            "s": sorted(strs), "i": sorted(calls), "o": ",".join(ops), "l": len(ops)}
+    return res
+
+
+def body_score(a, b):
+    """Similarity of two body signatures (0..1)."""
+    sa, sb = set(a["s"]), set(b["s"])
+    ia, ib = set(a["i"]), set(b["i"])
+    j = lambda x, y: len(x & y) / len(x | y) if (x or y) else 1.0
+    la, lb = a["l"], b["l"]
+    if max(la, lb) < 400:
+        from difflib import SequenceMatcher
+        op = SequenceMatcher(None, a["o"].split(","), b["o"].split(","), autojunk=False).ratio()
+    else:
+        op = 1 - abs(la - lb) / (max(la, lb) + 1)
+    return 0.3 * j(sa, sb) + 0.3 * j(ia, ib) + 0.4 * op
+
+
+def mapped_methods(mapping, owners, cm=None):
+    """{dotted class: set(method names)} for every mapped method (ref names, or new names via cm)."""
+    w = {}
+    for e in mapping["methods"]:
+        key = e["c"] + "#" + e["o"]
+        owner = owners.get(MEMBER_OWNER_OVERRIDE.get(key, e["c"]))
+        if cm is not None:
+            owner = cm.get(owner)
+        if owner:
+            w.setdefault(owner, set()).add(e["r"])
+    return w
+
+
 def dot(desc):  # 'Lfoo/Bar;' -> 'foo.Bar'
     return desc[1:-1].replace("/", ".")
 
@@ -164,6 +259,8 @@ def cmd_fingerprint(args):
         "classes": classes,
         "alias": _read_alias(version),
     }
+    if args.apk:
+        fp["bodies"] = body_sigs(args.apk, mapped_methods(mapping, owners))
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     with gzip.open(args.out, "wt", encoding="utf-8") as f:
         json.dump(fp, f)
@@ -180,8 +277,9 @@ def _read_alias(version):
 
 # ---------------------------------------------------------------------- port
 class Porter:
-    def __init__(self, fp, new_ix):
+    def __init__(self, fp, new_ix, new_apk=None):
         self.fp = fp
+        self.new_apk = new_apk
         self.ref = fp["classes"]
         for v in self.ref.values():
             v["m"] = [tuple(x) for x in v["m"]]
@@ -193,6 +291,9 @@ class Porter:
         self.cls_report = []    # (orig, ref, new, score, margin, status)
         self.mem_report = []
         self._cache = {}
+        self.ref_bodies = fp.get("bodies")
+        self._body_cache = {}
+        self._dex_cache = {}
 
     # --- per-class structures --------------------------------------------
     def _struct(self, ix, name, keep, translate, cacheable):
@@ -338,6 +439,58 @@ class Porter:
             cls = dot(ix[cls]["s"])
         return out
 
+    def _pick_by_body(self, ref_owner, new_owner, ref_name, refm, cand):
+        """Choose among same-shaped candidates by comparing method bodies."""
+        if not self.new_apk:
+            return None
+        nb = self._new_body_cache(new_owner)
+        if nb is None:
+            return None
+        scores = []
+        for rm in refm:
+            rs = self.ref_bodies.get(ref_owner, {}).get("%s|%s" % (rm[0], rm[1]))
+            if not rs:
+                continue
+            for name, pairs in cand.items():
+                for _, nmm in pairs:
+                    ns = nb.get("%s|%s" % (nmm[0], nmm[1]))
+                    if ns:
+                        scores.append((body_score(rs, ns), name))
+        if not scores:
+            return None
+        scores.sort(reverse=True)
+        top, second = scores[0], next((x for x in scores if x[1] != scores[0][1]), (0.0, None))
+        if top[0] >= 0.5 and top[0] - second[0] >= 0.03:
+            return (top[1], top[0], top[0] - second[0])
+        # tie between structurally identical twins (e.g. setTitle/setMessage): keep the reference
+        # name if it is one of the tied best candidates, but flag it as WEAK
+        tied = {n for sc, n in scores if top[0] - sc < 0.03}
+        if top[0] >= 0.5 and ref_name in tied:
+            return (ref_name, top[0], 0.0)
+        return None
+
+    def _new_body_cache(self, new_owner):
+        if new_owner not in self._body_cache:
+            w = {new_owner: None}
+            self._body_cache.update(self._load_class_bodies(w))
+        return self._body_cache.get(new_owner)
+
+    def _load_class_bodies(self, w):
+        # all methods of the requested classes (names=None means every method)
+        from androguard.core.dex import DEX
+        out = {}
+        z = zipfile.ZipFile(self.new_apk)
+        for n in z.namelist():
+            if not (n.startswith("classes") and n.endswith(".dex")):
+                continue
+            if not self._dex_cache.get(n):
+                self._dex_cache[n] = DEX(z.read(n))
+            for c in self._dex_cache[n].get_classes():
+                name = c.get_name()[1:-1].replace("/", ".")
+                if name in w:
+                    out[name] = _sigs_of_class(c)
+        return out
+
     def resolve_members(self):
         keep = frozenset(self.cm.values())
         new_mapping = {"methods": [], "fields": []}
@@ -357,23 +510,39 @@ class Porter:
                 if not refm:
                     status, why = "REVIEW", "no existe en la referencia"
                 else:
-                    kept, alt = False, set()
+                    cand = {}   # new name -> (descriptor) for every member with the same normalised shape
                     for rm in refm:
                         want = norm(rm[1], keep, self.cm)
                         for nm in newm:
                             if (nm[2] & 8) != (rm[2] & 8):
                                 continue
                             if norm(nm[1], keep) == want:
-                                if nm[0] == e["r"]:
-                                    kept = True
-                                else:
-                                    alt.add(nm[0])
-                    if kept:
+                                cand.setdefault(nm[0], []).append((rm, nm))
+                    picked = None
+                    if kind == "m" and self.ref_bodies is not None and len(cand) != 1:
+                        picked = self._pick_by_body(ref_owner, new_owner, e["r"], refm, cand)
+                    elif kind == "m" and self.ref_bodies is not None and len(cand) == 1 \
+                            and next(iter(cand)) != e["r"]:
+                        picked = (next(iter(cand)), 1.0, 1.0)
+                    elif kind == "m" and self.ref_bodies is not None and len(cand) == 1:
+                        picked = (e["r"], 1.0, 1.0)
+                    if picked is not None:
+                        nm_, sc, mg = picked
+                        result = nm_
+                        status = "OK" if nm_ == e["r"] else "RENAMED"
+                        why = "" if nm_ == e["r"] else "cuerpo del método coincide (%.2f)" % sc
+                        if mg == 0.0 and nm_ == e["r"]:
+                            status, why = "WEAK", "empate entre métodos gemelos; se conserva el nombre de la referencia"
+                    elif picked is None and kind == "m" and self.ref_bodies is not None and len(cand) > 1:
+                        status, why = "REVIEW", "%d candidatos, cuerpo no concluyente" % len(cand)
+                    elif e["r"] in cand and (self.ref_bodies is None or kind != "m"):
                         status = "OK"
-                    elif len(alt) == 1:
-                        result, status, why = next(iter(alt)), "RENAMED", "mismo descriptor, nombre distinto"
+                        if kind == "m" and len(cand) > 1:
+                            status, why = "REVIEW", "%d candidatos sin firma de cuerpo (regenera la huella con --apk)" % len(cand)
+                    elif len(cand) == 1:
+                        result, status, why = next(iter(cand)), "RENAMED", "mismo descriptor, nombre distinto"
                     else:
-                        status, why = "REVIEW", "%d candidatos" % len(alt)
+                        status, why = "REVIEW", "%d candidatos" % len(cand)
                 new_mapping[key].append({**e, "r": result})
                 self.mem_report.append((k, e["r"], result, status, why))
         return new_mapping
@@ -383,7 +552,9 @@ def cmd_port(args):
     fp = json.load(gzip.open(args.ref, "rt", encoding="utf-8"))
     new_ix = load_index(args.apk, args.index)
     vc = apk_version(args.apk)[0] if args.apk else args.version
-    p = Porter(fp, new_ix)
+    p = Porter(fp, new_ix, args.apk)
+    if not args.apk:
+        print('AVISO: sin --apk no se pueden comparar cuerpos de método; los candidatos ambiguos irán a REVIEW.')
     p.resolve_classes()
     members = p.resolve_members()
 
@@ -402,7 +573,7 @@ def cmd_port(args):
     print("\nMIEMBROS: %d OK, %d a revisar" % (n_ok, len(review_m)))
     for k, old, new, st, why in review_m:
         print("  %-8s %-45s %s -> %s  (%s)" % (st, k, old, new, why))
-    n_rev = sum(1 for r in p.cls_report if r[5] != "OK") + len(review_m)
+    n_rev = sum(1 for r in p.cls_report if r[5] != "OK") + sum(1 for m in review_m if m[3] == "REVIEW")
 
     dest_dir = args.out_dir or CLIENTS
     dest = os.path.join(dest_dir, "TelegramWeb-%s.json" % vc)
@@ -419,6 +590,8 @@ def cmd_port(args):
 
     if args.save_fp:
         newfp = {"version": vc, "mapping": out, "alias": fp.get("alias", {}), "classes": {}}
+        if args.apk:
+            newfp["bodies"] = body_sigs(args.apk, mapped_methods(out, owner_table(out), None))
         wanted = {c["r"] for c in out["classes"]} | set(UNOBF_OWNERS.values())
         for r in wanted:
             if r in new_ix:
@@ -427,6 +600,9 @@ def cmd_port(args):
         with gzip.open(args.save_fp, "wt", encoding="utf-8") as f:
             json.dump(newfp, f)
         print("Huella de la versión nueva: %s" % args.save_fp)
+    n_weak = sum(1 for m in review_m if m[3] == "WEAK")
+    if n_weak:
+        print("\n%d miembros WEAK (gemelos indistinguibles): conservan el nombre anterior; confírmalo en el dispositivo." % n_weak)
     print("\n%s" % ("TODO RESUELTO CON CONFIANZA." if n_rev == 0 else
                     "%d elementos a REVISAR antes de usar este mapeo." % n_rev))
     return 0 if n_rev == 0 else 2

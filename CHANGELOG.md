@@ -2,6 +2,13 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.5.0
+
+Added
+- Settings: compact mode (hides descriptions and tips for a shorter list).
+- Settings: AMOLED black theme (when Telegram is dark) and accent colour (section titles and action rows).
+- Both are in the Interface section.
+
 ## 1.4.1
 
 Fixed

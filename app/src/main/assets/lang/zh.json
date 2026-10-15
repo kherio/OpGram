@@ -215,5 +215,18 @@
   "BatchDownloadDone": "已保存 %1$d/%2$d 项到相册",
   "BatchDownloadEmpty": "未找到照片或视频",
   "BatchDownloadFailed": "无法下载媒体",
-  "BatchDownloadBusy": "已有下载正在进行"
+  "BatchDownloadBusy": "已有下载正在进行",
+  "CompactMode": "紧凑模式",
+  "CompactModeDesc": "隐藏说明和提示，使列表更短",
+  "SettingsTheme": "主题",
+  "ThemeFollow": "跟随 Telegram",
+  "ThemeAmoled": "AMOLED 纯黑",
+  "SettingsAccent": "强调色",
+  "AccentDefault": "默认",
+  "AccentBlue": "蓝色",
+  "AccentGreen": "绿色",
+  "AccentOrange": "橙色",
+  "AccentPink": "粉色",
+  "AccentPurple": "紫色",
+  "AccentCyan": "青色"
 }

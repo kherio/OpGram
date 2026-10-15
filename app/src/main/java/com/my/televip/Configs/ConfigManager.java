@@ -92,6 +92,9 @@ public class ConfigManager {
     public static ConfigItem hideProxySponsor;
     public static ConfigItem showUserID;
     public static ConfigItem customCalendar;
+    public static ConfigItem compactMode, settingsTheme, settingsAccent;
+
+    public static boolean isCompact() { return compactMode != null && compactMode.isEnable(); }
 
     // Other Features
     public static ConfigItem otherFeatures;
@@ -288,6 +291,13 @@ public class ConfigManager {
 
         disableProfileSwipeBack = new ConfigItem(ConfigItem.SWITCH, Keys.DisableProfileSwipeBack, ConfigPreferences.getBoolean(Keys.DisableProfileSwipeBack), DisableProfileSwipeBack::init);
         items.add(disableProfileSwipeBack);
+
+        compactMode = new ConfigItem(ConfigItem.SWITCH, Keys.CompactMode, ConfigPreferences.getBoolean(Keys.CompactMode), () -> {});
+        items.add(compactMode);
+        settingsTheme = new ConfigItem(ConfigItem.TEXT, Keys.SettingsTheme, true, () -> {});
+        items.add(settingsTheme);
+        settingsAccent = new ConfigItem(ConfigItem.TEXT, Keys.SettingsAccent, true, () -> {});
+        items.add(settingsAccent);
 
         hideProxySponsor = new ConfigItem(ConfigItem.SWITCH, Keys.HideProxySponsor, true, ConfigPreferences.getBoolean(Keys.HideProxySponsor), HideProxySponsor::init);
         items.add(hideProxySponsor);
@@ -496,7 +506,7 @@ public class ConfigManager {
 
         if (!searching) {
             if (tipsItem == null) tipsItem = new ConfigItem(ConfigItem.INFO, Keys.SettingsTips);
-            viewItems.add(tipsItem);
+            if (!isCompact()) viewItems.add(tipsItem);
 
             List<ConfigItem> favs = new ArrayList<>();
             for (String k : favorites) {

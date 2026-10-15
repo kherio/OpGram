@@ -32,6 +32,26 @@ public class SettingsAdapter {
 
     private static boolean isLongText = false;
 
+    private static final String[] ACCENT_KEYS = {Keys.AccentDefault, Keys.AccentBlue, Keys.AccentGreen,
+            Keys.AccentOrange, Keys.AccentPink, Keys.AccentPurple, Keys.AccentCyan};
+
+    /** Recolours the title text of a header cell with the chosen accent (no-op for "default"). */
+    private static void tintAccent(View v) {
+        int accent = ThemeColors.ACCENTS[ThemeColors.getAccentIndex()];
+        if (accent == 0 || v == null) return;
+        try {
+            if (v instanceof TextView) { ((TextView) v).setTextColor(accent); return; }
+            if (v instanceof android.view.ViewGroup) {
+                android.view.ViewGroup g = (android.view.ViewGroup) v;
+                for (int i = 0; i < g.getChildCount(); i++) {
+                    View c = g.getChildAt(i);
+                    if (c instanceof TextView) ((TextView) c).setTextColor(accent);
+                    else XposedHelpers.callMethod(c, "setTextColor", accent);
+                }
+            }
+        } catch (Throwable ignored) { }
+    }
+
     public static int getRow(int position) { return ConfigManager.getItems().get(position).getType(); }
 
     public static int getRowCount() {
@@ -49,6 +69,7 @@ public class SettingsAdapter {
                     String arrow = ConfigManager.getSearchQuery().isEmpty()
                             ? (ConfigManager.isCollapsed(hkey) ? "  ▸" : "  ▾") : "";
                     headerCell.cell.setText(Translator.get(hkey) + arrow);
+                    tintAccent(headerCell.cell.getView());
                     if (ConfigManager.getSearchQuery().isEmpty()) {
                         headerCell.cell.getView().setOnClickListener(v -> {
                             ConfigManager.toggleCollapseByKey(hkey);
@@ -101,6 +122,12 @@ public class SettingsAdapter {
                                 break;
                         }
                         settingsCell.cell.setTextAndValue(Translator.get(item.getKey()), value, false, false);
+                    } else if (item.getKey().equals(Keys.SettingsTheme)) {
+                        settingsCell.cell.setTextAndValue(Translator.get(item.getKey()),
+                                Translator.get(item.getCustomCalendar() == 1 ? Keys.ThemeAmoled : Keys.ThemeFollow), false, false);
+                    } else if (item.getKey().equals(Keys.SettingsAccent)) {
+                        settingsCell.cell.setTextAndValue(Translator.get(item.getKey()),
+                                Translator.get(ACCENT_KEYS[Math.max(0, Math.min(item.getCustomCalendar(), ACCENT_KEYS.length - 1))]), false, false);
                     } else {
                         settingsCell.cell.setText(Translator.get(item.getKey()), false);
                         settingsCell.cell.getTextView().setTextColor(ThemeColors.getTextBlueColor());
@@ -147,6 +174,9 @@ public class SettingsAdapter {
             if (viewType == ConfigItem.HEADER) return;
 
             ViewHolder viewHolder = new ViewHolder(holder);
+            if (ThemeColors.isAmoled() && viewType != ConfigItem.DIVIDER) {
+                viewHolder.getItemView().setBackgroundColor(ThemeColors.getBackgroundWhiteOrBlueColor());
+            }
 
             viewHolder.getItemView().setOnLongClickListener(v -> {
                 if (viewType == ConfigItem.SWITCH) {
@@ -168,6 +198,11 @@ public class SettingsAdapter {
                     textCheck.cell.setChecked(checked);
                     item.setEnable(checked);
                     item.run();
+                    if (Keys.CompactMode.equals(item.getKey())) {
+                        ConfigManager.rebuildView();
+                        settingsController.refreshList();
+                        return;
+                    }
                     if (item.isRestartRequired() && !ConfigManager.isRestartPending()) {
                         ConfigManager.setRestartPending(true);
                         settingsController.refreshList();
@@ -202,6 +237,29 @@ public class SettingsAdapter {
                         case Keys.ClearEditsHistory:
                             BackupActions.clearEditsHistory((Activity) settingsController.getContext());
                             break;
+                        case Keys.SettingsTheme: {
+                            Dialog d = DialogUtils.createSingleChoiceDialog((Activity) settingsController.getContext(),
+                                    new String[]{Translator.get(Keys.ThemeFollow), Translator.get(Keys.ThemeAmoled)},
+                                    Translator.get(Keys.SettingsTheme), item.getCustomCalendar(), (dialog, which) -> {
+                                        item.setCustomCalendar(which);
+                                        settingsController.settingsActivity.applyTheme();
+                                        settingsController.refreshList();
+                                    });
+                            d.show();
+                            break;
+                        }
+                        case Keys.SettingsAccent: {
+                            String[] names = new String[ACCENT_KEYS.length];
+                            for (int i = 0; i < names.length; i++) names[i] = Translator.get(ACCENT_KEYS[i]);
+                            Dialog d = DialogUtils.createSingleChoiceDialog((Activity) settingsController.getContext(),
+                                    names, Translator.get(Keys.SettingsAccent), item.getCustomCalendar(), (dialog, which) -> {
+                                        item.setCustomCalendar(which);
+                                        settingsController.settingsActivity.applyTheme();
+                                        settingsController.refreshList();
+                                    });
+                            d.show();
+                            break;
+                        }
                         case Keys.Calendar:
                             Dialog dlg = DialogUtils.createSingleChoiceDialog((Activity) settingsController.getContext(), new String[]{
                                             Translator.get(Keys.Gregorian), Translator.get(Keys.Hijri), Translator.get(Keys.Persian)},
@@ -227,13 +285,14 @@ public class SettingsAdapter {
     /** Subtitle under a switch: description, example value and/or "restart required". */
     private static String buildSubtitle(ConfigItem item) {
         StringBuilder sb = new StringBuilder();
-        String desc = Translator.getOrNull(item.getKey() + "Desc");
+        boolean compact = ConfigManager.isCompact();
+        String desc = compact ? null : Translator.getOrNull(item.getKey() + "Desc");
         if (desc != null) sb.append(desc);
-        if (item.getValue() != null) {
+        if (item.getValue() != null && !compact) {
             if (sb.length() > 0) sb.append("\n");
             sb.append(item.getValue());
         }
-        if (item.isRestartRequired()) {
+        if (item.isRestartRequired() && !compact) {
             if (sb.length() > 0) sb.append("\n");
             sb.append("\u21BB ").append(Translator.get(Keys.RestartRequired));
         }

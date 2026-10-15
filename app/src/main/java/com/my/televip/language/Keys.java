@@ -199,4 +199,16 @@ public class Keys {
     public static final String BatchDownloadEmpty = "BatchDownloadEmpty";
     public static final String BatchDownloadFailed = "BatchDownloadFailed";
     public static final String BatchDownloadBusy = "BatchDownloadBusy";
+    public static final String CompactMode = "CompactMode";
+    public static final String SettingsTheme = "SettingsTheme";
+    public static final String ThemeFollow = "ThemeFollow";
+    public static final String ThemeAmoled = "ThemeAmoled";
+    public static final String SettingsAccent = "SettingsAccent";
+    public static final String AccentDefault = "AccentDefault";
+    public static final String AccentBlue = "AccentBlue";
+    public static final String AccentGreen = "AccentGreen";
+    public static final String AccentOrange = "AccentOrange";
+    public static final String AccentPink = "AccentPink";
+    public static final String AccentPurple = "AccentPurple";
+    public static final String AccentCyan = "AccentCyan";
 }

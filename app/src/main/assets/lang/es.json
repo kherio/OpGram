@@ -242,5 +242,18 @@
   "BatchDownloadDone": "Guardados %1$d de %2$d en la galería",
   "BatchDownloadEmpty": "No se han encontrado fotos ni vídeos",
   "BatchDownloadFailed": "No se han podido descargar los medios",
-  "BatchDownloadBusy": "Ya hay una descarga en curso"
+  "BatchDownloadBusy": "Ya hay una descarga en curso",
+  "CompactMode": "Modo compacto",
+  "CompactModeDesc": "Oculta descripciones y consejos para una lista más corta",
+  "SettingsTheme": "Tema",
+  "ThemeFollow": "Seguir a Telegram",
+  "ThemeAmoled": "Negro AMOLED",
+  "SettingsAccent": "Color de acento",
+  "AccentDefault": "Predeterminado",
+  "AccentBlue": "Azul",
+  "AccentGreen": "Verde",
+  "AccentOrange": "Naranja",
+  "AccentPink": "Rosa",
+  "AccentPurple": "Morado",
+  "AccentCyan": "Cian"
 }

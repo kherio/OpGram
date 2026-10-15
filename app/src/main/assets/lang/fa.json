@@ -215,5 +215,18 @@
   "BatchDownloadDone": "%1$d از %2$d مورد در گالری ذخیره شد",
   "BatchDownloadEmpty": "عکس یا ویدیویی پیدا نشد",
   "BatchDownloadFailed": "دانلود رسانه‌ها ممکن نشد",
-  "BatchDownloadBusy": "یک دانلود در حال انجام است"
+  "BatchDownloadBusy": "یک دانلود در حال انجام است",
+  "CompactMode": "حالت فشرده",
+  "CompactModeDesc": "توضیحات و نکته‌ها را برای فهرست کوتاه‌تر پنهان می‌کند",
+  "SettingsTheme": "پوسته",
+  "ThemeFollow": "پیروی از تلگرام",
+  "ThemeAmoled": "مشکی AMOLED",
+  "SettingsAccent": "رنگ تأکید",
+  "AccentDefault": "پیش‌فرض",
+  "AccentBlue": "آبی",
+  "AccentGreen": "سبز",
+  "AccentOrange": "نارنجی",
+  "AccentPink": "صورتی",
+  "AccentPurple": "بنفش",
+  "AccentCyan": "فیروزه‌ای"
 }

@@ -215,5 +215,18 @@
   "BatchDownloadDone": "تم حفظ %1$d من %2$d في المعرض",
   "BatchDownloadEmpty": "لم يتم العثور على صور أو فيديوهات",
   "BatchDownloadFailed": "تعذّر تنزيل الوسائط",
-  "BatchDownloadBusy": "هناك تنزيل قيد التشغيل بالفعل"
+  "BatchDownloadBusy": "هناك تنزيل قيد التشغيل بالفعل",
+  "CompactMode": "الوضع المضغوط",
+  "CompactModeDesc": "يخفي الأوصاف والنصائح لقائمة أقصر",
+  "SettingsTheme": "السمة",
+  "ThemeFollow": "اتبع تيليغرام",
+  "ThemeAmoled": "أسود AMOLED",
+  "SettingsAccent": "لون التمييز",
+  "AccentDefault": "الافتراضي",
+  "AccentBlue": "أزرق",
+  "AccentGreen": "أخضر",
+  "AccentOrange": "برتقالي",
+  "AccentPink": "وردي",
+  "AccentPurple": "بنفسجي",
+  "AccentCyan": "سماوي"
 }

@@ -35,6 +35,9 @@ public class SettingsActivity {
     private final Context context;
 
     public RecyclerListView listView;
+    private LinearLayout rootLayout;
+    private MainToolBar mainToolbar;
+    private android.widget.EditText searchBox;
 
 
     public View createView(SettingsController settingsController) {
@@ -56,6 +59,8 @@ public class SettingsActivity {
             toolbar.getImage().setOnClickListener(v -> settingsController.hide());
 
             layout.addView(toolbar);
+            rootLayout = layout;
+            mainToolbar = toolbar;
 
             // Search box over the settings list
             ConfigManager.setSearchQuery("");
@@ -69,6 +74,7 @@ public class SettingsActivity {
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             searchParams.setMargins(10, 6, 10, 0);
             layout.addView(search, searchParams);
+            searchBox = search;
 
             listView = new RecyclerListView(context);
             if (DexInjector.classLoader != null) {
@@ -110,6 +116,21 @@ public class SettingsActivity {
         }
 
         return layout;
+    }
+
+    /** Re-applies theme colours (AMOLED / accent) without rebuilding the page. */
+    public void applyTheme() {
+        try {
+            if (rootLayout != null) rootLayout.setBackgroundColor(ThemeColors.getBackgroundGrayColor());
+            if (listView != null) listView.setBackgroundColor(ThemeColors.getBackgroundWhiteOrBlueColor());
+            if (mainToolbar != null) {
+                mainToolbar.setColorTitle(ThemeColors.getTextToolBarColor());
+                mainToolbar.setBackgroundColor(ThemeColors.getToolBarColor());
+            }
+            if (searchBox != null) searchBox.setTextColor(ThemeColors.getTextToolBarColor());
+        } catch (Throwable t) {
+            Logger.e(t);
+        }
     }
 
     public SettingsActivity(Context context) {

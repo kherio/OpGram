@@ -39,6 +39,15 @@ jobs:
       - name: Build release APK
         run: ./gradlew :app:assembleRelease --no-daemon --stacktrace
 
+      - name: Check signing secrets
+        env:
+          KS_PASS: ${{ secrets.KEYSTORE_PASS }}
+          K_PASS: ${{ secrets.KEY_PASS }}
+          K_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          echo "KEYSTORE_B64 length: ${#KEYSTORE_B64}"
+          echo "KEYSTORE_PASS length: ${#KS_PASS}, KEY_PASS length: ${#K_PASS}, KEY_ALIAS length: ${#K_ALIAS}"
+
       - name: Require signing secrets on release tags
         if: ${{ startsWith(github.ref, 'refs/tags/v') && env.KEYSTORE_B64 == '' }}
         run: |

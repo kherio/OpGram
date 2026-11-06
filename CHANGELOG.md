@@ -2,6 +2,18 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.5.1
+
+Added
+- Partial support for Telegram Web 13.2.0 (72809): settings page, ghost mode and the interface tweaks.
+  Telegram now obfuscates its core classes (MessageObject, MessagesController, FileLoader...), so features
+  that depend on them (deleted-message log, edit history, batch download, some chat/profile tweaks) are
+  disabled on 13.2.0 until they are ported.
+
+Fixed
+- A feature that fails to start on an unsupported build no longer stops the remaining features.
+- Menu icons are now looked up by name, so they no longer depend on obfuscated resource classes.
+
 ## 1.5.0
 
 Added

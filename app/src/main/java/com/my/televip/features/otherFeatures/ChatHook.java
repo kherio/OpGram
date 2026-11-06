@@ -47,35 +47,35 @@ public class ChatHook {
                         ActionBarMenuItem headerItem = chatActivity.getHeaderItem();
                         if (headerItem.getActionBarMenuItem() != null) {
 
-                            int drawableResource = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "msg_go_up");
+                            int drawableResource = Utils.drawableId("msg_go_up");
 
                             if (!ClientManager.is(ClientManager.Client.iMe) && !ClientManager.is(ClientManager.Client.iMeWeb) && !ClientManager.is(ClientManager.Client.TelegramPlus) && !ClientManager.is(ClientManager.Client.XPlus) && !ClientManager.is(ClientManager.Client.forkgram) && !ClientManager.is(ClientManager.Client.forkgramBeta)) {
                                 headerItem.lazilyAddSubItem(8353847, drawableResource, Translator.get(Keys.ToTheBeginning));
                             }
-                            drawableResource = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "player_new_order");
+                            drawableResource = Utils.drawableId("player_new_order");
 
                             headerItem.lazilyAddSubItem(8353848, drawableResource, Translator.get(Keys.ToTheMessage));
 
                             if (ConfigManager.reminders != null && ConfigManager.reminders.isEnable()) {
-                                int remIcon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "msg_calendar2");
+                                int remIcon = Utils.drawableId("msg_calendar2");
                                 headerItem.lazilyAddSubItem(8353852, remIcon, Translator.get(Keys.RemindMe));
                             }
                             if (ConfigManager.batchDownload != null && ConfigManager.batchDownload.isEnable()) {
-                                int dlIcon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "msg_download");
+                                int dlIcon = Utils.drawableId("msg_download");
                                 headerItem.lazilyAddSubItem(8353853, dlIcon, Translator.get(Keys.BatchDownload));
                             }
                             if (ConfigManager.chatLock != null && ConfigManager.chatLock.isEnable()) {
                                 long lockDid = chatActivity.getDialogId();
-                                int lockIcon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE),
+                                int lockIcon = Utils.drawableId(
                                         com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? "menu_unlock" : "msg_secret");
                                 headerItem.lazilyAddSubItem(8353851, lockIcon, Translator.get(
                                         com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? Keys.UnlockThisChat : Keys.LockThisChat));
                             }
                             if (ConfigManager.isGhostMode()) {
                                 long did = chatActivity.getDialogId();
-                                int icon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "msg_markread");
+                                int icon = Utils.drawableId("msg_markread");
                                 headerItem.lazilyAddSubItem(8353849, icon, Translator.get(Keys.MarkAsReadNow));
-                                icon = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "ghost");
+                                icon = Utils.drawableId("ghost");
                                 headerItem.lazilyAddSubItem(8353850, icon, Translator.get(
                                         GhostExceptions.isExcluded(did) ? Keys.GhostIncludeChat : Keys.GhostExcludeChat));
                             }

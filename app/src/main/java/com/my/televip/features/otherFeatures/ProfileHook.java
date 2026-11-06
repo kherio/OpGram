@@ -42,7 +42,7 @@ public class ProfileHook {
                         int drawableResource = 0x7f0806d3;
 
                         if (!ClientManager.is(ClientManager.Client.Nagram) && !ClientManager.is(ClientManager.Client.Momogram)) {
-                            drawableResource = XposedHelpers.getStaticIntField(ClassLoad.getClass(ClassNames.DRAWABLE), "msg_filled_menu_users");
+                            drawableResource = Utils.drawableId("msg_filled_menu_users");
                         }
 
                         otherItem.addSubItem(8353847, drawableResource, Translator.get(Keys.ApproximateCreationDate));

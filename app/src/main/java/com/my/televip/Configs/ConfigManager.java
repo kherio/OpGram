@@ -562,7 +562,10 @@ public class ConfigManager {
             for (ConfigItem item : items) {
                 if (item == null) continue;
                 if (item.getType() != ConfigItem.SWITCH && item.getCustomCalendar() == 0) continue;
-                if (item.isEnable()) item.run();
+                if (item.isEnable()) {
+                    // one broken feature must not stop the rest (e.g. an unmapped class on a new Telegram build)
+                    try { item.run(); } catch (Throwable t) { Logger.e(t); }
+                }
             }
 
             if (!ClientManager.is(ClientManager.Client.Telegraph) && !ClientManager.is(ClientManager.Client.Nekogram) && !ClientManager.is(ClientManager.Client.Cherrygram)) {

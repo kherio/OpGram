@@ -28,6 +28,24 @@ public class Utils {
         return currentActivity != null ? currentActivity.get() : null;
     }
 
+    /** Resource id of a Telegram drawable by name (R$drawable is obfuscated in newer builds). */
+    public static int drawableId(String name) {
+        try {
+            android.content.Context c = (android.content.Context) Class.forName("android.app.ActivityThread")
+                    .getMethod("currentApplication").invoke(null);
+            if (c != null) {
+                int id = c.getResources().getIdentifier(name, "drawable", c.getPackageName());
+                if (id != 0) return id;
+            }
+        } catch (Throwable ignored) { }
+        try {
+            return de.robv.android.xposed.XposedHelpers.getStaticIntField(
+                    com.my.televip.Class.ClassLoad.getClass(com.my.televip.Class.ClassNames.DRAWABLE), name);
+        } catch (Throwable t) {
+            return 0;
+        }
+    }
+
     public static String getFieldAsString(Object value) {
 
         if (value == null) {

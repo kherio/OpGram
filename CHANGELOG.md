@@ -2,6 +2,12 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.5.3
+
+Added
+- Support for Telegram from Google Play (org.telegram.messenger) 13.2.0 (72801). It is built like Telegram Web, so it uses the same behaviour and its own mapping.
+  As with Web 13.2.0, features that depend on obfuscated core classes (deleted-message log, edit history, batch download, some chat/profile tweaks) are disabled for now.
+
 ## 1.5.2
 
 Fixed

@@ -71,13 +71,24 @@ public class ClientManager {
 
     }
 
+    /**
+     * Telegram from Google Play (org.telegram.messenger) is built like Telegram Web from 13.2.0 on
+     * (R8-optimized, same parameter changes), so it uses the TelegramWeb behaviour and mappings.
+     */
+    private static boolean webLike(String pkg) {
+        return "org.telegram.messenger".equals(pkg) && Utils.versionCode >= 72000L;
+    }
+
     public static boolean is(Client client, String pkg) {
 
+        if (webLike(pkg)) return client == Client.TelegramWeb;
         return client.hasPackage(pkg);
 
     }
 
     public static Client getCurrent() {
+
+        if (webLike(Utils.pkgName)) return Client.TelegramWeb;
 
         for (Client client : Client.values()) {
 

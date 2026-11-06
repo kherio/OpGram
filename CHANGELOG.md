@@ -2,6 +2,11 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.5.5
+
+Fixed
+- Telegram 13.2.0 (Google Play and Web): the chat menu entries now work again (go to the start, go to a message, remind me, lock chat, ghost-mode exception for this chat, mark as read now). The mapping now includes the chat header menu and the chat id field, verified by comparing how the original code uses them.
+
 ## 1.5.4
 
 Fixed

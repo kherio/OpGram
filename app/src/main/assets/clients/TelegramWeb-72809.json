@@ -352,6 +352,16 @@
       "c": "ChatActivity",
       "o": "this$0",
       "r": "b"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "headerItem",
+      "r": "h0"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "dialog_id",
+      "r": "i6"
     }
   ]
 }

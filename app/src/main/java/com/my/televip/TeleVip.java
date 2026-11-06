@@ -14,25 +14,28 @@ import com.my.televip.virtuals.TeleVip.Bridge.Bridge;
 
 public class TeleVip {
     
-    public static void startHook() {
+    /** Each start-up step is isolated: one failing step must not prevent the settings entry from appearing. */
+    private static void step(String name, Runnable r) {
         try {
-            resolverRegistry.loadParameter();
-            Translator.init();
-            AndroidUtilities.init();
-            DexInjector.injectDex(Utils.classLoader);
-
-            SettingsController settingsController = new SettingsController();
-
-            Bridge.init(settingsController);
-            ConfigManager.loadAndRead();
-            SettingsManager.init(settingsController);
-            com.my.televip.features.extra.VersionGuard.check();
-            com.my.televip.features.extra.Updater.checkAsync(false);
-
-        } catch (Throwable e){
+            r.run();
+        } catch (Throwable e) {
+            Logger.w("OpGram startup step failed: " + name);
             Logger.e(e);
         }
-
     }
 
+    public static void startHook() {
+        step("params", () -> resolverRegistry.loadParameter());
+        step("translator", () -> Translator.init());
+        step("androidUtilities", () -> AndroidUtilities.init());
+        step("dex", () -> DexInjector.injectDex(Utils.classLoader));
+
+        final SettingsController settingsController = new SettingsController();
+
+        step("bridge", () -> Bridge.init(settingsController));
+        step("config", () -> ConfigManager.loadAndRead());
+        step("settings", () -> SettingsManager.init(settingsController));
+        step("versionGuard", () -> com.my.televip.features.extra.VersionGuard.check());
+        step("updater", () -> com.my.televip.features.extra.Updater.checkAsync(false));
+    }
 }

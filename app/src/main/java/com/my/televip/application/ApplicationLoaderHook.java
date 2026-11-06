@@ -14,10 +14,20 @@ public class ApplicationLoaderHook {
 
     public static Context getApplicationContext() {
         if (applicationContext == null) {
-            applicationContext = (Context) XposedHelpers.getStaticObjectField(
-                    ClassLoad.getClass(ClassNames.APPLICATION_LOADER),
-                    Obfuscate.getFieldName("ApplicationLoader", "applicationContext")
-            );
+            try {
+                applicationContext = (Context) XposedHelpers.getStaticObjectField(
+                        ClassLoad.getClass(ClassNames.APPLICATION_LOADER),
+                        Obfuscate.getFieldName("ApplicationLoader", "applicationContext")
+                );
+            } catch (Throwable ignored) {
+                // ApplicationLoader is obfuscated on newer Telegram builds: ask Android instead
+            }
+        }
+        if (applicationContext == null) {
+            try {
+                applicationContext = (Context) Class.forName("android.app.ActivityThread")
+                        .getMethod("currentApplication").invoke(null);
+            } catch (Throwable ignored) { }
         }
         return applicationContext;
     }

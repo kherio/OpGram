@@ -2,6 +2,13 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.5.2
+
+Fixed
+- Start-up steps are isolated, so one failing step (e.g. an obfuscated Telegram class) no longer prevents the OpGram settings entry from being installed.
+- The application context no longer depends on the obfuscated ApplicationLoader class.
+- If the settings entry cannot be installed, OpGram now shows a message with the reason instead of failing silently.
+
 ## 1.5.1
 
 Added

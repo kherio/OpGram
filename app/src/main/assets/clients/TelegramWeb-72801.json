@@ -341,12 +341,7 @@
     {
       "c": "LaunchActivity",
       "o": "frameLayout",
-      "r": "v0"
-    },
-    {
-      "c": "PhotoViewer",
-      "o": "galleryButton",
-      "r": "s0"
+      "r": "t0"
     },
     {
       "c": "Switch",
@@ -357,21 +352,6 @@
       "c": "ChatActivity",
       "o": "this$0",
       "r": "b"
-    },
-    {
-      "c": "ProfileActivity",
-      "o": "this$0",
-      "r": "b"
-    },
-    {
-      "c": "ProfileActivity",
-      "o": "userId",
-      "r": "d1"
-    },
-    {
-      "c": "ProfileActivity",
-      "o": "chatId",
-      "r": "e1"
     }
   ]
 }

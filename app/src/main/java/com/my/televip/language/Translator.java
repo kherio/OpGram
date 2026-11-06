@@ -16,13 +16,27 @@ public class Translator {
 
     private static LocaleController localeController;
 
+    private static java.util.Locale locale() {
+        try {
+            if (localeController != null) {
+                java.util.Locale l = localeController.getCurrentLocale();
+                if (l != null) return l;
+            }
+        } catch (Throwable ignored) { }
+        return java.util.Locale.getDefault();
+    }
+
     public static void init() {
         try {
             loadAllLanguages();
-
-            localeController = new LocaleController();
         } catch (Throwable e) {
             Logger.e(e);
+        }
+        try {
+            localeController = new LocaleController();
+        } catch (Throwable e) {
+            // LocaleController is obfuscated on newer Telegram builds: fall back to the system language
+            localeController = null;
         }
     }
     private static void loadAllLanguages() {
@@ -39,10 +53,9 @@ public class Translator {
     }
 
     public static String get(String key) {
-        if (localeController == null) return key;
         try {
-            if (localeController.getCurrentLocale() != null) {
-                String lang = localeController.getCurrentLocale().getLanguage();
+            if (locale() != null) {
+                String lang = locale().getLanguage();
                 JSONObject langJson = langMap.get(lang);
 
                 if (langJson != null && langJson.has(key)) {
@@ -68,10 +81,9 @@ public class Translator {
 
     /** Like get(), but returns null when the key has no translation at all (used for optional texts). */
     public static String getOrNull(String key) {
-        if (localeController == null) return null;
         try {
-            if (localeController.getCurrentLocale() != null) {
-                JSONObject langJson = langMap.get(localeController.getCurrentLocale().getLanguage());
+            if (locale() != null) {
+                JSONObject langJson = langMap.get(locale().getLanguage());
                 if (langJson != null && langJson.has(key)) return langJson.optString(key);
                 JSONObject enJson = langMap.get("en");
                 if (enJson != null && enJson.has(key)) return enJson.optString(key);
@@ -83,10 +95,9 @@ public class Translator {
     }
 
     public static String get(String key, Object... args) {
-        if (localeController == null) return key;
         try {
-            if (localeController.getCurrentLocale() != null) {
-                String lang = localeController.getCurrentLocale().getLanguage();
+            if (locale() != null) {
+                String lang = locale().getLanguage();
 
                 String text = null;
 

@@ -2,6 +2,13 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.5.4
+
+Fixed
+- Telegram (Google Play) 13.2.0: tapping OpGram in Settings did not open the page (wrong LaunchActivity field in the mapping).
+- Texts showed their raw keys (e.g. "ByMustafa") because the language lookup depended on an obfuscated Telegram class; it now falls back to the system language.
+- Removed unverified field names from the 13.2.0 mappings so they fail safely instead of reading the wrong field.
+
 ## 1.5.3
 
 Added

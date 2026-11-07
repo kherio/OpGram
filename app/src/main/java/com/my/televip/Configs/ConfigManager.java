@@ -9,7 +9,9 @@ import com.my.televip.features.extra.ConfirmSending;
 import com.my.televip.features.extra.UndoSend;
 import com.my.televip.features.extra.VoicePlaybackSpeed;
 import com.my.televip.features.extra.BatterySaver;
+import com.my.televip.features.extra.AppLock;
 import com.my.televip.features.extra.ChatLock;
+import com.my.televip.features.extra.SecureScreen;
 import com.my.televip.features.extra.HideSponsoredMessages;
 import com.my.televip.features.ui.DisableProfileSwipeBack;
 import com.my.televip.features.stories.DisableStories;
@@ -93,6 +95,7 @@ public class ConfigManager {
     public static ConfigItem showUserID;
     public static ConfigItem customCalendar;
     public static ConfigItem compactMode, settingsTheme, settingsAccent;
+    public static ConfigItem securityHeader, appLock, appLockTimeout, secureScreen, secureChats;
 
     public static boolean isCompact() { return compactMode != null && compactMode.isEnable(); }
 
@@ -244,6 +247,24 @@ public class ConfigManager {
 
         hideSponsoredMessages = new ConfigItem(ConfigItem.SWITCH, Keys.HideSponsoredMessages, ConfigPreferences.getBoolean(Keys.HideSponsoredMessages), HideSponsoredMessages::init);
         items.add(hideSponsoredMessages);
+
+        items.add(shadows);
+
+        // Security
+        securityHeader = new ConfigItem(ConfigItem.HEADER, Keys.SecuritySettings);
+        items.add(securityHeader);
+
+        appLock = new ConfigItem(ConfigItem.SWITCH, Keys.AppLock, ConfigPreferences.getBoolean(Keys.AppLock), AppLock::init);
+        items.add(appLock);
+
+        appLockTimeout = new ConfigItem(ConfigItem.TEXT, Keys.AppLockTimeout, true, () -> {});
+        items.add(appLockTimeout);
+
+        secureScreen = new ConfigItem(ConfigItem.SWITCH, Keys.SecureScreen, ConfigPreferences.getBoolean(Keys.SecureScreen), SecureScreen::init);
+        items.add(secureScreen);
+
+        secureChats = new ConfigItem(ConfigItem.SWITCH, Keys.SecureChats, ConfigPreferences.getBoolean(Keys.SecureChats), SecureScreen::init);
+        items.add(secureChats);
 
         items.add(shadows);
 

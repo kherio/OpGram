@@ -211,4 +211,22 @@ public class Keys {
     public static final String AccentPink = "AccentPink";
     public static final String AccentPurple = "AccentPurple";
     public static final String AccentCyan = "AccentCyan";
+    public static final String SecuritySettings = "SecuritySettings";
+    public static final String AppLock = "AppLock";
+    public static final String AppLockDesc = "AppLockDesc";
+    public static final String AppLockTimeout = "AppLockTimeout";
+    public static final String AppLockTitle = "AppLockTitle";
+    public static final String AppLockUnlock = "AppLockUnlock";
+    public static final String LockImmediate = "LockImmediate";
+    public static final String Lock30s = "Lock30s";
+    public static final String Lock1m = "Lock1m";
+    public static final String Lock5m = "Lock5m";
+    public static final String SecureScreen = "SecureScreen";
+    public static final String SecureScreenDesc = "SecureScreenDesc";
+    public static final String SecureChats = "SecureChats";
+    public static final String SecureChatsDesc = "SecureChatsDesc";
+    public static final String SecureThisChat = "SecureThisChat";
+    public static final String UnsecureThisChat = "UnsecureThisChat";
+    public static final String SecureChatOn = "SecureChatOn";
+    public static final String SecureChatOff = "SecureChatOff";
 }

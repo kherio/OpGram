@@ -31,6 +31,7 @@ import de.robv.android.xposed.XposedHelpers;
 public class SettingsAdapter {
 
     private static boolean isLongText = false;
+    private static final String[] LOCK_KEYS = {Keys.LockImmediate, Keys.Lock30s, Keys.Lock1m, Keys.Lock5m};
 
     private static final String[] ACCENT_KEYS = {Keys.AccentDefault, Keys.AccentBlue, Keys.AccentGreen,
             Keys.AccentOrange, Keys.AccentPink, Keys.AccentPurple, Keys.AccentCyan};
@@ -122,6 +123,9 @@ public class SettingsAdapter {
                                 break;
                         }
                         settingsCell.cell.setTextAndValue(Translator.get(item.getKey()), value, false, false);
+                    } else if (item.getKey().equals(Keys.AppLockTimeout)) {
+                        settingsCell.cell.setTextAndValue(Translator.get(item.getKey()),
+                                Translator.get(LOCK_KEYS[Math.max(0, Math.min(item.getCustomCalendar(), LOCK_KEYS.length - 1))]), false, false);
                     } else if (item.getKey().equals(Keys.SettingsTheme)) {
                         settingsCell.cell.setTextAndValue(Translator.get(item.getKey()),
                                 Translator.get(item.getCustomCalendar() == 1 ? Keys.ThemeAmoled : Keys.ThemeFollow), false, false);
@@ -237,6 +241,17 @@ public class SettingsAdapter {
                         case Keys.ClearEditsHistory:
                             BackupActions.clearEditsHistory((Activity) settingsController.getContext());
                             break;
+                        case Keys.AppLockTimeout: {
+                            String[] names = new String[LOCK_KEYS.length];
+                            for (int i = 0; i < names.length; i++) names[i] = Translator.get(LOCK_KEYS[i]);
+                            Dialog d = DialogUtils.createSingleChoiceDialog((Activity) settingsController.getContext(),
+                                    names, Translator.get(Keys.AppLockTimeout), item.getCustomCalendar(), (dialog, which) -> {
+                                        item.setCustomCalendar(which);
+                                        settingsController.refreshList();
+                                    });
+                            d.show();
+                            break;
+                        }
                         case Keys.SettingsTheme: {
                             Dialog d = DialogUtils.createSingleChoiceDialog((Activity) settingsController.getContext(),
                                     new String[]{Translator.get(Keys.ThemeFollow), Translator.get(Keys.ThemeAmoled)},

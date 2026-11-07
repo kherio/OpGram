@@ -21,7 +21,12 @@ public class UserConfig {
     }
 
     public long getClientUserId(){
-        return XposedHelpers.getLongField(userConfig, Obfuscate.getFieldName("UserConfig" , "clientUserId"));
+        try {
+            // 13.x derives the id from the current user, there is no clientUserId field any more
+            return (long) XposedHelpers.callMethod(userConfig, Obfuscate.getMethodName("UserConfig", "getClientUserId"));
+        } catch (Throwable t) {
+            return XposedHelpers.getLongField(userConfig, Obfuscate.getFieldName("UserConfig" , "clientUserId"));
+        }
     }
 
     public TLRPC.User getCurrentUser(){

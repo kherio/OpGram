@@ -157,7 +157,10 @@ public class ShowDeletedMessages {
                                     @Override
                                     protected void beforeMethod(MethodHookParam param) {
                                         if (!isDeleteMessage) {
-                                            param.setResult(null);
+                                            // In 13.x the method returns an ArrayList; callers iterate it, so never return null.
+                                            boolean returnsList = param.method instanceof java.lang.reflect.Method
+                                                    && java.util.ArrayList.class.isAssignableFrom(((java.lang.reflect.Method) param.method).getReturnType());
+                                            param.setResult(returnsList ? new ArrayList<Object>() : null);
                                         }
                                     }
                                 }

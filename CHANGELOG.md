@@ -2,6 +2,19 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.6.0
+
+Added
+- Security section: app lock with fingerprint, face or screen lock (asks on start and after a chosen time in the background, never locks you out if the phone has no lock screen), block screenshots and hide the app in recents, and a per-chat option in the chat menu to block screenshots only in that chat.
+
+Fixed
+- Telegram 13.2.0 (Google Play): deleted messages are kept again, edit history works, and batch download works (mappings verified against the 72801 APK: update processing, delete notifications, message storage, file loader). The 13.x signature of the message-saving method and the new way of reading the user id are handled.
+- Batch download now resolves its Telegram calls through the version mapping and tolerates reordered parameters, and saves photos and videos to the gallery through the 13.x method.
+
+Notes
+- The Google Play 13.2.0 mapping is still partial: profile fields, the photo viewer button and the pinned-message bar are not mapped yet.
+- Not tested on a device before release; please report anything that does not work.
+
 ## 1.5.5
 
 Fixed

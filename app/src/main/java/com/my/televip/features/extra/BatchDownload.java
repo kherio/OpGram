@@ -64,12 +64,12 @@ public class BatchDownload {
     }
 
     private static Class<?> cls(String name) {
-        return XposedHelpers.findClass(name, Utils.classLoader);
+        return XposedHelpers.findClass(com.my.televip.obfuscate.Obfuscate.getClassName(name), Utils.classLoader);
     }
 
     private static void run(long dialogId, int limit) throws Throwable {
         final ClassLoader cl = Utils.classLoader;
-        final int account = XposedHelpers.getStaticIntField(cls("org.telegram.messenger.UserConfig"), "selectedAccount");
+        final int account = XposedHelpers.getStaticIntField(cls("org.telegram.messenger.UserConfig"), com.my.televip.obfuscate.Obfuscate.getFieldName("UserConfig", "selectedAccount"));
 
         Class<?> tlObject = cls("org.telegram.tgnet.TLObject");
         Class<?> delegateC = cls("org.telegram.tgnet.RequestDelegate");
@@ -78,9 +78,8 @@ public class BatchDownload {
 
         // --- messages.search with the photo+video filter ---
         Object req = cls("org.telegram.tgnet.TLRPC$TL_messages_search").newInstance();
-        Object mc = XposedHelpers.callStaticMethod(mcC, "getInstance", account);
-        Method getInputPeer = mcC.getMethod("getInputPeer", long.class);
-        Object peer = getInputPeer.invoke(mc, dialogId);
+        Object mc = XposedHelpers.callStaticMethod(mcC, mn("MessagesController", "getInstance"), account);
+        Object peer = XposedHelpers.callMethod(mc, mn("MessagesController", "getInputPeer"), dialogId);
         XposedHelpers.setObjectField(req, "peer", peer);
         XposedHelpers.setObjectField(req, "q", "");
         XposedHelpers.setObjectField(req, "filter", cls("org.telegram.tgnet.TLRPC$TL_inputMessagesFilterPhotoVideo").newInstance());
@@ -125,12 +124,12 @@ public class BatchDownload {
         Class<?> messageC = cls("org.telegram.tgnet.TLRPC$Message");
         Class<?> documentC = cls("org.telegram.tgnet.TLRPC$Document");
         Class<?> messageObjectC = cls("org.telegram.messenger.MessageObject");
-        Object fl = XposedHelpers.callStaticMethod(fileLoaderC, "getInstance", account);
-        int prioLow = XposedHelpers.getStaticIntField(fileLoaderC, "PRIORITY_LOW");
-        Method getPath = fileLoaderC.getMethod("getPathToMessage", messageC);
-        Method loadDoc = fileLoaderC.getMethod("loadFile", documentC, Object.class, int.class, int.class);
-        Method getDocument = messageObjectC.getMethod("getDocument", messageC);
-        Method isPhoto = messageObjectC.getMethod("isPhoto", messageC);
+        Object fl = XposedHelpers.callStaticMethod(fileLoaderC, mn("FileLoader", "getInstance"), account);
+        int prioLow = 0; // FileLoader.PRIORITY_LOW
+        try { prioLow = XposedHelpers.getStaticIntField(fileLoaderC, "PRIORITY_LOW"); } catch (Throwable ignored) {}
+        Method getPath = findMethod(fileLoaderC, mn("FileLoader", "getPathToMessage"), messageC);
+        Method loadDoc = findMethod(fileLoaderC, mn("FileLoader", "loadFile"), documentC, Object.class, int.class, int.class);
+        Method getDocument = findMethod(messageObjectC, mn("MessageObject", "getDocument"), messageC);
 
         final List<File> files = new ArrayList<>();
         final List<Object> items = new ArrayList<>();
@@ -149,23 +148,23 @@ public class BatchDownload {
                     if (mime == null || !mime.startsWith("video/")) continue;
                     target = (File) getPath.invoke(fl, m);
                     if (target == null) continue;
-                    name = (String) fileLoaderC.getMethod("getDocumentFileName", documentC).invoke(null, doc);
+                    name = (String) findMethod(fileLoaderC, mn("FileLoader", "getDocumentFileName"), documentC).invoke(null, doc);
                     if (!target.exists()) loadDoc.invoke(fl, doc, m, prioLow, 0);
                     isVideo = true;
-                } else if ((Boolean) isPhoto.invoke(null, m)) {
+                } else if (isPhotoMessage(m)) {
                     target = (File) getPath.invoke(fl, m);
                     if (target == null) continue;
                     if (!target.exists()) {
                         Object media = XposedHelpers.getObjectField(m, "media");
                         Object photo = XposedHelpers.getObjectField(media, "photo");
                         Object sizes = XposedHelpers.getObjectField(photo, "sizes");
-                        int px = (Integer) XposedHelpers.callStaticMethod(cls("org.telegram.messenger.AndroidUtilities"), "getPhotoSize");
-                        Object size = fileLoaderC.getMethod("getClosestPhotoSizeWithSize", ArrayList.class, int.class)
-                                .invoke(null, sizes, px);
-                        Object loc = cls("org.telegram.messenger.ImageLocation")
-                                .getMethod("getForPhoto", cls("org.telegram.tgnet.TLRPC$PhotoSize"), cls("org.telegram.tgnet.TLRPC$Photo"))
+                        int px = 1280;
+                        Method closest = findMethod(fileLoaderC, mn("FileLoader", "getClosestPhotoSizeWithSize"), ArrayList.class, int.class);
+                        Object size = closest.getParameterTypes()[0] == int.class ? closest.invoke(null, px, sizes) : closest.invoke(null, sizes, px);
+                        Class<?> imageLocationC = cls("org.telegram.messenger.ImageLocation");
+                        Object loc = findMethod(imageLocationC, mn("ImageLocation", "getForPhoto"), cls("org.telegram.tgnet.TLRPC$PhotoSize"), cls("org.telegram.tgnet.TLRPC$Photo"))
                                 .invoke(null, size, photo);
-                        fileLoaderC.getMethod("loadFile", cls("org.telegram.messenger.ImageLocation"), Object.class, String.class, int.class, int.class)
+                        findMethod(fileLoaderC, mnOr("FileLoader", "loadFileImage", "loadFile"), imageLocationC, Object.class, String.class, int.class, int.class)
                                 .invoke(fl, loc, m, null, prioLow, 0);
                     }
                     isVideo = false;
@@ -191,7 +190,7 @@ public class BatchDownload {
         // --- wait for the files to appear, then save each to the gallery ---
         final Activity activity = Utils.getCurrentActivity();
         Class<?> mediaC = cls("org.telegram.messenger.MediaController");
-        Method saveFile = mediaC.getMethod("saveFile", String.class, Context.class, int.class, String.class, String.class);
+        Method saveFile = findMethod(mediaC, mn("MediaController", "saveFile"), String.class, Context.class, int.class, String.class, String.class);
         boolean[] saved = new boolean[files.size()];
         int done = 0;
         long end = System.currentTimeMillis() + TIMEOUT_MS;
@@ -201,7 +200,8 @@ public class BatchDownload {
                 File f = files.get(i);
                 if (f.exists() && f.length() > 0) {
                     try {
-                        saveFile.invoke(null, f.getAbsolutePath(), activity, video.get(i) ? 1 : 0, names.get(i), mimes.get(i));
+                        if (saveFile.getParameterTypes().length == 5) saveFile.invoke(null, f.getAbsolutePath(), activity, video.get(i) ? 1 : 0, names.get(i), mimes.get(i));
+                        else saveFile.invoke(null, f.getAbsolutePath(), activity, video.get(i) ? 1 : 0, names.get(i), mimes.get(i), null);
                         saved[i] = true;
                         done++;
                     } catch (Throwable t) {
@@ -213,6 +213,46 @@ public class BatchDownload {
             if (done < files.size()) Thread.sleep(1000);
         }
         toast(Translator.get(Keys.BatchDownloadDone, done, files.size()));
+    }
+
+    private static String mnOr(String c, String key, String fallback) {
+        String r = com.my.televip.obfuscate.Obfuscate.getMethodName(c, key);
+        return key.equals(r) ? fallback : r;
+    }
+
+    private static String mn(String c, String m) {
+        return com.my.televip.obfuscate.Obfuscate.getMethodName(c, m);
+    }
+
+    /** Finds a method by name whose leading parameter types match (as a set, so R8 parameter reordering and extra trailing parameters still resolve). */
+    private static Method findMethod(Class<?> c, String name, Class<?>... types) throws NoSuchMethodException {
+        Method best = null;
+        for (Class<?> k = c; k != null && best == null; k = k.getSuperclass()) {
+            for (Method m : k.getDeclaredMethods()) {
+                if (!m.getName().equals(name)) continue;
+                Class<?>[] p = m.getParameterTypes();
+                if (p.length < types.length || p.length > types.length + 1) continue;
+                java.util.List<Class<?>> pool = new ArrayList<>(java.util.Arrays.asList(p));
+                boolean ok = true;
+                for (Class<?> t : types) {
+                    if (!pool.remove(t)) { ok = false; break; }
+                }
+                if (ok && pool.size() <= 1) { best = m; break; }
+            }
+        }
+        if (best == null) throw new NoSuchMethodException(c.getName() + "#" + name);
+        best.setAccessible(true);
+        return best;
+    }
+
+    private static boolean isPhotoMessage(Object message) {
+        try {
+            Object media = XposedHelpers.getObjectField(message, "media");
+            return media != null && media.getClass().getSimpleName().equals("TL_messageMediaPhoto")
+                    && XposedHelpers.getObjectField(media, "photo") != null;
+        } catch (Throwable t) {
+            return false;
+        }
     }
 
     private static void toast(final String text) {

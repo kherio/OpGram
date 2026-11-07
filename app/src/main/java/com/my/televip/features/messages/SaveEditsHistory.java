@@ -190,15 +190,17 @@ public class SaveEditsHistory {
                                 @Override
                                 protected void beforeMethod(MethodHookParam param) {
                                     if (ConfigManager.saveEditsHistory.isEnable()) {
-                                        int load_type = (int) param.args[2];
-                                        if (ClientManager.is(ClientManager.Client.Nagram)) {
-                                            load_type = (int) param.args[0];
-                                        }
+                                        // Nagram and Telegram 13.x share the (int,int,int,long,long,messages_Messages,boolean) signature
+                                        boolean newSig = ClientManager.is(ClientManager.Client.Nagram)
+                                                || (param.args.length == 7 && param.args[5] != null
+                                                && ClassLoad.getClass(ClassNames.TL_MESSAGES_MESSAGES) != null
+                                                && ClassLoad.getClass(ClassNames.TL_MESSAGES_MESSAGES).isInstance(param.args[5]));
+                                        int load_type = newSig ? (int) param.args[0] : (int) param.args[2];
 
                                         if (load_type == -2) {
                                             Object messagesStorageObject = param.thisObject;
                                             Object messagesObject = param.args[0];
-                                            if (ClientManager.is(ClientManager.Client.Nagram)) {
+                                            if (newSig) {
                                                 messagesObject = param.args[5];
                                             }
 

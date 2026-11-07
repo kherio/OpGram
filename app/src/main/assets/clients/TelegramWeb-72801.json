@@ -103,6 +103,38 @@
     {
       "o": "org.telegram.ui.ChatActivity$ChatMessageCellDelegate",
       "r": "org.telegram.ui.lm"
+    },
+    {
+      "o": "org.telegram.messenger.MessagesController",
+      "r": "org.telegram.messenger.gp"
+    },
+    {
+      "o": "org.telegram.messenger.MessagesStorage",
+      "r": "org.telegram.messenger.or"
+    },
+    {
+      "o": "org.telegram.messenger.MessageObject",
+      "r": "org.telegram.messenger.zi"
+    },
+    {
+      "o": "org.telegram.messenger.NotificationCenter",
+      "r": "org.telegram.messenger.fs"
+    },
+    {
+      "o": "org.telegram.messenger.NotificationsController",
+      "r": "org.telegram.messenger.ss"
+    },
+    {
+      "o": "org.telegram.messenger.UserConfig",
+      "r": "org.telegram.messenger.j10"
+    },
+    {
+      "o": "org.telegram.messenger.FileLoader",
+      "r": "org.telegram.messenger.u7"
+    },
+    {
+      "o": "org.telegram.messenger.ImageLocation",
+      "r": "org.telegram.messenger.ac"
     }
   ],
   "methods": [
@@ -290,6 +322,116 @@
       "c": "SimpleTextView",
       "o": "setText",
       "r": "l"
+    },
+    {
+      "c": "MessagesController",
+      "o": "processUpdateArray",
+      "r": "K3"
+    },
+    {
+      "c": "MessagesController",
+      "o": "deleteMessages",
+      "r": "b0"
+    },
+    {
+      "c": "MessagesStorage",
+      "o": "markMessagesAsDeleted",
+      "r": "P0"
+    },
+    {
+      "c": "MessagesStorage",
+      "o": "getDatabase",
+      "r": "R"
+    },
+    {
+      "c": "NotificationCenter",
+      "o": "postNotificationName",
+      "r": "k"
+    },
+    {
+      "c": "NotificationsController",
+      "o": "removeDeletedMessagesFromNotifications",
+      "r": "M"
+    },
+    {
+      "c": "MessagesStorage",
+      "o": "putMessages",
+      "r": "h1"
+    },
+    {
+      "c": "MessageObject",
+      "o": "getDialogId",
+      "r": "B0"
+    },
+    {
+      "c": "MessageObject",
+      "o": "getDocument",
+      "r": "G0"
+    },
+    {
+      "c": "UserConfig",
+      "o": "getClientUserId",
+      "r": "e"
+    },
+    {
+      "c": "UserConfig",
+      "o": "getInstance",
+      "r": "i"
+    },
+    {
+      "c": "UserConfig",
+      "o": "getCurrentUser",
+      "r": "f"
+    },
+    {
+      "c": "MessagesController",
+      "o": "getInstance",
+      "r": "r1"
+    },
+    {
+      "c": "MessagesController",
+      "o": "getInputPeer",
+      "r": "i1"
+    },
+    {
+      "c": "FileLoader",
+      "o": "getInstance",
+      "r": "G"
+    },
+    {
+      "c": "FileLoader",
+      "o": "getPathToMessage",
+      "r": "M"
+    },
+    {
+      "c": "FileLoader",
+      "o": "getDocumentFileName",
+      "r": "B"
+    },
+    {
+      "c": "FileLoader",
+      "o": "loadFile",
+      "r": "X"
+    },
+    {
+      "c": "FileLoader",
+      "o": "loadFileImage",
+      "r": "W"
+    },
+    {
+      "c": "FileLoader",
+      "o": "getClosestPhotoSizeWithSize",
+      "r": "u"
+    },
+    {
+      "c": "ImageLocation",
+      "o": "getForPhoto",
+      "r": "i"
+    },
+    {
+      "c": "MediaController",
+      "o": "saveFile",
+      "r": "d0"
     }
   ],
   "fields": [
@@ -362,6 +504,36 @@
       "c": "ChatActivity",
       "o": "dialog_id",
       "r": "i6"
+    },
+    {
+      "c": "MessagesController",
+      "o": "dialogMessagesByIds",
+      "r": "T"
+    },
+    {
+      "c": "MessagesController",
+      "o": "dialogMessage",
+      "r": "Q"
+    },
+    {
+      "c": "MessageObject",
+      "o": "messageOwner",
+      "r": "k"
+    },
+    {
+      "c": "NotificationCenter",
+      "o": "messagesDeleted",
+      "r": "v"
+    },
+    {
+      "c": "ChatActivity",
+      "o": "selectedObject",
+      "r": "s5"
+    },
+    {
+      "c": "UserConfig",
+      "o": "selectedAccount",
+      "r": "r0"
     }
   ]
 }

@@ -71,6 +71,12 @@ public class ChatHook {
                                 headerItem.lazilyAddSubItem(8353851, lockIcon, Translator.get(
                                         com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? Keys.UnlockThisChat : Keys.LockThisChat));
                             }
+                            if (ConfigManager.secureChats != null && ConfigManager.secureChats.isEnable()) {
+                                long secDid = chatActivity.getDialogId();
+                                boolean sec = com.my.televip.features.extra.SecureScreen.isSecure(secDid);
+                                headerItem.lazilyAddSubItem(8353854, Utils.drawableId("msg_secret"),
+                                        Translator.get(sec ? Keys.UnsecureThisChat : Keys.SecureThisChat));
+                            }
                             if (ConfigManager.isGhostMode()) {
                                 long did = chatActivity.getDialogId();
                                 int icon = Utils.drawableId("msg_markread");
@@ -103,6 +109,8 @@ public class ChatHook {
                             com.my.televip.features.extra.Reminders.offer(chat.getDialogId(), Translator.get(Keys.RemindMe));
                         } else if (id == 8353853) {
                             com.my.televip.features.extra.BatchDownload.offer(chat.getDialogId());
+                        } else if (id == 8353854) {
+                            com.my.televip.features.extra.SecureScreen.toggle(chat.getDialogId());
                         } else if (id == 8353851) {
                             com.my.televip.features.extra.ChatLock.toggle(chat.getDialogId());
                         } else if (id == 8353849) {

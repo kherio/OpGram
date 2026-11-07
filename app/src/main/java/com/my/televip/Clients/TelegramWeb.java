@@ -43,6 +43,10 @@ public class TelegramWeb {
         // SettingsActivity.fillItems(ArrayList, UniversalAdapter) -> static b0(SettingsActivity, ArrayList)
         if (settingsActivity != null)
             ParameterResolver.register("fillItems", new Class[]{settingsActivity, ArrayList.class});
+        // Telegram 13.x: MessagesStorage.putMessages(int, int, int, long, long, messages_Messages, boolean)
+        if (com.my.televip.utils.Utils.versionCode >= 72000L)
+            ParameterResolver.register("putMessages", new Class[]{int.class, int.class, int.class, long.class, long.class,
+                    ClassLoad.getClass(ClassNames.TL_MESSAGES_MESSAGES), boolean.class});
         // SettingsActivity.onClick(UItem, View, int, float, float) -> static f0(SettingsActivity, UItem)
         if (settingsActivity != null && uItem != null)
             ParameterResolver.register("onClick", new Class[]{settingsActivity, uItem});

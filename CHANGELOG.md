@@ -2,6 +2,14 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.6.1
+
+Fixed
+- Telegram 13.2.0 (Google Play): the OpGram entry in Telegram settings now shows its icon (the cell binding method is found by its shape because it is obfuscated).
+
+Changed
+- The subtitle of the OpGram entry is now an identifying text ("Privacy, security and extras for Telegram · by kherio"). The attribution to TeleVip by @m_1_iq (GPL) moved to the bottom of the OpGram settings page.
+
 ## 1.6.0
 
 Added

@@ -9,7 +9,7 @@
   "ChangeTo": "更改为",
   "NameDeleted": "名称已删除",
   "GhostMode": "高级模式",
-  "ByMustafa": "基于 @m_1_iq 的 TeleVip",
+  "ByMustafa": "Telegram 隐私、安全与扩展功能 · by kherio",
   "HideSeen": "隐藏“已查看”状态",
   "HideStoryView": "隐藏 '故事观看' 状态",
   "HideTyping": "隐藏正在输入...",
@@ -246,5 +246,6 @@
   "SecureThisChat": "Block screenshots here",
   "UnsecureThisChat": "Allow screenshots here",
   "SecureChatOn": "Screenshots blocked in this chat",
-  "SecureChatOff": "Screenshots allowed in this chat"
+  "SecureChatOff": "Screenshots allowed in this chat",
+  "CreditInfo": "OpGram 是 @m_1_iq 的 TeleVip 的分支，采用 GPL 许可。"
 }

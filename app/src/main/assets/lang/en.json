@@ -9,7 +9,7 @@
   "ChangeTo": "Change to",
   "NameDeleted": "Name deleted",
   "GhostMode": "Advanced Mode",
-  "ByMustafa": "Based on TeleVip by @m_1_iq",
+  "ByMustafa": "Privacy, security and extras for Telegram · by kherio",
   "HideSeen": "Hide 'Seen' status",
   "HideStoryView": "Hide 'Story View' status",
   "HideTyping": "Hide Typing...",
@@ -273,5 +273,6 @@
   "SecureThisChat": "Block screenshots here",
   "UnsecureThisChat": "Allow screenshots here",
   "SecureChatOn": "Screenshots blocked in this chat",
-  "SecureChatOff": "Screenshots allowed in this chat"
+  "SecureChatOff": "Screenshots allowed in this chat",
+  "CreditInfo": "OpGram is a fork of TeleVip by @m_1_iq, licensed under the GPL."
 }

@@ -40,8 +40,13 @@ public class SettingsHook {
 
             if (ClientManager.is(ClientManager.Client.TelegramWeb)) {
                 // SettingCell.set() is inlined into Factory.bindView() in R8 builds
+                final Class<?> uItemType = ClassLoad.getClass(ClassNames.UITEM);
                 for (Method m : SettingsActivity$SettingCell$FactoryClass.getDeclaredMethods()) {
-                    if (!m.getName().equals("bindView")) continue;
+                    // 13.x obfuscates bindView: also match it by shape (View, UItem, ...) -> void
+                    Class<?>[] pt = m.getParameterTypes();
+                    boolean byShape = uItemType != null && pt.length >= 2 && View.class.isAssignableFrom(pt[0])
+                            && pt[1] == uItemType && m.getReturnType() == void.class;
+                    if (!m.getName().equals("bindView") && !byShape) continue;
                     XposedBridge.hookMethod(m, new BaseMethodHook() {
                         @Override
                         protected void afterMethod(MethodHookParam param) {

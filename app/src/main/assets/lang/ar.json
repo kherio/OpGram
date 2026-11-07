@@ -9,7 +9,7 @@
   "ChangeTo": "تم التغيير الى",
   "NameDeleted": "تم حذف الاسم",
   "GhostMode": "الوضع المتقدم",
-  "ByMustafa": "مبني على TeleVip بواسطة @m_1_iq",
+  "ByMustafa": "الخصوصية والأمان وميزات إضافية لتيليجرام · by kherio",
   "HideSeen": "اخفاء علامة الاستلام",
   "HideStoryView": "اخفاء مشاهدة قصة",
   "HideTyping": "اخفاء مؤشر الكتابة",
@@ -246,5 +246,6 @@
   "SecureThisChat": "Block screenshots here",
   "UnsecureThisChat": "Allow screenshots here",
   "SecureChatOn": "Screenshots blocked in this chat",
-  "SecureChatOff": "Screenshots allowed in this chat"
+  "SecureChatOff": "Screenshots allowed in this chat",
+  "CreditInfo": "OpGram هو تفرع من TeleVip بواسطة @m_1_iq بموجب رخصة GPL."
 }

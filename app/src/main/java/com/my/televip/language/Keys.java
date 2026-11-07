@@ -229,4 +229,5 @@ public class Keys {
     public static final String UnsecureThisChat = "UnsecureThisChat";
     public static final String SecureChatOn = "SecureChatOn";
     public static final String SecureChatOff = "SecureChatOff";
+    public static final String CreditInfo = "CreditInfo";
 }

@@ -9,7 +9,7 @@
   "ChangeTo": "تغییر به",
   "NameDeleted": "اسم پاک شد",
   "GhostMode": "حالت پیشرفته",
-  "ByMustafa": "بر پایه TeleVip از @m_1_iq",
+  "ByMustafa": "حریم خصوصی، امنیت و امکانات بیشتر برای تلگرام · by kherio",
   "HideSeen": "مخفی کردن وضعیت 'دیده شد'",
   "HideStoryView": "مخفی کردن 'دیده شدن استوری'",
   "HideTyping": "مخفی کردن 'در حال تایپ...'",
@@ -246,5 +246,6 @@
   "SecureThisChat": "Block screenshots here",
   "UnsecureThisChat": "Allow screenshots here",
   "SecureChatOn": "Screenshots blocked in this chat",
-  "SecureChatOff": "Screenshots allowed in this chat"
+  "SecureChatOff": "Screenshots allowed in this chat",
+  "CreditInfo": "OpGram انشعابی از TeleVip اثر @m_1_iq با مجوز GPL است."
 }

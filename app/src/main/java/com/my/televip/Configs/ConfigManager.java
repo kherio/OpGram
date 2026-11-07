@@ -380,6 +380,8 @@ public class ConfigManager {
 
         items.add(shadows);
 
+        items.add(new ConfigItem(ConfigItem.INFO, Keys.CreditInfo));
+
         readFeature();
         rebuildView();
 

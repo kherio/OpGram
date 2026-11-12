@@ -289,5 +289,8 @@
   "BlockScreenshotsHere": "Bloquear capturas aquí",
   "TotalDeleteShort": "Borrado total al borrar",
   "DetailsHint": "Toca el texto para ver detalles",
-  "TimeoutLabel": "Bloquear tras"
+  "TimeoutLabel": "Bloquear tras",
+  "Compatibility": "Compatibilidad",
+  "CompatSummary": "%s de %s funciones encuentran lo que necesitan",
+  "CompatNote": "Un aviso significa que esa función no puede funcionar en esta versión de Telegram hasta que se mapee. Indica al desarrollador la versión que aparece arriba."
 }

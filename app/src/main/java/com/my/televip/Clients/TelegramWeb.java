@@ -47,6 +47,9 @@ public class TelegramWeb {
         if (com.my.televip.utils.Utils.versionCode >= 72000L)
             ParameterResolver.register("putMessages", new Class[]{int.class, int.class, int.class, long.class, long.class,
                     ClassLoad.getClass(ClassNames.TL_MESSAGES_MESSAGES), boolean.class});
+        // Play 13.2.0: LocaleController.formatShortNumber(int, int[]) -> S(int[], int)
+        if (com.my.televip.utils.Utils.versionCode == 72801L)
+            ParameterResolver.register("formatShortNumber", new Class[]{int[].class, int.class});
         // SettingsActivity.onClick(UItem, View, int, float, float) -> static f0(SettingsActivity, UItem)
         if (settingsActivity != null && uItem != null)
             ParameterResolver.register("onClick", new Class[]{settingsActivity, uItem});

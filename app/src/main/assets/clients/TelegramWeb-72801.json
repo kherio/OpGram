@@ -135,6 +135,22 @@
     {
       "o": "org.telegram.messenger.ImageLocation",
       "r": "org.telegram.messenger.ac"
+    },
+    {
+      "o": "org.telegram.messenger.AndroidUtilities",
+      "r": "org.telegram.messenger.h0"
+    },
+    {
+      "o": "org.telegram.messenger.ApplicationLoader",
+      "r": "org.telegram.messenger.v0"
+    },
+    {
+      "o": "org.telegram.messenger.LocaleController",
+      "r": "org.telegram.messenger.wc"
+    },
+    {
+      "o": "org.telegram.messenger.DownloadController",
+      "r": "org.telegram.messenger.v5"
     }
   ],
   "methods": [
@@ -437,6 +453,31 @@
       "c": "MediaController",
       "o": "saveFile",
       "r": "d0"
+    },
+    {
+      "c": "AndroidUtilities",
+      "o": "isTabletInternal",
+      "r": "R1"
+    },
+    {
+      "c": "LocaleController",
+      "o": "getInstance",
+      "r": "D0"
+    },
+    {
+      "c": "LocaleController",
+      "o": "formatShortNumber",
+      "r": "S"
+    },
+    {
+      "c": "LocaleController",
+      "o": "formatDateOnline",
+      "r": "w"
+    },
+    {
+      "c": "DownloadController",
+      "o": "canPreloadStories",
+      "r": "f"
     }
   ],
   "fields": [
@@ -539,6 +580,11 @@
       "c": "UserConfig",
       "o": "selectedAccount",
       "r": "r0"
+    },
+    {
+      "c": "ApplicationLoader",
+      "o": "applicationContext",
+      "r": "b"
     }
   ]
 }

@@ -24,8 +24,10 @@ public class DisableNumberRounding {
                                 @Override
                                 protected void beforeMethod(MethodHookParam param) {
                                     if (ConfigManager.disableNumberRounding.isEnable()) {
-                                        int[] rounded = (int[]) param.args[1];
-                                        int number = (int) param.args[0];
+                                        // argument order differs between builds: (int, int[]) or (int[], int)
+                                        boolean arrFirst = param.args[0] instanceof int[];
+                                        int[] rounded = (int[]) param.args[arrFirst ? 0 : 1];
+                                        int number = (int) param.args[arrFirst ? 1 : 0];
                                         if (rounded != null) {
                                             rounded[0] = number;
                                         }

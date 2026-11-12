@@ -245,4 +245,7 @@ public class Keys {
     public static final String TotalDeleteShort = "TotalDeleteShort";
     public static final String DetailsHint = "DetailsHint";
     public static final String TimeoutLabel = "TimeoutLabel";
+    public static final String Compatibility = "Compatibility";
+    public static final String CompatSummary = "CompatSummary";
+    public static final String CompatNote = "CompatNote";
 }

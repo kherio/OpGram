@@ -6,6 +6,7 @@ import com.my.televip.Configs.ConfigManager;
 import com.my.televip.base.BaseMethodHook;
 import com.my.televip.hooks.HMethod;
 import com.my.televip.logging.Logger;
+import com.my.televip.obfuscate.Obfuscate;
 
 /**
  * Battery / data savers built on non-obfuscated messenger classes:
@@ -32,7 +33,7 @@ public class BatterySaver {
 
             Class<?> dc = ClassLoad.getClass(ClassNames.DOWNLOAD_CONTROLLER);
             if (dc != null) {
-                HMethod.hookMethod(dc, "canPreloadStories", new BaseMethodHook() {
+                HMethod.hookMethod(dc, Obfuscate.getMethodName("DownloadController", "canPreloadStories"), new BaseMethodHook() {
                     @Override
                     protected void beforeMethod(MethodHookParam param) {
                         if (noStoriesPreload()) param.setResult(false);

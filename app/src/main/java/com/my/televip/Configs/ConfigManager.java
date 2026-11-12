@@ -366,6 +366,7 @@ public class ConfigManager {
         items.add(backupHeader);
         btnCheckUpdate = new ConfigItem(ConfigItem.TEXT, Keys.CheckForUpdates);
         items.add(btnCheckUpdate);
+        items.add(new ConfigItem(ConfigItem.TEXT, Keys.Compatibility));
         btnExportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ExportSettings);
         items.add(btnExportSettings);
         btnImportSettings = new ConfigItem(ConfigItem.TEXT, Keys.ImportSettings);

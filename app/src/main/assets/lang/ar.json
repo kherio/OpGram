@@ -262,5 +262,8 @@
   "BlockScreenshotsHere": "Block screenshots here",
   "TotalDeleteShort": "Total delete on delete",
   "DetailsHint": "Tap the text for details",
-  "TimeoutLabel": "Lock after"
+  "TimeoutLabel": "Lock after",
+  "Compatibility": "Compatibility check",
+  "CompatSummary": "%s of %s features can find what they need",
+  "CompatNote": "A warning means that feature cannot work on this Telegram version until it is mapped. Tell the developer the version shown above."
 }

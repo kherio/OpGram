@@ -2,6 +2,10 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.10.0
+- Telegram Play 13.2.0: mapped AndroidUtilities, ApplicationLoader, LocaleController and DownloadController (tablet-layout fix for the settings page, exact numbers, exact last seen, story preloading control).
+- New: Compatibility check (Backup section) lists which features can find what they need in the installed Telegram version.
+
 ## 1.9.3
 - Fix: "Telegram Premium" did nothing on Telegram Play 13.2.0 (UserConfig.isPremium was not mapped).
 

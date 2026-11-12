@@ -281,5 +281,13 @@
   "TotalDeleteDisableChat": "Total delete: unmark this chat",
   "TotalDeleteOn": "This chat will be deleted for both sides",
   "TotalDeleteOff": "Total delete removed from this chat",
-  "TotalDeleteSent": "Chat deleted for both sides (requested)"
+  "TotalDeleteSent": "Chat deleted for both sides (requested)",
+  "OpGramInChat": "OpGram in this chat",
+  "ChatActions": "Actions",
+  "HideSeenHere": "Hide “seen” here",
+  "BlockThisChat": "Lock this chat",
+  "BlockScreenshotsHere": "Block screenshots here",
+  "TotalDeleteShort": "Total delete on delete",
+  "DetailsHint": "Tap the text for details",
+  "TimeoutLabel": "Lock after"
 }

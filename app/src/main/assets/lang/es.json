@@ -281,5 +281,13 @@
   "TotalDeleteDisableChat": "Borrado total: desmarcar este chat",
   "TotalDeleteOn": "Este chat se borrará para ambos lados",
   "TotalDeleteOff": "Borrado total quitado de este chat",
-  "TotalDeleteSent": "Chat borrado para ambos lados (solicitado)"
+  "TotalDeleteSent": "Chat borrado para ambos lados (solicitado)",
+  "OpGramInChat": "OpGram en este chat",
+  "ChatActions": "Acciones",
+  "HideSeenHere": "Ocultar «visto» aquí",
+  "BlockThisChat": "Bloquear este chat",
+  "BlockScreenshotsHere": "Bloquear capturas aquí",
+  "TotalDeleteShort": "Borrado total al borrar",
+  "DetailsHint": "Toca el texto para ver detalles",
+  "TimeoutLabel": "Bloquear tras"
 }

@@ -31,6 +31,8 @@ import de.robv.android.xposed.XposedHelpers;
 public class SettingsAdapter {
 
     private static boolean isLongText = false;
+    private static final java.util.Set<String> OPEN = new java.util.HashSet<>();
+    private static final java.util.WeakHashMap<View, View.OnLayoutChangeListener> SEP_LISTENERS = new java.util.WeakHashMap<>();
     private static final String[] LOCK_KEYS = {Keys.LockImmediate, Keys.Lock30s, Keys.Lock1m, Keys.Lock5m};
 
     private static final String[] ACCENT_KEYS = {Keys.AccentDefault, Keys.AccentBlue, Keys.AccentGreen,
@@ -92,6 +94,11 @@ public class SettingsAdapter {
                     String subtitle = buildSubtitle(item);
                     String title = Translator.get(item.getKey());
                     if (ConfigManager.isFavorite(item.getKey())) title = "\u2605 " + title;
+                    boolean open = OPEN.contains(item.getKey());
+                    if (subtitle != null) {
+                        title = title + (open ? "  \u25BE" : "  \u203A");
+                        if (!open) subtitle = null;
+                    }
                     if (subtitle != null) {
                         textCheck.cell.setTextAndValueAndCheck(title, subtitle, item.isEnable(), true, false);
                     } else {
@@ -182,6 +189,33 @@ public class SettingsAdapter {
                 viewHolder.getItemView().setBackgroundColor(ThemeColors.getBackgroundWhiteOrBlueColor());
             }
 
+            final float[] lastTouchX = new float[]{0f};
+            if (viewType == ConfigItem.SWITCH) {
+                final View iv = viewHolder.getItemView();
+                iv.setOnTouchListener((tv, ev) -> { lastTouchX[0] = ev.getX(); return false; });
+                if (buildSubtitle(item) != null && iv instanceof android.view.ViewGroup) {
+                    final android.view.ViewGroup vg = (android.view.ViewGroup) iv;
+                    final android.graphics.drawable.ColorDrawable sep = new android.graphics.drawable.ColorDrawable(
+                            ThemeColors.isAmoled() ? 0x33FFFFFF : 0x26808890);
+                    vg.getOverlay().clear();
+                    vg.getOverlay().add(sep);
+                    final float dn = iv.getResources().getDisplayMetrics().density;
+                    View.OnLayoutChangeListener prev = SEP_LISTENERS.remove(iv);
+                    if (prev != null) iv.removeOnLayoutChangeListener(prev);
+                    View.OnLayoutChangeListener lcl = (vw, l, t, r, b, ol, ot, or2, ob) -> {
+                        int x = (r - l) - Math.round(76 * dn);
+                        int pad = Math.round(14 * dn);
+                        sep.setBounds(x, pad, x + Math.max(1, Math.round(dn)), (b - t) - pad);
+                    };
+                    SEP_LISTENERS.put(iv, lcl);
+                    iv.addOnLayoutChangeListener(lcl);
+                    int w = iv.getWidth(), h = iv.getHeight();
+                    if (w > 0 && h > 0) {
+                        int x = w - Math.round(76 * dn); int pad = Math.round(14 * dn);
+                        sep.setBounds(x, pad, x + Math.max(1, Math.round(dn)), h - pad);
+                    }
+                }
+            }
             viewHolder.getItemView().setOnLongClickListener(v -> {
                 if (viewType == ConfigItem.SWITCH) {
                     boolean now = ConfigManager.toggleFavorite(item.getKey());
@@ -197,6 +231,11 @@ public class SettingsAdapter {
             viewHolder.getItemView().setOnClickListener(v -> {
 
                 if (viewType == ConfigItem.SWITCH) {
+                    if (buildSubtitle(item) != null && lastTouchX[0] < v.getWidth() - Math.round(76 * v.getResources().getDisplayMetrics().density)) {
+                        if (!OPEN.remove(item.getKey())) OPEN.add(item.getKey());
+                        settingsController.refreshList();
+                        return;
+                    }
                     TextCheckCellHolder textCheck = new TextCheckCellHolder(holder);
                     boolean checked = !textCheck.cell.isChecked();
                     textCheck.cell.setChecked(checked);

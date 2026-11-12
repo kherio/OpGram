@@ -2,6 +2,10 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.8.0
+- New: single per-chat **OpGram** panel (bottom sheet) in the chat menu: hide "seen" here, lock chat, block screenshots here, total delete, plus actions (mark as read now, reminder, batch download). Replaces the separate menu entries.
+- Settings: rows with a description now follow "text opens details, switch toggles": tap the text to expand, tap the right side (after the divider) to switch.
+
 ## 1.7.0
 
 Added

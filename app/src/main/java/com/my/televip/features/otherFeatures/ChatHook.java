@@ -56,39 +56,8 @@ public class ChatHook {
 
                             headerItem.lazilyAddSubItem(8353848, drawableResource, Translator.get(Keys.ToTheMessage));
 
-                            if (ConfigManager.reminders != null && ConfigManager.reminders.isEnable()) {
-                                int remIcon = Utils.drawableId("msg_calendar2");
-                                headerItem.lazilyAddSubItem(8353852, remIcon, Translator.get(Keys.RemindMe));
-                            }
-                            if (ConfigManager.batchDownload != null && ConfigManager.batchDownload.isEnable()) {
-                                int dlIcon = Utils.drawableId("msg_download");
-                                headerItem.lazilyAddSubItem(8353853, dlIcon, Translator.get(Keys.BatchDownload));
-                            }
-                            if (ConfigManager.chatLock != null && ConfigManager.chatLock.isEnable()) {
-                                long lockDid = chatActivity.getDialogId();
-                                int lockIcon = Utils.drawableId(
-                                        com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? "menu_unlock" : "msg_secret");
-                                headerItem.lazilyAddSubItem(8353851, lockIcon, Translator.get(
-                                        com.my.televip.features.extra.ChatLock.isLocked(lockDid) ? Keys.UnlockThisChat : Keys.LockThisChat));
-                            }
-                            if (ConfigManager.totalDelete != null && ConfigManager.totalDelete.isEnable() && chatActivity.getDialogId() > 0) {
-                                boolean marked = com.my.televip.features.extra.TotalDelete.isMarked(chatActivity.getDialogId());
-                                headerItem.lazilyAddSubItem(8353855, Utils.drawableId("msg_delete"),
-                                        Translator.get(marked ? Keys.TotalDeleteDisableChat : Keys.TotalDeleteEnableChat));
-                            }
-                            if (ConfigManager.secureChats != null && ConfigManager.secureChats.isEnable()) {
-                                long secDid = chatActivity.getDialogId();
-                                boolean sec = com.my.televip.features.extra.SecureScreen.isSecure(secDid);
-                                headerItem.lazilyAddSubItem(8353854, Utils.drawableId("msg_secret"),
-                                        Translator.get(sec ? Keys.UnsecureThisChat : Keys.SecureThisChat));
-                            }
-                            if (ConfigManager.isGhostMode()) {
-                                long did = chatActivity.getDialogId();
-                                int icon = Utils.drawableId("msg_markread");
-                                headerItem.lazilyAddSubItem(8353849, icon, Translator.get(Keys.MarkAsReadNow));
-                                icon = Utils.drawableId("ghost");
-                                headerItem.lazilyAddSubItem(8353850, icon, Translator.get(
-                                        GhostExceptions.isExcluded(did) ? Keys.GhostIncludeChat : Keys.GhostExcludeChat));
+                            if (com.my.televip.features.extra.ChatPanel.hasContent(chatActivity.getDialogId())) {
+                                headerItem.lazilyAddSubItem(8353856, Utils.drawableId("msg_settings"), "OpGram");
                             }
 
                         }
@@ -110,20 +79,8 @@ public class ChatHook {
 
                         if (id == 8353847) {
                             chat.scrollToMessageId(1, 0, true, 0, true, 0);
-                        } else if (id == 8353852) {
-                            com.my.televip.features.extra.Reminders.offer(chat.getDialogId(), Translator.get(Keys.RemindMe));
-                        } else if (id == 8353853) {
-                            com.my.televip.features.extra.BatchDownload.offer(chat.getDialogId());
-                        } else if (id == 8353855) {
-                            com.my.televip.features.extra.TotalDelete.toggle(chat.getDialogId());
-                        } else if (id == 8353854) {
-                            com.my.televip.features.extra.SecureScreen.toggle(chat.getDialogId());
-                        } else if (id == 8353851) {
-                            com.my.televip.features.extra.ChatLock.toggle(chat.getDialogId());
-                        } else if (id == 8353849) {
-                            GhostExceptions.markAsReadNow(chat.getDialogId());
-                        } else if (id == 8353850) {
-                            GhostExceptions.toggle(chat.getDialogId());
+                        } else if (id == 8353856) {
+                            com.my.televip.features.extra.ChatPanel.show(chat.getDialogId());
                         } else if (id == 8353848) {
 
                             AlertDialog dialog = new AlertDialog(Utils.getCurrentActivity());

@@ -237,4 +237,12 @@ public class Keys {
     public static final String TotalDeleteOn = "TotalDeleteOn";
     public static final String TotalDeleteOff = "TotalDeleteOff";
     public static final String TotalDeleteSent = "TotalDeleteSent";
+    public static final String OpGramInChat = "OpGramInChat";
+    public static final String ChatActions = "ChatActions";
+    public static final String HideSeenHere = "HideSeenHere";
+    public static final String BlockThisChat = "BlockThisChat";
+    public static final String BlockScreenshotsHere = "BlockScreenshotsHere";
+    public static final String TotalDeleteShort = "TotalDeleteShort";
+    public static final String DetailsHint = "DetailsHint";
+    public static final String TimeoutLabel = "TimeoutLabel";
 }

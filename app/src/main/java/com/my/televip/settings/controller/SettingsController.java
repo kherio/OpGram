@@ -35,6 +35,7 @@ public class SettingsController {
             settingsView.addView(settingsActivity.createView(this));
 
             show(settingsView);
+            registerBackCallback();
         } catch (Throwable e) {
             Logger.e(e);
         }
@@ -88,7 +89,52 @@ public class SettingsController {
         }
     }
 
+    private Object backCallback;
+    private android.app.Activity backActivity;
+
+    /**
+     * Gesture / button back on Android 13+ goes through OnBackInvokedDispatcher, and Telegram's own
+     * callback closes the app because the settings page is not one of its fragments. A higher-priority
+     * callback makes back return from a section to the section list, then close settings.
+     */
+    private void registerBackCallback() {
+        try {
+            unregisterBackCallback();
+            if (android.os.Build.VERSION.SDK_INT < 33) return;
+            final android.app.Activity act = Utils.getCurrentActivity();
+            if (act == null) return;
+            android.window.OnBackInvokedCallback cb = () -> {
+                try {
+                    if (settingsActivity != null && settingsActivity.handleBack()) return;
+                    hide();
+                    settingsView = null;
+                } catch (Throwable t) {
+                    Logger.e(t);
+                }
+            };
+            act.getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    android.window.OnBackInvokedDispatcher.PRIORITY_OVERLAY, cb);
+            backCallback = cb;
+            backActivity = act;
+        } catch (Throwable t) {
+            Logger.e(t);
+        }
+    }
+
+    private void unregisterBackCallback() {
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= 33 && backCallback != null && backActivity != null) {
+                backActivity.getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(
+                        (android.window.OnBackInvokedCallback) backCallback);
+            }
+        } catch (Throwable ignored) {
+        }
+        backCallback = null;
+        backActivity = null;
+    }
+
     public void hide() {
+        unregisterBackCallback();
         LaunchActivity launchActivity = new LaunchActivity(settingsView.getContext());
         for (int i = 0; i < launchActivity.frameLayout.getChildCount(); i++) {
             View child = launchActivity.frameLayout.getChildAt(i);

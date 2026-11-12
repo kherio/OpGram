@@ -2,6 +2,9 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.9.2
+- Fix: the back gesture/button inside a settings section closed Telegram. It now returns to the section list, and from the list it leaves settings (Android 13+ back dispatcher).
+
 ## 1.9.1
 - Settings: the main screen is now a list of sections (icon, name, enabled/total, chevron). Tap a section to open it; the back arrow or back button returns to the list. The title bar shows the open section. Search still works across everything.
 

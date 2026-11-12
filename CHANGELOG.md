@@ -2,6 +2,10 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.10.3
+- Telegram Play 13.2.0: mapped FileLoadOperation (faster downloads) and SharedConfig.
+- Compatibility check: features that do not apply to this build (secret media on Web builds, update notice on Play) show "not applicable" instead of a warning.
+
 ## 1.10.2
 - Fix: tapping Theme (and Accent, Lock timeout, Calendar) closed the app on Telegram Play 13.2.0. These pickers now use a plain Android dialog instead of Telegram's internal one.
 

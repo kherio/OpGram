@@ -248,4 +248,5 @@ public class Keys {
     public static final String Compatibility = "Compatibility";
     public static final String CompatSummary = "CompatSummary";
     public static final String CompatNote = "CompatNote";
+    public static final String CompatNA = "CompatNA";
 }

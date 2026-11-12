@@ -151,6 +151,14 @@
     {
       "o": "org.telegram.messenger.DownloadController",
       "r": "org.telegram.messenger.v5"
+    },
+    {
+      "o": "org.telegram.messenger.FileLoadOperation",
+      "r": "org.telegram.messenger.f7"
+    },
+    {
+      "o": "org.telegram.messenger.SharedConfig",
+      "r": "org.telegram.messenger.bz"
     }
   ],
   "methods": [
@@ -478,6 +486,11 @@
       "c": "DownloadController",
       "o": "canPreloadStories",
       "r": "f"
+    },
+    {
+      "c": "FileLoadOperation",
+      "o": "updateParams",
+      "r": "t"
     }
   ],
   "fields": [
@@ -585,6 +598,26 @@
       "c": "ApplicationLoader",
       "o": "applicationContext",
       "r": "b"
+    },
+    {
+      "c": "FileLoadOperation",
+      "o": "downloadChunkSizeBig",
+      "r": "n"
+    },
+    {
+      "c": "FileLoadOperation",
+      "o": "maxDownloadRequests",
+      "r": "o"
+    },
+    {
+      "c": "FileLoadOperation",
+      "o": "maxDownloadRequestsBig",
+      "r": "p"
+    },
+    {
+      "c": "FileLoadOperation",
+      "o": "maxCdnParts",
+      "r": "q"
     }
   ]
 }

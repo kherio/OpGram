@@ -18,11 +18,16 @@ public class Compat {
     private static final class Check {
         final String labelKey;
         final String[][] parts; // {classConstant, objectKeyOrNull, methodNameOrNull}
+        boolean naOnWeb = false;          // feature is not used on Telegram Web / Play builds
+        boolean naIfMethodsMissing = false; // class exists but the methods are gone: nothing to hook
 
         Check(String labelKey, String[]... parts) {
             this.labelKey = labelKey;
             this.parts = parts;
         }
+
+        Check naOnWeb() { naOnWeb = true; return this; }
+        Check naIfMethodsMissing() { naIfMethodsMissing = true; return this; }
     }
 
     private static String[] p(String cls, String key, String method) { return new String[]{cls, key, method}; }
@@ -39,13 +44,13 @@ public class Compat {
                         p(ClassNames.MEDIA_CONTROLLER, "MediaController", "saveFile")),
                 new Check(Keys.TelegramPremium, p(ClassNames.USER_CONFIG, "UserConfig", "isPremium")),
                 new Check(Keys.OpGramInChat, p(ClassNames.CHAT_ACTIVITY, "ChatActivity", "createView")),
-                new Check(Keys.SecretMediaSave, p(ClassNames.SECRET_MEDIA_VIEWER, "SecretMediaViewer", "openMedia")),
+                new Check(Keys.SecretMediaSave, p(ClassNames.SECRET_MEDIA_VIEWER, "SecretMediaViewer", "openMedia")).naOnWeb(),
                 new Check(Keys.DisableNumberRounding, p(ClassNames.LOCALE_CONTROLLER, "LocaleController", "formatShortNumber")),
                 new Check(Keys.ExactLastSeen, p(ClassNames.LOCALE_CONTROLLER, "LocaleController", "formatDateOnline")),
                 new Check(Keys.DownloadSpeed, p(ClassNames.FILE_LOAD_OPERATION, "FileLoadOperation", "updateParams")),
                 new Check(Keys.HideUpdateApp,
                         p(ClassNames.SHARED_CONFIG, "SharedConfig", "isAppUpdateAvailable"),
-                        p(ClassNames.SHARED_CONFIG, "SharedConfig", "setNewAppVersionAvailable")),
+                        p(ClassNames.SHARED_CONFIG, "SharedConfig", "setNewAppVersionAvailable")).naIfMethodsMissing(),
                 new Check(Keys.HideStoriesBar,
                         p(ClassNames.DOWNLOAD_CONTROLLER, "DownloadController", "canPreloadStories"),
                         p(ClassNames.MESSAGES_CONTROLLER, "MessagesController", "storiesEnabled")),
@@ -86,9 +91,15 @@ public class Compat {
             StringBuilder body = new StringBuilder();
             int ok = 0, total = 0;
             for (Check c : checks()) {
-                total++;
                 String pr = problem(c);
                 String label = Translator.get(c.labelKey);
+                boolean na = (c.naOnWeb && com.my.televip.Clients.ClientManager.is(com.my.televip.Clients.ClientManager.Client.TelegramWeb))
+                        || (c.naIfMethodsMissing && pr != null && pr.contains("."));
+                if (na) {
+                    body.append("\u2139\uFE0F  ").append(label).append("\n      ").append(Translator.get(Keys.CompatNA)).append('\n');
+                    continue;
+                }
+                total++;
                 if (pr == null) {
                     ok++;
                     body.append("✅  ").append(label).append('\n');

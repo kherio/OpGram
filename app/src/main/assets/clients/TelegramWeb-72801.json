@@ -370,6 +370,11 @@
     },
     {
       "c": "UserConfig",
+      "o": "isPremium",
+      "r": "q"
+    },
+    {
+      "c": "UserConfig",
       "o": "getClientUserId",
       "r": "e"
     },

@@ -2,6 +2,9 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.9.3
+- Fix: "Telegram Premium" did nothing on Telegram Play 13.2.0 (UserConfig.isPremium was not mapped).
+
 ## 1.9.2
 - Fix: the back gesture/button inside a settings section closed Telegram. It now returns to the section list, and from the list it leaves settings (Android 13+ back dispatcher).
 

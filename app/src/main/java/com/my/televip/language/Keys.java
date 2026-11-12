@@ -230,4 +230,11 @@ public class Keys {
     public static final String SecureChatOn = "SecureChatOn";
     public static final String SecureChatOff = "SecureChatOff";
     public static final String CreditInfo = "CreditInfo";
+    public static final String TotalDelete = "TotalDelete";
+    public static final String TotalDeleteDesc = "TotalDeleteDesc";
+    public static final String TotalDeleteEnableChat = "TotalDeleteEnableChat";
+    public static final String TotalDeleteDisableChat = "TotalDeleteDisableChat";
+    public static final String TotalDeleteOn = "TotalDeleteOn";
+    public static final String TotalDeleteOff = "TotalDeleteOff";
+    public static final String TotalDeleteSent = "TotalDeleteSent";
 }

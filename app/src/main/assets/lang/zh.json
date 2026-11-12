@@ -247,5 +247,12 @@
   "UnsecureThisChat": "Allow screenshots here",
   "SecureChatOn": "Screenshots blocked in this chat",
   "SecureChatOff": "Screenshots allowed in this chat",
-  "CreditInfo": "OpGram 是 @m_1_iq 的 TeleVip 的分支，采用 GPL 许可。"
+  "CreditInfo": "OpGram 是 @m_1_iq 的 TeleVip 的分支，采用 GPL 许可。",
+  "TotalDelete": "Total delete (private chats)",
+  "TotalDeleteDesc": "Chats marked from their menu are always deleted for both sides, and OpGram's saved copies are purged",
+  "TotalDeleteEnableChat": "Total delete: mark this chat",
+  "TotalDeleteDisableChat": "Total delete: unmark this chat",
+  "TotalDeleteOn": "This chat will be deleted for both sides",
+  "TotalDeleteOff": "Total delete removed from this chat",
+  "TotalDeleteSent": "Chat deleted for both sides (requested)"
 }

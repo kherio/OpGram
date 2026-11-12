@@ -274,5 +274,12 @@
   "UnsecureThisChat": "Permitir capturas aquí",
   "SecureChatOn": "Capturas bloqueadas en este chat",
   "SecureChatOff": "Capturas permitidas en este chat",
-  "CreditInfo": "OpGram es un fork de TeleVip de @m_1_iq, con licencia GPL."
+  "CreditInfo": "OpGram es un fork de TeleVip de @m_1_iq, con licencia GPL.",
+  "TotalDelete": "Borrado total (chats privados)",
+  "TotalDeleteDesc": "Los chats marcados desde su menú se borran siempre para ambos lados y se eliminan las copias guardadas por OpGram",
+  "TotalDeleteEnableChat": "Borrado total: marcar este chat",
+  "TotalDeleteDisableChat": "Borrado total: desmarcar este chat",
+  "TotalDeleteOn": "Este chat se borrará para ambos lados",
+  "TotalDeleteOff": "Borrado total quitado de este chat",
+  "TotalDeleteSent": "Chat borrado para ambos lados (solicitado)"
 }

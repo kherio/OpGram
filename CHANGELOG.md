@@ -2,6 +2,16 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.7.0
+
+Added
+- Total delete (Security section): mark a private chat from its menu ("Total delete: mark this chat"). From then on, deleting that chat always asks Telegram to delete it for both sides, whatever the checkbox says, and OpGram's saved edit history for that user is purged.
+
+Notes
+- It works at the request level, so it does not depend on Telegram's obfuscated classes. It only covers private chats; groups and channels cannot be deleted for everyone, and secret chats are not affected.
+- It cannot remove screenshots, forwards, downloaded files, or copies kept by the other person's own modules or clients.
+- Not tested on a device before release.
+
 ## 1.6.1
 
 Fixed

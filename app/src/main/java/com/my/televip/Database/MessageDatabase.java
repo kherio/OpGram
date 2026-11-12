@@ -71,6 +71,16 @@ public class MessageDatabase extends SQLiteOpenHelper {
     }
 
     /** Recent edited/saved message versions, newest first, optionally filtered by text. */
+    /** Removes the edit history saved for messages written by this user/chat id. */
+    public void deleteByUser(long id) {
+        try {
+            SQLiteDatabase database = getWritableDatabase();
+            database.delete(TABLE_MESSAGES, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
+        } catch (Throwable t) {
+            com.my.televip.logging.Logger.e(t);
+        }
+    }
+
     public java.util.List<String[]> queryRecent(String filter, int limit) {
         java.util.List<String[]> out = new java.util.ArrayList<>();
         try {

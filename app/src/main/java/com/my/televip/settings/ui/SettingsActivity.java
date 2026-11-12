@@ -38,54 +38,36 @@ public class SettingsActivity {
     private LinearLayout rootLayout;
     private MainToolBar mainToolbar;
     private android.widget.EditText searchBox;
-    private android.widget.HorizontalScrollView tabScroll;
-    private LinearLayout tabRow;
     private SettingsController controller;
 
     private int dp(int v) { return Math.round(v * context.getResources().getDisplayMetrics().density); }
 
-    /** Rebuilds the section tab strip (selected tab, favourites tab, theme colours, search state). */
+    /** Title bar shows the open section's name, or the module title on the section list. */
     public void refreshTabs() {
         try {
-            if (tabRow == null) return;
+            if (mainToolbar == null) return;
+            String sel = ConfigManager.getSelectedSection();
             boolean searching = !ConfigManager.getSearchQuery().isEmpty();
-            tabScroll.setVisibility(searching ? View.GONE : View.VISIBLE);
-            tabRow.removeAllViews();
-            final String selected = ConfigManager.getSelectedSection();
-            for (final String key : ConfigManager.getSectionKeys()) {
-                boolean sel = key.equals(selected);
-                android.widget.TextView tab = new android.widget.TextView(context);
-                tab.setText(Translator.get(key));
-                tab.setTextSize(13);
-                tab.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
-                tab.setSingleLine(true);
-                tab.setPadding(dp(14), dp(8), dp(14), dp(8));
-                tab.setTextColor(sel ? 0xFFFFFFFF : ThemeColors.getTextGrayColor());
-                android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
-                bg.setCornerRadius(dp(20));
-                bg.setColor(sel ? ThemeColors.getTextBlueColor() : ThemeColors.getBackgroundWhiteOrBlueColor());
-                tab.setBackground(bg);
-                tab.setOnClickListener(v -> {
-                    ConfigManager.selectSection(key);
-                    if (controller != null) controller.refreshList();
-                    else refreshTabs();
-                    if (listView != null) {
-                        View rv0 = listView.getRecyclerListView();
-                        if (rv0 instanceof androidx.recyclerview.widget.RecyclerView) {
-                            ((androidx.recyclerview.widget.RecyclerView) rv0).scrollToPosition(0);
-                        }
-                    }
-                });
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                lp.rightMargin = dp(6);
-                tabRow.addView(tab, lp);
-            }
+            mainToolbar.setTextTitle(sel != null && !searching ? Translator.get(sel) : com.my.televip.Branding.title());
         } catch (Throwable t) {
             Logger.e(t);
         }
     }
 
+    /** Back inside a section returns to the section list instead of leaving settings. */
+    public boolean handleBack() {
+        if (ConfigManager.goBackToIndex()) {
+            if (controller != null) controller.refreshList();
+            if (listView != null) {
+                View rv0 = listView.getRecyclerListView();
+                if (rv0 instanceof androidx.recyclerview.widget.RecyclerView) {
+                    ((androidx.recyclerview.widget.RecyclerView) rv0).scrollToPosition(0);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
     public View createView(SettingsController settingsController) {
 
@@ -103,13 +85,14 @@ public class SettingsActivity {
 
             ArrowDrawable arrow = new ArrowDrawable();
             toolbar.setImageDrawable(arrow);
-            toolbar.getImage().setOnClickListener(v -> settingsController.hide());
+            toolbar.getImage().setOnClickListener(v -> { if (!handleBack()) settingsController.hide(); });
 
             layout.addView(toolbar);
             rootLayout = layout;
             mainToolbar = toolbar;
 
             // Search box over the settings list
+            ConfigManager.selectSection(null);
             ConfigManager.setSearchQuery("");
             final android.widget.EditText search = new android.widget.EditText(context);
             search.setHint(Translator.get(Keys.Search));
@@ -123,15 +106,6 @@ public class SettingsActivity {
             layout.addView(search, searchParams);
             searchBox = search;
             controller = settingsController;
-
-            tabScroll = new android.widget.HorizontalScrollView(context);
-            tabScroll.setHorizontalScrollBarEnabled(false);
-            tabRow = new LinearLayout(context);
-            tabRow.setOrientation(LinearLayout.HORIZONTAL);
-            tabRow.setPadding(dp(12), dp(8), dp(12), dp(4));
-            tabScroll.addView(tabRow);
-            layout.addView(tabScroll, new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
             listView = new RecyclerListView(context);
             if (DexInjector.classLoader != null) {
@@ -214,6 +188,10 @@ public class SettingsActivity {
                 @Override
                 protected void beforeMethod(MethodHookParam param) {
                     if (isSettings) {
+                        if (settingsController.settingsActivity != null && settingsController.settingsActivity.handleBack()) {
+                            param.setResult(null);
+                            return;
+                        }
                         settingsController.hide();
                         settingsController.settingsView = null;
                         param.setResult(null);

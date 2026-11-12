@@ -2,6 +2,9 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.9.1
+- Settings: the main screen is now a list of sections (icon, name, enabled/total, chevron). Tap a section to open it; the back arrow or back button returns to the list. The title bar shows the open section. Search still works across everything.
+
 ## 1.9.0
 - Settings: sections are now tabs (one section at a time, Favorites tab when you have favorites); the list is a rounded card. Search still looks across everything.
 - Chat: the OpGram panel is now a floating rounded menu next to the top-right button, with quick actions first and the per-chat switches below.

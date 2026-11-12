@@ -532,14 +532,16 @@ public class ConfigManager {
         }
 
         List<String> sections = getSectionKeys();
-        if (!searching && (selectedSection == null || !sections.contains(selectedSection))) {
-            selectedSection = sections.isEmpty() ? null : sections.get(0);
-        }
+        if (selectedSection != null && !sections.contains(selectedSection)) selectedSection = null;
 
         if (!searching) {
             if (tipsItem == null) tipsItem = new ConfigItem(ConfigItem.INFO, Keys.SettingsTips);
             if (!isCompact()) viewItems.add(tipsItem);
 
+            if (selectedSection == null) {
+                for (String key : sections) viewItems.add(sectionRow(key));
+                return;
+            }
             if (Keys.Favorites.equals(selectedSection)) {
                 if (favoritesHeader == null) favoritesHeader = new ConfigItem(ConfigItem.HEADER, Keys.Favorites);
                 viewItems.add(favoritesHeader);
@@ -590,9 +592,47 @@ public class ConfigManager {
         return out;
     }
 
-    public static String getSelectedSection() {
-        if (selectedSection == null) rebuildView();
-        return selectedSection;
+    public static String getSelectedSection() { return selectedSection; }
+
+    private static final java.util.Map<String, ConfigItem> sectionRows = new java.util.HashMap<>();
+
+    private static ConfigItem sectionRow(String key) {
+        ConfigItem row = sectionRows.get(key);
+        if (row == null) {
+            row = new ConfigItem(ConfigItem.TEXT, key);
+            sectionRows.put(key, row);
+        }
+        return row;
+    }
+
+    public static boolean isSectionRow(ConfigItem it) {
+        return it != null && it.getType() == ConfigItem.TEXT && sectionRows.get(it.getKey()) == it;
+    }
+
+    /** "enabled/total" switches of a section, e.g. "2/5". */
+    public static String sectionSummary(String key) {
+        int on = 0, total = 0;
+        if (Keys.Favorites.equals(key)) {
+            total = favoriteItems().size();
+            for (ConfigItem it : favoriteItems()) if (it.isEnable()) on++;
+        } else {
+            for (ConfigItem it : sectionItems(key)) {
+                if (it.getType() == ConfigItem.SWITCH || it.getType() == ConfigItem.EXPANDABLE_SWITCH) {
+                    total++;
+                    if (it.isEnable()) on++;
+                }
+            }
+        }
+        return total == 0 ? "" : on + "/" + total;
+    }
+
+    /** Inside a section (and not searching): go back to the section list. Returns true if it handled the back. */
+    public static boolean goBackToIndex() {
+        if (selectedSection != null && searchQuery.isEmpty()) {
+            selectSection(null);
+            return true;
+        }
+        return false;
     }
 
     public static void selectSection(String key) {

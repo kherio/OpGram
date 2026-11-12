@@ -112,7 +112,12 @@ public class SettingsAdapter {
                     break;
                 case ConfigItem.TEXT:
                     TextSettingsCellHolder settingsCell = new TextSettingsCellHolder(holder);
-                    if (item.getKey().equals(Keys.Calendar)) {
+                    if (ConfigManager.isSectionRow(item)) {
+                        String sum = ConfigManager.sectionSummary(item.getKey());
+                        settingsCell.cell.setTextAndValue(sectionIcon(item.getKey()) + "  " + Translator.get(item.getKey()),
+                                (sum.isEmpty() ? "" : sum + "   ") + "\u203A", false, false);
+                        settingsCell.cell.getTextView().setTextColor(ThemeColors.getTextColor());
+                    } else if (item.getKey().equals(Keys.Calendar)) {
                         String value = null;
                         switch (item.getCustomCalendar()) {
                             case 0:
@@ -246,6 +251,10 @@ public class SettingsAdapter {
                         ConfigManager.setRestartPending(true);
                         settingsController.refreshList();
                     }
+                } else if (viewType == ConfigItem.TEXT && ConfigManager.isSectionRow(item)) {
+                    ConfigManager.selectSection(item.getKey());
+                    settingsController.refreshList();
+                    scrollTop(settingsController);
                 } else if (viewType == ConfigItem.TEXT) {
                     switch (item.getKey()) {
                         case Keys.RestartPendingBanner:
@@ -330,6 +339,30 @@ public class SettingsAdapter {
             Logger.e(t);
         }
 
+    }
+
+    private static String sectionIcon(String key) {
+        switch (key) {
+            case Keys.Favorites: return "\u2B50";
+            case Keys.GhostModeSettings: return "\uD83D\uDC41";
+            case Keys.StoriesSettings: return "\u25D4";
+            case Keys.MessagesSettings: return "\uD83D\uDCAC";
+            case Keys.SecuritySettings: return "\uD83D\uDD12";
+            case Keys.ConnectionsSettings: return "\uD83C\uDF10";
+            case Keys.MediaSettings: return "\uD83D\uDDBC";
+            case Keys.UiSettings: return "\uD83C\uDFA8";
+            case Keys.BackupSettings: return "\uD83D\uDCBE";
+            default: return "\u2726";
+        }
+    }
+
+    private static void scrollTop(SettingsController c) {
+        try {
+            View rv = c.settingsActivity.listView.getRecyclerListView();
+            if (rv instanceof androidx.recyclerview.widget.RecyclerView) {
+                ((androidx.recyclerview.widget.RecyclerView) rv).scrollToPosition(0);
+            }
+        } catch (Throwable ignored) {}
     }
 
     /** Subtitle under a switch: description, example value and/or "restart required". */

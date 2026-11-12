@@ -16,28 +16,26 @@ import com.my.televip.ui.Cells.RadioColorCell;
 
 public class DialogUtils {
 
+    /**
+     * Single-choice dialog built with the plain Android dialog: Telegram's own AlertDialog/Builder
+     * changes between builds and a failure inside a click handler closes the whole app.
+     */
     public static Dialog createSingleChoiceDialog(Activity parentActivity, final String[] options, final String title, final int selected, final DialogInterface.OnClickListener listener) {
-        final LinearLayout linearLayout = new LinearLayout(parentActivity);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        AlertDialog builder = new AlertDialog(parentActivity);
-        for (int a = 0; a < options.length; a++) {
-            RadioColorCell cell = new RadioColorCell(parentActivity);
-            cell.setPadding(dp(4), 0, dp(4), 0);
-            cell.setTag(a);
-            cell.setCheckColor(ThemeColors.getTextColor(), ThemeColors.getTextBlueColor());
-            cell.setTextAndValue(options[a], selected == a);
-            linearLayout.addView(cell);
-            cell.setOnClickListener(v -> {
-                int sel = (Integer) v.getTag();
-                builder.getDismissRunnable().run();
-                listener.onClick(null, sel);
-            });
-        }
-
-        builder.setTitle(title);
-        builder.setView(linearLayout);
-        builder.setPositiveButton(Translator.get(Keys.Cancel), null);
-        return builder.create();
+        boolean light = com.my.televip.virtuals.ActionBar.Theme.isLight();
+        android.content.Context themed = new android.view.ContextThemeWrapper(parentActivity,
+                light ? android.R.style.Theme_DeviceDefault_Light_Dialog_Alert : android.R.style.Theme_DeviceDefault_Dialog_Alert);
+        return new android.app.AlertDialog.Builder(themed)
+                .setTitle(title)
+                .setSingleChoiceItems(options, selected, (d, which) -> {
+                    d.dismiss();
+                    try {
+                        listener.onClick(d, which);
+                    } catch (Throwable t) {
+                        com.my.televip.logging.Logger.e(t);
+                    }
+                })
+                .setNegativeButton(Translator.get(Keys.Cancel), null)
+                .create();
     }
 
     public static void showQuranAlert(Context context){

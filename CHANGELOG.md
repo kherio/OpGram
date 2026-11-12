@@ -2,6 +2,9 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.10.2
+- Fix: tapping Theme (and Accent, Lock timeout, Calendar) closed the app on Telegram Play 13.2.0. These pickers now use a plain Android dialog instead of Telegram's internal one.
+
 ## 1.10.1
 - Fix: the "Search" hint was black and barely visible on dark themes; it now uses the theme's grey.
 - The "Backup" section is now called "Misc" ("Varios"), since it holds more than backups.

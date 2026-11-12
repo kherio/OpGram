@@ -98,6 +98,7 @@ public class SettingsActivity {
             search.setHint(Translator.get(Keys.Search));
             search.setSingleLine(true);
             search.setTextColor(ThemeColors.getTextToolBarColor());
+            search.setHintTextColor(ThemeColors.getTextGrayColor());
             int sp = Math.round(12 * context.getResources().getDisplayMetrics().density);
             search.setPadding(sp, sp / 2, sp, sp / 2);
             LinearLayout.LayoutParams searchParams = new LinearLayout.LayoutParams(
@@ -170,7 +171,10 @@ public class SettingsActivity {
                 mainToolbar.setColorTitle(ThemeColors.getTextToolBarColor());
                 mainToolbar.setBackgroundColor(ThemeColors.getToolBarColor());
             }
-            if (searchBox != null) searchBox.setTextColor(ThemeColors.getTextToolBarColor());
+            if (searchBox != null) {
+                searchBox.setTextColor(ThemeColors.getTextToolBarColor());
+                searchBox.setHintTextColor(ThemeColors.getTextGrayColor());
+            }
         } catch (Throwable t) {
             Logger.e(t);
         }

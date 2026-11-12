@@ -117,7 +117,7 @@
   "ConfirmVoice": "Do you want to send this voice message?",
   "ConfirmRound": "Do you want to send this video message?",
   "Send": "Send",
-  "BackupSettings": "Backup",
+  "BackupSettings": "Misc",
   "ExportSettings": "Export TeleVip settings",
   "ImportSettings": "Import settings from clipboard",
   "SettingsExported": "Settings copied to the clipboard. Save them somewhere, e.g. in Saved Messages.",

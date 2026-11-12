@@ -2,6 +2,10 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.10.1
+- Fix: the "Search" hint was black and barely visible on dark themes; it now uses the theme's grey.
+- The "Backup" section is now called "Misc" ("Varios"), since it holds more than backups.
+
 ## 1.10.0
 - Telegram Play 13.2.0: mapped AndroidUtilities, ApplicationLoader, LocaleController and DownloadController (tablet-layout fix for the settings page, exact numbers, exact last seen, story preloading control).
 - New: Compatibility check (Backup section) lists which features can find what they need in the installed Telegram version.

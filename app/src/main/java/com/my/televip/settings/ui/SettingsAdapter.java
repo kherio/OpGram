@@ -354,7 +354,7 @@ public class SettingsAdapter {
             case Keys.ConnectionsSettings: return "\uD83C\uDF10";
             case Keys.MediaSettings: return "\uD83D\uDDBC";
             case Keys.UiSettings: return "\uD83C\uDFA8";
-            case Keys.BackupSettings: return "\uD83D\uDCBE";
+            case Keys.BackupSettings: return "\uD83E\uDDF0";
             default: return "\u2726";
         }
     }

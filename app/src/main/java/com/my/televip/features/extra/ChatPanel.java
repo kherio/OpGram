@@ -26,7 +26,7 @@ import com.my.televip.logging.Logger;
 import com.my.televip.ui.ThemeColors;
 import com.my.televip.utils.Utils;
 
-/** Single per-chat OpGram panel (bottom sheet): switches for this chat + quick actions. */
+/** Single per-chat OpGram floating menu: quick actions on top, then switches for this chat. */
 public class ChatPanel {
 
     private interface Toggle { boolean get(); void set(boolean on); }
@@ -63,99 +63,69 @@ public class ChatPanel {
             root.setOrientation(LinearLayout.VERTICAL);
             GradientDrawable shape = new GradientDrawable();
             shape.setColor(bg);
-            float r = dp(act, 20);
-            shape.setCornerRadii(new float[]{r, r, r, r, 0, 0, 0, 0});
+            float r = dp(act, 18);
+            shape.setCornerRadius(r);
             root.setBackground(shape);
-            root.setPadding(0, dp(act, 8), 0, dp(act, 16));
+            root.setPadding(0, dp(act, 6), 0, dp(act, 6));
+            root.setElevation(dp(act, 8));
 
-            View handle = new View(act);
-            GradientDrawable hd = new GradientDrawable();
-            hd.setColor(line == 0 ? gray : (light ? 0x33000000 : 0x55FFFFFF));
-            hd.setCornerRadius(dp(act, 3));
-            handle.setBackground(hd);
-            LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(dp(act, 36), dp(act, 4));
-            hp.gravity = Gravity.CENTER_HORIZONTAL;
-            hp.bottomMargin = dp(act, 8);
-            root.addView(handle, hp);
-
-            TextView title = new TextView(act);
-            title.setText(Translator.get(Keys.OpGramInChat));
-            title.setTextColor(text);
-            title.setTextSize(17);
-            title.setTypeface(Typeface.DEFAULT_BOLD);
-            title.setPadding(dp(act, 20), dp(act, 6), dp(act, 20), dp(act, 10));
-            root.addView(title);
-
-            boolean any = false;
-
+            boolean hasActions = ConfigManager.isGhostMode() || on(ConfigManager.reminders) || on(ConfigManager.batchDownload);
             if (ConfigManager.isGhostMode()) {
-                any = true;
+                addAction(act, root, dialog, "msg_markread", Keys.MarkAsReadNow, text, accent,
+                        () -> GhostExceptions.markAsReadNow(did));
+            }
+            if (on(ConfigManager.reminders)) {
+                addAction(act, root, dialog, "msg_calendar2", Keys.RemindMe, text, accent,
+                        () -> Reminders.offer(did, Translator.get(Keys.RemindMe)));
+            }
+            if (on(ConfigManager.batchDownload)) {
+                addAction(act, root, dialog, "msg_download", Keys.BatchDownload, text, accent,
+                        () -> BatchDownload.offer(did));
+            }
+            if (hasActions) {
+                View div = new View(act);
+                div.setBackgroundColor(line);
+                LinearLayout.LayoutParams dlp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                dlp.topMargin = dp(act, 4);
+                dlp.bottomMargin = dp(act, 4);
+                root.addView(div, dlp);
+            }
+            if (ConfigManager.isGhostMode()) {
                 addSwitch(act, root, dialog, "ghost", Keys.HideSeenHere, text, accent, new Toggle() {
                     public boolean get() { return !GhostExceptions.isExcluded(did); }
                     public void set(boolean on) { if (on != get()) GhostExceptions.toggle(did); }
                 });
             }
             if (on(ConfigManager.chatLock)) {
-                any = true;
                 addSwitch(act, root, dialog, "msg_secret", Keys.BlockThisChat, text, accent, new Toggle() {
                     public boolean get() { return ChatLock.isLocked(did); }
                     public void set(boolean on) { if (on != get()) ChatLock.toggle(did); }
                 });
             }
             if (on(ConfigManager.secureChats)) {
-                any = true;
                 addSwitch(act, root, dialog, "msg_secret", Keys.BlockScreenshotsHere, text, accent, new Toggle() {
                     public boolean get() { return SecureScreen.isSecure(did); }
                     public void set(boolean on) { if (on != get()) SecureScreen.toggle(did); }
                 });
             }
             if (on(ConfigManager.totalDelete) && did > 0) {
-                any = true;
                 addSwitch(act, root, dialog, "msg_delete", Keys.TotalDeleteShort, text, accent, new Toggle() {
                     public boolean get() { return TotalDelete.isMarked(did); }
                     public void set(boolean on) { if (on != get()) TotalDelete.toggle(did); }
                 });
             }
 
-            boolean hasActions = ConfigManager.isGhostMode() || on(ConfigManager.reminders) || on(ConfigManager.batchDownload);
-            if (hasActions) {
-                if (any) {
-                    View div = new View(act);
-                    div.setBackgroundColor(line);
-                    LinearLayout.LayoutParams dlp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
-                    dlp.topMargin = dp(act, 6);
-                    dlp.bottomMargin = dp(act, 6);
-                    root.addView(div, dlp);
-                }
-                TextView sub = new TextView(act);
-                sub.setText(Translator.get(Keys.ChatActions));
-                sub.setTextColor(accent);
-                sub.setTextSize(13);
-                sub.setTypeface(Typeface.DEFAULT_BOLD);
-                sub.setPadding(dp(act, 20), dp(act, 8), dp(act, 20), dp(act, 4));
-                root.addView(sub);
-
-                if (ConfigManager.isGhostMode()) {
-                    addAction(act, root, dialog, "msg_markread", Keys.MarkAsReadNow, text, accent,
-                            () -> GhostExceptions.markAsReadNow(did));
-                }
-                if (on(ConfigManager.reminders)) {
-                    addAction(act, root, dialog, "msg_calendar2", Keys.RemindMe, text, accent,
-                            () -> Reminders.offer(did, Translator.get(Keys.RemindMe)));
-                }
-                if (on(ConfigManager.batchDownload)) {
-                    addAction(act, root, dialog, "msg_download", Keys.BatchDownload, text, accent,
-                            () -> BatchDownload.offer(did));
-                }
-            }
-
             dialog.setContentView(root);
             Window w = dialog.getWindow();
             if (w != null) {
                 w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                w.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                w.setGravity(Gravity.BOTTOM);
-                w.setDimAmount(0.45f);
+                w.setLayout(dp(act, 290), WindowManager.LayoutParams.WRAP_CONTENT);
+                w.setGravity(Gravity.TOP | Gravity.END);
+                WindowManager.LayoutParams wl = w.getAttributes();
+                wl.x = dp(act, 10);
+                wl.y = dp(act, 64);
+                w.setAttributes(wl);
+                w.setDimAmount(0.12f);
             }
             dialog.show();
         } catch (Throwable t) {

@@ -69,15 +69,11 @@ public class SettingsAdapter {
                 case ConfigItem.HEADER:
                     HeaderCellHolder headerCell = new HeaderCellHolder(holder);
                     String hkey = item.getKey();
-                    String arrow = ConfigManager.getSearchQuery().isEmpty()
-                            ? (ConfigManager.isCollapsed(hkey) ? "  ▸" : "  ▾") : "";
+                    String arrow = "";
                     headerCell.cell.setText(Translator.get(hkey) + arrow);
                     tintAccent(headerCell.cell.getView());
                     if (ConfigManager.getSearchQuery().isEmpty()) {
-                        headerCell.cell.getView().setOnClickListener(v -> {
-                            ConfigManager.toggleCollapseByKey(hkey);
-                            settingsController.refreshList();
-                        });
+                        headerCell.cell.getView().setOnClickListener(null);
                         if (ConfigManager.isResettable(hkey)) {
                             headerCell.cell.getView().setOnLongClickListener(v -> {
                                 confirmReset(settingsController, hkey);

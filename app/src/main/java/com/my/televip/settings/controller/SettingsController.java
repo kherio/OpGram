@@ -81,6 +81,7 @@ public class SettingsController {
         try {
             if (settingsActivity != null && settingsActivity.listView != null) {
                 settingsActivity.listView.getAdapter().notifyDataSetChanged();
+                settingsActivity.refreshTabs();
             }
         } catch (Throwable e) {
             Logger.e(e);

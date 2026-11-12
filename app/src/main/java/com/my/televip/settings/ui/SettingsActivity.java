@@ -38,6 +38,53 @@ public class SettingsActivity {
     private LinearLayout rootLayout;
     private MainToolBar mainToolbar;
     private android.widget.EditText searchBox;
+    private android.widget.HorizontalScrollView tabScroll;
+    private LinearLayout tabRow;
+    private SettingsController controller;
+
+    private int dp(int v) { return Math.round(v * context.getResources().getDisplayMetrics().density); }
+
+    /** Rebuilds the section tab strip (selected tab, favourites tab, theme colours, search state). */
+    public void refreshTabs() {
+        try {
+            if (tabRow == null) return;
+            boolean searching = !ConfigManager.getSearchQuery().isEmpty();
+            tabScroll.setVisibility(searching ? View.GONE : View.VISIBLE);
+            tabRow.removeAllViews();
+            final String selected = ConfigManager.getSelectedSection();
+            for (final String key : ConfigManager.getSectionKeys()) {
+                boolean sel = key.equals(selected);
+                android.widget.TextView tab = new android.widget.TextView(context);
+                tab.setText(Translator.get(key));
+                tab.setTextSize(13);
+                tab.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+                tab.setSingleLine(true);
+                tab.setPadding(dp(14), dp(8), dp(14), dp(8));
+                tab.setTextColor(sel ? 0xFFFFFFFF : ThemeColors.getTextGrayColor());
+                android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
+                bg.setCornerRadius(dp(20));
+                bg.setColor(sel ? ThemeColors.getTextBlueColor() : ThemeColors.getBackgroundWhiteOrBlueColor());
+                tab.setBackground(bg);
+                tab.setOnClickListener(v -> {
+                    ConfigManager.selectSection(key);
+                    if (controller != null) controller.refreshList();
+                    else refreshTabs();
+                    if (listView != null) {
+                        View rv0 = listView.getRecyclerListView();
+                        if (rv0 instanceof androidx.recyclerview.widget.RecyclerView) {
+                            ((androidx.recyclerview.widget.RecyclerView) rv0).scrollToPosition(0);
+                        }
+                    }
+                });
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.rightMargin = dp(6);
+                tabRow.addView(tab, lp);
+            }
+        } catch (Throwable t) {
+            Logger.e(t);
+        }
+    }
 
 
     public View createView(SettingsController settingsController) {
@@ -75,6 +122,16 @@ public class SettingsActivity {
             searchParams.setMargins(10, 6, 10, 0);
             layout.addView(search, searchParams);
             searchBox = search;
+            controller = settingsController;
+
+            tabScroll = new android.widget.HorizontalScrollView(context);
+            tabScroll.setHorizontalScrollBarEnabled(false);
+            tabRow = new LinearLayout(context);
+            tabRow.setOrientation(LinearLayout.HORIZONTAL);
+            tabRow.setPadding(dp(12), dp(8), dp(12), dp(4));
+            tabScroll.addView(tabRow);
+            layout.addView(tabScroll, new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
             listView = new RecyclerListView(context);
             if (DexInjector.classLoader != null) {
@@ -98,9 +155,20 @@ public class SettingsActivity {
                     0,
                     1f
             );
-            recyclerParams.setMargins(10, 10, 10, 0);
+            recyclerParams.setMargins(dp(12), dp(6), dp(12), dp(12));
 
-            layout.addView(listView.getRecyclerListView(), recyclerParams);
+            // rounded card instead of a square list
+            final View rv = listView.getRecyclerListView();
+            rv.setOutlineProvider(new android.view.ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, android.graphics.Outline outline) {
+                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), dp(22));
+                }
+            });
+            rv.setClipToOutline(true);
+
+            layout.addView(rv, recyclerParams);
+            refreshTabs();
 
             search.addTextChangedListener(new android.text.TextWatcher() {
                 public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
@@ -108,6 +176,7 @@ public class SettingsActivity {
                 public void afterTextChanged(android.text.Editable e) {
                     ConfigManager.setSearchQuery(e.toString());
                     settingsController.refreshList();
+                    refreshTabs();
                 }
             });
 

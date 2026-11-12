@@ -2,6 +2,10 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.9.0
+- Settings: sections are now tabs (one section at a time, Favorites tab when you have favorites); the list is a rounded card. Search still looks across everything.
+- Chat: the OpGram panel is now a floating rounded menu next to the top-right button, with quick actions first and the per-chat switches below.
+
 ## 1.8.0
 - New: single per-chat **OpGram** panel (bottom sheet) in the chat menu: hide "seen" here, lock chat, block screenshots here, total delete, plus actions (mark as read now, reminder, batch download). Replaces the separate menu entries.
 - Settings: rows with a description now follow "text opens details, switch toggles": tap the text to expand, tap the right side (after the divider) to switch.

@@ -531,41 +531,73 @@ public class ConfigManager {
             viewItems.add(restartBanner);
         }
 
+        List<String> sections = getSectionKeys();
+        if (!searching && (selectedSection == null || !sections.contains(selectedSection))) {
+            selectedSection = sections.isEmpty() ? null : sections.get(0);
+        }
+
         if (!searching) {
             if (tipsItem == null) tipsItem = new ConfigItem(ConfigItem.INFO, Keys.SettingsTips);
             if (!isCompact()) viewItems.add(tipsItem);
 
-            List<ConfigItem> favs = new ArrayList<>();
-            for (String k : favorites) {
-                for (ConfigItem it : items) {
-                    if (it.getType() == ConfigItem.SWITCH && k.equals(it.getKey())) { favs.add(it); break; }
-                }
-            }
-            if (!favs.isEmpty()) {
+            if (Keys.Favorites.equals(selectedSection)) {
                 if (favoritesHeader == null) favoritesHeader = new ConfigItem(ConfigItem.HEADER, Keys.Favorites);
                 viewItems.add(favoritesHeader);
-                if (!collapsed.contains(Keys.Favorites)) viewItems.addAll(favs);
+                viewItems.addAll(favoriteItems());
                 viewItems.add(shadows);
+                return;
             }
         }
 
-        boolean currentHidden = false;
+        boolean currentHidden = true;
         for (ConfigItem it : items) {
             int type = it.getType();
             if (type == ConfigItem.HEADER) {
-                currentHidden = !searching && collapsed.contains(it.getKey());
-                if (!searching) viewItems.add(it);
+                currentHidden = !searching && !it.getKey().equals(selectedSection);
+                if (!searching && !currentHidden) viewItems.add(it);
                 continue;
             }
             if (searching) {
                 if (type == ConfigItem.DIVIDER || !matches(it)) continue;
                 viewItems.add(it);
             } else {
-                // collapsed sections keep their trailing divider so the layout stays tidy
-                if (currentHidden && type != ConfigItem.DIVIDER) continue;
+                if (currentHidden) continue;
                 viewItems.add(it);
             }
         }
+    }
+
+    private static List<ConfigItem> favoriteItems() {
+        List<ConfigItem> favs = new ArrayList<>();
+        for (String k : favorites) {
+            for (ConfigItem it : items) {
+                if (it.getType() == ConfigItem.SWITCH && k.equals(it.getKey())) { favs.add(it); break; }
+            }
+        }
+        return favs;
+    }
+
+    private static String selectedSection = null;
+
+    /** Tab keys in display order: favorites first (only when there are any), then every section header. */
+    public static List<String> getSectionKeys() {
+        loadViewState();
+        List<String> out = new ArrayList<>();
+        if (!favoriteItems().isEmpty()) out.add(Keys.Favorites);
+        for (ConfigItem it : items) {
+            if (it.getType() == ConfigItem.HEADER) out.add(it.getKey());
+        }
+        return out;
+    }
+
+    public static String getSelectedSection() {
+        if (selectedSection == null) rebuildView();
+        return selectedSection;
+    }
+
+    public static void selectSection(String key) {
+        selectedSection = key;
+        rebuildView();
     }
 
     private static boolean matches(ConfigItem it) {

@@ -2,6 +2,9 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.10.4
+- New launcher icon: a chat bubble with a keyhole (adaptive and themed-icon ready).
+
 ## 1.10.3
 - Telegram Play 13.2.0: mapped FileLoadOperation (faster downloads) and SharedConfig.
 - Compatibility check: features that do not apply to this build (secret media on Web builds, update notice on Play) show "not applicable" instead of a warning.

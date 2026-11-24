@@ -2,6 +2,9 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.13.0
+- New main menu: sections grouped in rounded blocks (Privacy, Messages and media, App) with thin separators.
+
 ## 1.12.1
 - Fix: the loose-pill design was not showing (gaps between options are now applied directly on each row).
 

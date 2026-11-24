@@ -558,7 +558,13 @@ public class ConfigManager {
             if (!isCompact()) viewItems.add(tipsItem);
 
             if (selectedSection == null) {
-                for (String key : sections) viewItems.add(sectionRow(key));
+                String lastGroup = null;
+                for (String key : sections) {
+                    String g = groupOf(key);
+                    if (g != null && !g.equals(lastGroup)) viewItems.add(groupLabel(g));
+                    lastGroup = g;
+                    viewItems.add(sectionRow(key));
+                }
                 return;
             }
             if (Keys.Favorites.equals(selectedSection)) {
@@ -622,6 +628,48 @@ public class ConfigManager {
             sectionRows.put(key, row);
         }
         return row;
+    }
+
+    private static final java.util.Map<String, ConfigItem> groupLabels = new java.util.HashMap<>();
+
+    private static ConfigItem groupLabel(String key) {
+        ConfigItem row = groupLabels.get(key);
+        if (row == null) {
+            row = new ConfigItem(ConfigItem.TEXT, key);
+            groupLabels.put(key, row);
+        }
+        return row;
+    }
+
+    public static boolean isGroupLabel(ConfigItem it) {
+        return it != null && it.getType() == ConfigItem.TEXT && groupLabels.get(it.getKey()) == it;
+    }
+
+    /** Home-screen group of a section (null = no label, favorites block). */
+    public static String groupOf(String sectionKey) {
+        switch (sectionKey) {
+            case Keys.Favorites: return null;
+            case Keys.GhostModeSettings:
+            case Keys.StoriesSettings:
+            case Keys.SecuritySettings: return Keys.GroupPrivacy;
+            case Keys.MessagesSettings:
+            case Keys.MediaSettings:
+            case Keys.ConnectionsSettings: return Keys.GroupMessagesMedia;
+            default: return Keys.GroupApp;
+        }
+    }
+
+    /** Position of a section inside its block on the home screen: 0 alone, 1 first, 2 middle, 3 last. */
+    public static int blockPosition(String sectionKey) {
+        List<String> secs = getSectionKeys();
+        String g = groupOf(sectionKey);
+        int i = secs.indexOf(sectionKey);
+        boolean prev = i > 0 && java.util.Objects.equals(groupOf(secs.get(i - 1)), g);
+        boolean next = i >= 0 && i < secs.size() - 1 && java.util.Objects.equals(groupOf(secs.get(i + 1)), g);
+        if (prev && next) return 2;
+        if (next) return 1;
+        if (prev) return 3;
+        return 0;
     }
 
     public static boolean isSectionRow(ConfigItem it) {

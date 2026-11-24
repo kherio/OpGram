@@ -112,7 +112,12 @@ public class SettingsAdapter {
                     break;
                 case ConfigItem.TEXT:
                     TextSettingsCellHolder settingsCell = new TextSettingsCellHolder(holder);
-                    if (ConfigManager.isSectionRow(item)) {
+                    try { settingsCell.cell.getTextView().setTextSize(16f); } catch (Throwable ignored) {}
+                    if (ConfigManager.isGroupLabel(item)) {
+                        settingsCell.cell.setTextAndValue(Translator.get(item.getKey()).toUpperCase(), "", false, false);
+                        settingsCell.cell.getTextView().setTextColor(ThemeColors.getTextGrayColor());
+                        settingsCell.cell.getTextView().setTextSize(12f);
+                    } else if (ConfigManager.isSectionRow(item)) {
                         String sum = ConfigManager.sectionSummary(item.getKey());
                         settingsCell.cell.setTextAndValue(sectionIcon(item.getKey()) + "  " + Translator.get(item.getKey()),
                                 (sum.isEmpty() ? "" : sum + "   ") + "\u203A", false, false);
@@ -189,8 +194,17 @@ public class SettingsAdapter {
             }
 
             ViewHolder viewHolder = new ViewHolder(holder);
-            if (viewType != ConfigItem.DIVIDER && viewType != ConfigItem.INFO) {
-                pillBackground(viewHolder.getItemView());
+            if (viewType == ConfigItem.TEXT && ConfigManager.isGroupLabel(item)) {
+                viewHolder.getItemView().setBackground(null);
+                spacing(viewHolder.getItemView(), 14, 2);
+                return;
+            }
+            if (viewType == ConfigItem.TEXT && ConfigManager.isSectionRow(item)) {
+                int pos = ConfigManager.blockPosition(item.getKey());
+                pillBackground(viewHolder.getItemView(), pos);
+                spacing(viewHolder.getItemView(), 0, (pos == 0 || pos == 3) ? 6 : 0);
+            } else if (viewType != ConfigItem.DIVIDER && viewType != ConfigItem.INFO) {
+                pillBackground(viewHolder.getItemView(), 0);
                 spacing(viewHolder.getItemView(), 0, 6);
             } else if (viewType == ConfigItem.DIVIDER) {
                 spacing(viewHolder.getItemView(), 0, 0);
@@ -371,26 +385,40 @@ public class SettingsAdapter {
         }
     }
 
-    /** Each option is its own rounded pill (model "loose pills"). */
-    private static void pillBackground(final View v) {
+    /** Each option is its own rounded pill; pos 1/2/3 = first/middle/last row of a grouped block (thin separator). */
+    private static void pillBackground(final View v, int pos) {
         try {
             final float dn = v.getResources().getDisplayMetrics().density;
             final float r = 18 * dn;
+            final float top = (pos == 0 || pos == 1) ? r : 0;
+            final float bottom = (pos == 0 || pos == 3) ? r : 0;
+            final float[] radii = {top, top, top, top, bottom, bottom, bottom, bottom};
             android.graphics.drawable.GradientDrawable fill = new android.graphics.drawable.GradientDrawable();
             fill.setColor(ThemeColors.getBackgroundWhiteOrBlueColor());
-            fill.setCornerRadius(r);
+            fill.setCornerRadii(radii);
+            android.graphics.drawable.Drawable content = fill;
+            if (pos == 1 || pos == 2) {
+                android.graphics.drawable.GradientDrawable line = new android.graphics.drawable.GradientDrawable();
+                line.setColor(ThemeColors.isAmoled() ? 0x33FFFFFF : 0x26808890);
+                android.graphics.drawable.LayerDrawable ld = new android.graphics.drawable.LayerDrawable(
+                        new android.graphics.drawable.Drawable[]{fill, line});
+                ld.setLayerGravity(1, android.view.Gravity.BOTTOM);
+                ld.setLayerHeight(1, Math.max(1, Math.round(dn)));
+                ld.setLayerInset(1, Math.round(16 * dn), 0, Math.round(16 * dn), 0);
+                content = ld;
+            }
             android.graphics.drawable.GradientDrawable mask = new android.graphics.drawable.GradientDrawable();
             mask.setColor(0xFFFFFFFF);
-            mask.setCornerRadius(r);
+            mask.setCornerRadii(radii);
             v.setBackground(new android.graphics.drawable.RippleDrawable(
-                    android.content.res.ColorStateList.valueOf(0x22808890), fill, mask));
+                    android.content.res.ColorStateList.valueOf(0x22808890), content, mask));
             v.setOutlineProvider(new android.view.ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, android.graphics.Outline outline) {
                     outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), r);
                 }
             });
-            v.setClipToOutline(true);
+            v.setClipToOutline(pos == 0);
         } catch (Throwable ignored) {
         }
     }

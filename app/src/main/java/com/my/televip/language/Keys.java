@@ -292,4 +292,7 @@ public class Keys {
     public static final String SRClean = "SRClean";
     public static final String SRHow = "SRHow";
     public static final String SRFailed = "SRFailed";
+    public static final String GroupPrivacy = "GroupPrivacy";
+    public static final String GroupMessagesMedia = "GroupMessagesMedia";
+    public static final String GroupApp = "GroupApp";
 }

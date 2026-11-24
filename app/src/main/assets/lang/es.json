@@ -336,5 +336,8 @@
   "SRWarn": "%d elemento(s) a revisar (⚠️).",
   "SRClean": "No se ve nada raro.",
   "SRHow": "Para cerrar uno: Telegram → Ajustes → Dispositivos (o Privacidad → Sitios web).",
-  "SRFailed": "No se pudieron leer tus sesiones. Revisa la conexión e inténtalo de nuevo."
+  "SRFailed": "No se pudieron leer tus sesiones. Revisa la conexión e inténtalo de nuevo.",
+  "GroupPrivacy": "Privacidad",
+  "GroupMessagesMedia": "Mensajes y medios",
+  "GroupApp": "App"
 }

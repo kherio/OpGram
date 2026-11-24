@@ -249,4 +249,26 @@ public class Keys {
     public static final String CompatSummary = "CompatSummary";
     public static final String CompatNote = "CompatNote";
     public static final String CompatNA = "CompatNA";
+    public static final String AntiTrack = "AntiTrack";
+    public static final String AntiTrackDesc = "AntiTrackDesc";
+    public static final String PrivacyExposure = "PrivacyExposure";
+    public static final String PXPhone = "PXPhone";
+    public static final String PXFindByPhone = "PXFindByPhone";
+    public static final String PXSeen = "PXSeen";
+    public static final String PXPhoto = "PXPhoto";
+    public static final String PXAbout = "PXAbout";
+    public static final String PXBirthday = "PXBirthday";
+    public static final String PXGroups = "PXGroups";
+    public static final String PXCalls = "PXCalls";
+    public static final String PXForwards = "PXForwards";
+    public static final String PXVoice = "PXVoice";
+    public static final String PXAll = "PXAll";
+    public static final String PXContacts = "PXContacts";
+    public static final String PXNobody = "PXNobody";
+    public static final String PXGroupsWord = "PXGroupsWord";
+    public static final String PXOpenSome = "PXOpenSome";
+    public static final String PXOpenNone = "PXOpenNone";
+    public static final String PXNote = "PXNote";
+    public static final String PXFailed = "PXFailed";
+    public static final String PXUnknown = "PXUnknown";
 }

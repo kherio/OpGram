@@ -2,6 +2,10 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.11.0
+- New: "Clean tracking from links" (Security): strips utm_*, fbclid, gclid, igshid and similar parameters from web links before they open. Telegram links are not touched.
+- New: "What people can see about me" (Security): reads your Telegram privacy settings and lists who can see your number, last seen, photo, groups, calls and more, flagging what is open to everybody.
+
 ## 1.10.4
 - New launcher icon: a chat bubble with a keyhole (adaptive and themed-icon ready).
 

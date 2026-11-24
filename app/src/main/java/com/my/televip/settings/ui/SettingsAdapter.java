@@ -273,6 +273,9 @@ public class SettingsAdapter {
                         case Keys.ImportSettings:
                             BackupActions.importSettings((Activity) settingsController.getContext());
                             break;
+                        case Keys.PrivacyExposure:
+                            com.my.televip.features.extra.PrivacyExposure.show((Activity) settingsController.getContext());
+                            break;
                         case Keys.Compatibility:
                             com.my.televip.features.extra.Compat.show((Activity) settingsController.getContext());
                             break;

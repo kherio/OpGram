@@ -10,6 +10,7 @@ import com.my.televip.features.extra.UndoSend;
 import com.my.televip.features.extra.VoicePlaybackSpeed;
 import com.my.televip.features.extra.BatterySaver;
 import com.my.televip.features.extra.AppLock;
+import com.my.televip.features.extra.AntiTrack;
 import com.my.televip.features.extra.ChatLock;
 import com.my.televip.features.extra.SecureScreen;
 import com.my.televip.features.extra.TotalDelete;
@@ -96,7 +97,7 @@ public class ConfigManager {
     public static ConfigItem showUserID;
     public static ConfigItem customCalendar;
     public static ConfigItem compactMode, settingsTheme, settingsAccent;
-    public static ConfigItem securityHeader, appLock, appLockTimeout, secureScreen, secureChats, totalDelete;
+    public static ConfigItem securityHeader, appLock, appLockTimeout, secureScreen, secureChats, totalDelete, antiTrack, privacyExposure;
 
     public static boolean isCompact() { return compactMode != null && compactMode.isEnable(); }
 
@@ -269,6 +270,12 @@ public class ConfigManager {
 
         totalDelete = new ConfigItem(ConfigItem.SWITCH, Keys.TotalDelete, ConfigPreferences.getBoolean(Keys.TotalDelete), TotalDelete::init);
         items.add(totalDelete);
+
+        antiTrack = new ConfigItem(ConfigItem.SWITCH, Keys.AntiTrack, ConfigPreferences.getBoolean(Keys.AntiTrack), AntiTrack::init);
+        items.add(antiTrack);
+
+        privacyExposure = new ConfigItem(ConfigItem.TEXT, Keys.PrivacyExposure);
+        items.add(privacyExposure);
 
         items.add(shadows);
 

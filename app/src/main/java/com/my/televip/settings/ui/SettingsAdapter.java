@@ -186,8 +186,8 @@ public class SettingsAdapter {
             if (viewType == ConfigItem.HEADER) return;
 
             ViewHolder viewHolder = new ViewHolder(holder);
-            if (ThemeColors.isAmoled() && viewType != ConfigItem.DIVIDER) {
-                viewHolder.getItemView().setBackgroundColor(ThemeColors.getBackgroundWhiteOrBlueColor());
+            if (viewType != ConfigItem.DIVIDER && viewType != ConfigItem.INFO) {
+                pillBackground(viewHolder.getItemView());
             }
 
             final float[] lastTouchX = new float[]{0f};
@@ -276,6 +276,9 @@ public class SettingsAdapter {
                         case Keys.PrivacyExposure:
                             com.my.televip.features.extra.PrivacyExposure.show((Activity) settingsController.getContext());
                             break;
+                        case Keys.SessionsReview:
+                            com.my.televip.features.extra.SessionsReview.show((Activity) settingsController.getContext());
+                            break;
                         case Keys.Compatibility:
                             com.my.televip.features.extra.Compat.show((Activity) settingsController.getContext());
                             break;
@@ -345,6 +348,30 @@ public class SettingsAdapter {
             Logger.e(t);
         }
 
+    }
+
+    /** Each option is its own rounded pill (model "loose pills"). */
+    private static void pillBackground(final View v) {
+        try {
+            final float dn = v.getResources().getDisplayMetrics().density;
+            final float r = 18 * dn;
+            android.graphics.drawable.GradientDrawable fill = new android.graphics.drawable.GradientDrawable();
+            fill.setColor(ThemeColors.getBackgroundWhiteOrBlueColor());
+            fill.setCornerRadius(r);
+            android.graphics.drawable.GradientDrawable mask = new android.graphics.drawable.GradientDrawable();
+            mask.setColor(0xFFFFFFFF);
+            mask.setCornerRadius(r);
+            v.setBackground(new android.graphics.drawable.RippleDrawable(
+                    android.content.res.ColorStateList.valueOf(0x22808890), fill, mask));
+            v.setOutlineProvider(new android.view.ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, android.graphics.Outline outline) {
+                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), r);
+                }
+            });
+            v.setClipToOutline(true);
+        } catch (Throwable ignored) {
+        }
     }
 
     private static String sectionIcon(String key) {

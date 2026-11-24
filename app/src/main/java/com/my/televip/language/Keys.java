@@ -271,4 +271,25 @@ public class Keys {
     public static final String PXNote = "PXNote";
     public static final String PXFailed = "PXFailed";
     public static final String PXUnknown = "PXUnknown";
+    public static final String CleanMetadata = "CleanMetadata";
+    public static final String CleanMetadataDesc = "CleanMetadataDesc";
+    public static final String LocationGuard = "LocationGuard";
+    public static final String LocationGuardDesc = "LocationGuardDesc";
+    public static final String LGTitle = "LGTitle";
+    public static final String LGMessage = "LGMessage";
+    public static final String LGMessageLive = "LGMessageLive";
+    public static final String LGSend = "LGSend";
+    public static final String LGApprox = "LGApprox";
+    public static final String LGCancel = "LGCancel";
+    public static final String SessionsReview = "SessionsReview";
+    public static final String SRDevices = "SRDevices";
+    public static final String SRWeb = "SRWeb";
+    public static final String SRThisDevice = "SRThisDevice";
+    public static final String SRUnofficial = "SRUnofficial";
+    public static final String SRInactive = "SRInactive";
+    public static final String SRNone = "SRNone";
+    public static final String SRWarn = "SRWarn";
+    public static final String SRClean = "SRClean";
+    public static final String SRHow = "SRHow";
+    public static final String SRFailed = "SRFailed";
 }

@@ -2,6 +2,12 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.12.0
+- New design for settings: every option is its own rounded pill over the page background ("loose pills").
+- New: "Strip photo metadata on upload" (Security): removes GPS, camera model, dates and serial numbers from a copy of JPEG files before they are uploaded. The original is never modified.
+- New: "Confirm before sending location" (Security): asks first and lets you send an approximate location (about 1 km).
+- New: "Review devices and logins" (Security): lists active devices and websites/bots with access, flagging inactive or unofficial ones.
+
 ## 1.11.0
 - New: "Clean tracking from links" (Security): strips utm_*, fbclid, gclid, igshid and similar parameters from web links before they open. Telegram links are not touched.
 - New: "What people can see about me" (Security): reads your Telegram privacy settings and lists who can see your number, last seen, photo, groups, calls and more, flagging what is open to everybody.

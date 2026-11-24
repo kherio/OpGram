@@ -11,6 +11,8 @@ import com.my.televip.features.extra.VoicePlaybackSpeed;
 import com.my.televip.features.extra.BatterySaver;
 import com.my.televip.features.extra.AppLock;
 import com.my.televip.features.extra.AntiTrack;
+import com.my.televip.features.extra.LocationGuard;
+import com.my.televip.features.extra.MediaCleaner;
 import com.my.televip.features.extra.ChatLock;
 import com.my.televip.features.extra.SecureScreen;
 import com.my.televip.features.extra.TotalDelete;
@@ -97,7 +99,7 @@ public class ConfigManager {
     public static ConfigItem showUserID;
     public static ConfigItem customCalendar;
     public static ConfigItem compactMode, settingsTheme, settingsAccent;
-    public static ConfigItem securityHeader, appLock, appLockTimeout, secureScreen, secureChats, totalDelete, antiTrack, privacyExposure;
+    public static ConfigItem securityHeader, appLock, appLockTimeout, secureScreen, secureChats, totalDelete, antiTrack, privacyExposure, cleanMetadata, locationGuard, sessionsReview;
 
     public static boolean isCompact() { return compactMode != null && compactMode.isEnable(); }
 
@@ -276,6 +278,15 @@ public class ConfigManager {
 
         privacyExposure = new ConfigItem(ConfigItem.TEXT, Keys.PrivacyExposure);
         items.add(privacyExposure);
+
+        cleanMetadata = new ConfigItem(ConfigItem.SWITCH, Keys.CleanMetadata, ConfigPreferences.getBoolean(Keys.CleanMetadata), MediaCleaner::init);
+        items.add(cleanMetadata);
+
+        locationGuard = new ConfigItem(ConfigItem.SWITCH, Keys.LocationGuard, ConfigPreferences.getBoolean(Keys.LocationGuard), LocationGuard::init);
+        items.add(locationGuard);
+
+        sessionsReview = new ConfigItem(ConfigItem.TEXT, Keys.SessionsReview);
+        items.add(sessionsReview);
 
         items.add(shadows);
 

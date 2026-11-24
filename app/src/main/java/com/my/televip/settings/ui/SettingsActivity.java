@@ -18,6 +18,7 @@ import com.my.televip.language.Keys;
 import com.my.televip.language.Translator;
 import com.my.televip.logging.Logger;
 import com.my.televip.obfuscate.Obfuscate;
+import com.my.televip.Configs.ConfigItem;
 import com.my.televip.Configs.ConfigManager;
 import com.my.televip.settings.adapter.ListAdapter;
 import com.my.televip.settings.controller.SettingsController;
@@ -121,7 +122,7 @@ public class SettingsActivity {
                 listView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             }
 
-            listView.setBackgroundColor(ThemeColors.getBackgroundWhiteOrBlueColor());
+            listView.setBackgroundColor(ThemeColors.getBackgroundGrayColor());
 
             listView.setVerticalScrollBarEnabled(false);
 
@@ -132,15 +133,22 @@ public class SettingsActivity {
             );
             recyclerParams.setMargins(dp(12), dp(6), dp(12), dp(12));
 
-            // rounded card instead of a square list
+            // loose pills: the page background shows between rows, each row is its own rounded pill
             final View rv = listView.getRecyclerListView();
-            rv.setOutlineProvider(new android.view.ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, android.graphics.Outline outline) {
-                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), dp(22));
-                }
-            });
-            rv.setClipToOutline(true);
+            if (rv instanceof androidx.recyclerview.widget.RecyclerView) {
+                ((androidx.recyclerview.widget.RecyclerView) rv).addItemDecoration(new androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
+                    @Override
+                    public void getItemOffsets(android.graphics.Rect out, View v, androidx.recyclerview.widget.RecyclerView parent,
+                                               androidx.recyclerview.widget.RecyclerView.State state) {
+                        int pos = parent.getChildAdapterPosition(v);
+                        androidx.recyclerview.widget.RecyclerView.Adapter<?> ad = parent.getAdapter();
+                        int type = (ad != null && pos >= 0) ? ad.getItemViewType(pos) : -1;
+                        out.bottom = dp(6);
+                        if (type == ConfigItem.HEADER) { out.top = dp(10); out.bottom = dp(2); }
+                        else if (type == ConfigItem.DIVIDER) { out.bottom = 0; }
+                    }
+                });
+            }
 
             layout.addView(rv, recyclerParams);
             refreshTabs();
@@ -166,7 +174,7 @@ public class SettingsActivity {
     public void applyTheme() {
         try {
             if (rootLayout != null) rootLayout.setBackgroundColor(ThemeColors.getBackgroundGrayColor());
-            if (listView != null) listView.setBackgroundColor(ThemeColors.getBackgroundWhiteOrBlueColor());
+            if (listView != null) listView.setBackgroundColor(ThemeColors.getBackgroundGrayColor());
             if (mainToolbar != null) {
                 mainToolbar.setColorTitle(ThemeColors.getTextToolBarColor());
                 mainToolbar.setBackgroundColor(ThemeColors.getToolBarColor());

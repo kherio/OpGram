@@ -1,5 +1,6 @@
 package com.my.televip.Configs;
 
+import com.my.televip.Branding;
 import com.my.televip.Clients.ClientManager;
 import com.my.televip.Clients.Telegraph;
 import com.my.televip.features.ui.DisableChannelSwipeBack;
@@ -555,18 +556,12 @@ public class ConfigManager {
 
         if (!searching) {
             if (tipsItem == null) tipsItem = new ConfigItem(ConfigItem.INFO, Keys.SettingsTips);
-            if (!isCompact()) viewItems.add(tipsItem);
-
             if (selectedSection == null) {
-                String lastGroup = null;
-                for (String key : sections) {
-                    String g = groupOf(key);
-                    if (g != null && !g.equals(lastGroup)) viewItems.add(groupLabel(g));
-                    lastGroup = g;
-                    viewItems.add(sectionRow(key));
-                }
+                buildHome(sections);
+                if (!isCompact()) viewItems.add(tipsItem);
                 return;
             }
+            if (!isCompact()) viewItems.add(tipsItem);
             if (Keys.Favorites.equals(selectedSection)) {
                 if (favoritesHeader == null) favoritesHeader = new ConfigItem(ConfigItem.HEADER, Keys.Favorites);
                 viewItems.add(favoritesHeader);
@@ -645,31 +640,86 @@ public class ConfigManager {
         return it != null && it.getType() == ConfigItem.TEXT && groupLabels.get(it.getKey()) == it;
     }
 
-    /** Home-screen group of a section (null = no label, favorites block). */
-    public static String groupOf(String sectionKey) {
-        switch (sectionKey) {
-            case Keys.Favorites: return null;
-            case Keys.GhostModeSettings:
-            case Keys.StoriesSettings:
-            case Keys.SecuritySettings: return Keys.GroupPrivacy;
-            case Keys.MessagesSettings:
-            case Keys.MediaSettings:
-            case Keys.ConnectionsSettings: return Keys.GroupMessagesMedia;
-            default: return Keys.GroupApp;
+    private static final java.util.Map<String, ConfigItem> homeRows = new java.util.HashMap<>();
+    private static final java.util.Map<String, String> homeTipNames = new java.util.HashMap<>();
+
+    private static ConfigItem homeRow(String key) {
+        ConfigItem row = homeRows.get(key);
+        if (row == null) {
+            boolean multi = Keys.HomeTitle.equals(key) || Keys.HomeHero.equals(key);
+            row = new ConfigItem(multi ? ConfigItem.INFO : ConfigItem.TEXT, key);
+            homeRows.put(key, row);
         }
+        return row;
     }
 
-    /** Position of a section inside its block on the home screen: 0 alone, 1 first, 2 middle, 3 last. */
-    public static int blockPosition(String sectionKey) {
-        List<String> secs = getSectionKeys();
-        String g = groupOf(sectionKey);
-        int i = secs.indexOf(sectionKey);
-        boolean prev = i > 0 && java.util.Objects.equals(groupOf(secs.get(i - 1)), g);
-        boolean next = i >= 0 && i < secs.size() - 1 && java.util.Objects.equals(groupOf(secs.get(i + 1)), g);
-        if (prev && next) return 2;
-        if (next) return 1;
-        if (prev) return 3;
-        return 0;
+    public static boolean isHomeTitle(ConfigItem it) { return it != null && homeRows.get(it.getKey()) == it && Keys.HomeTitle.equals(it.getKey()); }
+    public static boolean isHomeHero(ConfigItem it) { return it != null && homeRows.get(it.getKey()) == it && Keys.HomeHero.equals(it.getKey()); }
+    public static boolean isHomeTip(ConfigItem it) { return it != null && homeRows.get(it.getKey()) == it && it.getKey().startsWith("Tip:"); }
+
+    private static int[] protectionCount() {
+        int on = 0, total = 0;
+        for (String k : new String[]{Keys.GhostModeSettings, Keys.StoriesSettings, Keys.SecuritySettings}) {
+            for (ConfigItem it : sectionItems(k)) {
+                if (it.getType() == ConfigItem.SWITCH || it.getType() == ConfigItem.EXPANDABLE_SWITCH) {
+                    total++;
+                    if (it.isEnable()) on++;
+                }
+            }
+        }
+        return new int[]{on, total};
+    }
+
+    private static int allSettingsCount() {
+        int n = 0;
+        for (ConfigItem it : items) if (it.getType() == ConfigItem.SWITCH || it.getType() == ConfigItem.EXPANDABLE_SWITCH) n++;
+        return n;
+    }
+
+    /** Title text for the home screen: "OpGram" + subtitle. */
+    public static String homeTitleText() {
+        return "OpGram\n" + Translator.get(Keys.HomeSubtitle, Branding.VERSION, allSettingsCount());
+    }
+
+    /** 0 good, 1 medium, 2 low. */
+    public static int homeLevel() {
+        int[] c = protectionCount();
+        double r = c[1] == 0 ? 0 : (double) c[0] / c[1];
+        return r >= 0.6 ? 0 : r >= 0.3 ? 1 : 2;
+    }
+
+    public static String homeHeroText() {
+        int[] c = protectionCount();
+        int lvl = homeLevel();
+        String head = Translator.get(lvl == 0 ? Keys.HeroGood : lvl == 1 ? Keys.HeroMid : Keys.HeroLow);
+        int tips = homeTipNames.size();
+        String sub = tips > 0 ? Translator.get(Keys.HeroSubTips, c[0], c[1], tips) : Translator.get(Keys.HeroSub, c[0], c[1]);
+        return "\uD83D\uDEE1  " + head + "\n" + sub;
+    }
+
+    private static void buildHome(List<String> sections) {
+        viewItems.add(homeRow(Keys.HomeTitle));
+        homeTipNames.clear();
+        List<ConfigItem> tipItems = new ArrayList<>();
+        ConfigItem[] candidates = {appLock, secureScreen, cleanMetadata, locationGuard, antiTrack, secureChats};
+        for (ConfigItem c : candidates) {
+            if (c != null && !c.isEnable() && homeTipNames.size() < 3) {
+                homeTipNames.put("Tip:" + c.getKey(), c.getKey());
+                tipItems.add(homeRow("Tip:" + c.getKey()));
+            }
+        }
+        viewItems.add(homeRow(Keys.HomeHero));
+        if (!tipItems.isEmpty()) {
+            viewItems.add(groupLabel(Keys.LabelTips));
+            viewItems.addAll(tipItems);
+        }
+        viewItems.add(groupLabel(Keys.LabelSections));
+        for (String key : sections) viewItems.add(sectionRow(key));
+    }
+
+    public static String homeTipText(ConfigItem it) {
+        String name = homeTipNames.get(it.getKey());
+        return "\u26A0\uFE0F  " + Translator.get(Keys.TipEnable, name == null ? "" : Translator.get(name));
     }
 
     public static boolean isSectionRow(ConfigItem it) {

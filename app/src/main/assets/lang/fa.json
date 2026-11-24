@@ -312,5 +312,16 @@
   "SRFailed": "Could not read your sessions. Check your connection and try again.",
   "GroupPrivacy": "Privacy",
   "GroupMessagesMedia": "Messages and media",
-  "GroupApp": "App"
+  "GroupApp": "App",
+  "HomeTitle": "HomeTitle",
+  "HomeHero": "HomeHero",
+  "HomeSubtitle": "Version %s · %d settings",
+  "HeroGood": "Protection: good",
+  "HeroMid": "Protection: medium",
+  "HeroLow": "Protection: low",
+  "HeroSub": "%d of %d protections active",
+  "HeroSubTips": "%d of %d protections active · %d tip(s)",
+  "TipEnable": "Turn on «%s»",
+  "LabelTips": "Tips",
+  "LabelSections": "Sections"
 }

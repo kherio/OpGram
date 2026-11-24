@@ -339,5 +339,16 @@
   "SRFailed": "No se pudieron leer tus sesiones. Revisa la conexión e inténtalo de nuevo.",
   "GroupPrivacy": "Privacidad",
   "GroupMessagesMedia": "Mensajes y medios",
-  "GroupApp": "App"
+  "GroupApp": "App",
+  "HomeTitle": "HomeTitle",
+  "HomeHero": "HomeHero",
+  "HomeSubtitle": "Versión %s · %d ajustes",
+  "HeroGood": "Protección: buena",
+  "HeroMid": "Protección: media",
+  "HeroLow": "Protección: baja",
+  "HeroSub": "%d de %d protecciones activas",
+  "HeroSubTips": "%d de %d protecciones activas · %d consejo(s)",
+  "TipEnable": "Activa «%s»",
+  "LabelTips": "Consejos",
+  "LabelSections": "Secciones"
 }

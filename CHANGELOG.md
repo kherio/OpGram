@@ -2,6 +2,9 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.14.0
+- New main menu: large title, a protection status panel (active protections, level, tips that jump to Security) and the list of sections.
+
 ## 1.13.0
 - New main menu: sections grouped in rounded blocks (Privacy, Messages and media, App) with thin separators.
 

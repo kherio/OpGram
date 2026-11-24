@@ -112,8 +112,16 @@ public class SettingsAdapter {
                     break;
                 case ConfigItem.TEXT:
                     TextSettingsCellHolder settingsCell = new TextSettingsCellHolder(holder);
-                    try { settingsCell.cell.getTextView().setTextSize(16f); } catch (Throwable ignored) {}
-                    if (ConfigManager.isGroupLabel(item)) {
+                    try {
+                        android.widget.TextView ctv = settingsCell.cell.getTextView();
+                        ctv.setTextSize(16f);
+                        ctv.setSingleLine(true);
+                        ctv.setTypeface(null, android.graphics.Typeface.NORMAL);
+                    } catch (Throwable ignored) {}
+                    if (ConfigManager.isHomeTip(item)) {
+                        settingsCell.cell.setTextAndValue(ConfigManager.homeTipText(item), "\u203A", false, false);
+                        settingsCell.cell.getTextView().setTextColor(ThemeColors.getTextColor());
+                    } else if (ConfigManager.isGroupLabel(item)) {
                         settingsCell.cell.setTextAndValue(Translator.get(item.getKey()).toUpperCase(), "", false, false);
                         settingsCell.cell.getTextView().setTextColor(ThemeColors.getTextGrayColor());
                         settingsCell.cell.getTextView().setTextSize(12f);
@@ -157,7 +165,15 @@ public class SettingsAdapter {
                 case ConfigItem.INFO:
                     TextInfoCellHolder textInfoCell = new TextInfoCellHolder(holder);
                     TextView textView = textInfoCell.text.getTextView();
-                    if (!item.getKey().equals(Keys.OfflineVisibilityInfo)) {
+                    textView.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
+                    if (ConfigManager.isHomeTitle(item) || ConfigManager.isHomeHero(item)) {
+                        boolean title = ConfigManager.isHomeTitle(item);
+                        textView.setGravity(android.view.Gravity.START);
+                        textView.setText(title ? ConfigManager.homeTitleText() : ConfigManager.homeHeroText());
+                        textView.setOnClickListener(null);
+                        if (title) styleTwoLines(textView, 30f, 13f, ThemeColors.getTextColor(), ThemeColors.getTextGrayColor());
+                        else styleTwoLines(textView, 17f, 12f, 0xFFFFFFFF, 0xDDFFFFFF);
+                    } else if (!item.getKey().equals(Keys.OfflineVisibilityInfo)) {
                         textView.setMaxLines(Integer.MAX_VALUE);
                         textView.setEllipsize(null);
                         textView.setText(Translator.get(item.getKey()));
@@ -194,16 +210,25 @@ public class SettingsAdapter {
             }
 
             ViewHolder viewHolder = new ViewHolder(holder);
+            if (viewType == ConfigItem.INFO && !ConfigManager.isHomeTitle(item) && !ConfigManager.isHomeHero(item)) {
+                viewHolder.getItemView().setBackground(null);
+            }
+            if (viewType == ConfigItem.INFO && ConfigManager.isHomeTitle(item)) {
+                viewHolder.getItemView().setBackground(null);
+                spacing(viewHolder.getItemView(), 6, 4);
+                return;
+            }
+            if (viewType == ConfigItem.INFO && ConfigManager.isHomeHero(item)) {
+                heroBackground(viewHolder.getItemView(), ConfigManager.homeLevel());
+                spacing(viewHolder.getItemView(), 4, 6);
+                return;
+            }
             if (viewType == ConfigItem.TEXT && ConfigManager.isGroupLabel(item)) {
                 viewHolder.getItemView().setBackground(null);
                 spacing(viewHolder.getItemView(), 14, 2);
                 return;
             }
-            if (viewType == ConfigItem.TEXT && ConfigManager.isSectionRow(item)) {
-                int pos = ConfigManager.blockPosition(item.getKey());
-                pillBackground(viewHolder.getItemView(), pos);
-                spacing(viewHolder.getItemView(), 0, (pos == 0 || pos == 3) ? 6 : 0);
-            } else if (viewType != ConfigItem.DIVIDER && viewType != ConfigItem.INFO) {
+            if (viewType != ConfigItem.DIVIDER && viewType != ConfigItem.INFO) {
                 pillBackground(viewHolder.getItemView(), 0);
                 spacing(viewHolder.getItemView(), 0, 6);
             } else if (viewType == ConfigItem.DIVIDER) {
@@ -271,6 +296,12 @@ public class SettingsAdapter {
                         ConfigManager.setRestartPending(true);
                         settingsController.refreshList();
                     }
+                } else if (viewType == ConfigItem.TEXT && ConfigManager.isHomeTip(item)) {
+                    ConfigManager.selectSection(Keys.SecuritySettings);
+                    settingsController.refreshList();
+                    scrollTop(settingsController);
+                } else if (viewType == ConfigItem.TEXT && (ConfigManager.isHomeTitle(item) || ConfigManager.isHomeHero(item) || ConfigManager.isGroupLabel(item))) {
+                    // not clickable
                 } else if (viewType == ConfigItem.TEXT && ConfigManager.isSectionRow(item)) {
                     ConfigManager.selectSection(item.getKey());
                     settingsController.refreshList();
@@ -371,6 +402,43 @@ public class SettingsAdapter {
     }
 
     /** Gap between pills as plain margins (the list's RecyclerView class may be renamed, so no ItemDecoration). */
+    /** First line big, the rest small and muted (the cell's TextView becomes multi-line). */
+    private static void styleTwoLines(android.widget.TextView tv, float bigSp, float smallSp, int bigColor, int smallColor) {
+        try {
+            CharSequence t = tv.getText();
+            String str = t == null ? "" : t.toString();
+            int nl = str.indexOf('\n');
+            tv.setSingleLine(false);
+            tv.setMaxLines(4);
+            tv.setEllipsize(null);
+            android.text.SpannableString sp = new android.text.SpannableString(str);
+            float dn = tv.getResources().getDisplayMetrics().scaledDensity;
+            int end = nl < 0 ? str.length() : nl;
+            sp.setSpan(new android.text.style.AbsoluteSizeSpan((int) (bigSp * dn)), 0, end, 0);
+            sp.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, end, 0);
+            sp.setSpan(new android.text.style.ForegroundColorSpan(bigColor), 0, end, 0);
+            if (nl >= 0 && nl + 1 < str.length()) {
+                sp.setSpan(new android.text.style.AbsoluteSizeSpan((int) (smallSp * dn)), nl + 1, str.length(), 0);
+                sp.setSpan(new android.text.style.ForegroundColorSpan(smallColor), nl + 1, str.length(), 0);
+            }
+            tv.setText(sp);
+        } catch (Throwable ignored) {
+        }
+    }
+
+    private static void heroBackground(View v, int level) {
+        try {
+            int a = level == 0 ? 0xFF2B8A3E : level == 1 ? 0xFFE8890C : 0xFFE03131;
+            int b = level == 0 ? 0xFF12B886 : level == 1 ? 0xFFF59F00 : 0xFFF76707;
+            android.graphics.drawable.GradientDrawable g = new android.graphics.drawable.GradientDrawable(
+                    android.graphics.drawable.GradientDrawable.Orientation.TL_BR, new int[]{a, b});
+            g.setCornerRadius(22 * v.getResources().getDisplayMetrics().density);
+            v.setBackground(g);
+            v.setClipToOutline(false);
+        } catch (Throwable ignored) {
+        }
+    }
+
     private static void spacing(View v, int topDp, int bottomDp) {
         try {
             android.view.ViewGroup.LayoutParams lp = v.getLayoutParams();

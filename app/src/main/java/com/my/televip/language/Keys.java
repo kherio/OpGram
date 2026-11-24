@@ -295,4 +295,15 @@ public class Keys {
     public static final String GroupPrivacy = "GroupPrivacy";
     public static final String GroupMessagesMedia = "GroupMessagesMedia";
     public static final String GroupApp = "GroupApp";
+    public static final String HomeTitle = "HomeTitle";
+    public static final String HomeHero = "HomeHero";
+    public static final String HomeSubtitle = "HomeSubtitle";
+    public static final String HeroGood = "HeroGood";
+    public static final String HeroMid = "HeroMid";
+    public static final String HeroLow = "HeroLow";
+    public static final String HeroSub = "HeroSub";
+    public static final String HeroSubTips = "HeroSubTips";
+    public static final String TipEnable = "TipEnable";
+    public static final String LabelTips = "LabelTips";
+    public static final String LabelSections = "LabelSections";
 }

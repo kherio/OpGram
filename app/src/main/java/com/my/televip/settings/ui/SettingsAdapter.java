@@ -167,11 +167,11 @@ public class SettingsAdapter {
                     TextView textView = textInfoCell.text.getTextView();
                     textView.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
                     if (ConfigManager.isHomeTitle(item) || ConfigManager.isHomeHero(item)) {
-                        boolean title = ConfigManager.isHomeTitle(item);
+                        boolean isTitle = ConfigManager.isHomeTitle(item);
                         textView.setGravity(android.view.Gravity.START);
-                        textView.setText(title ? ConfigManager.homeTitleText() : ConfigManager.homeHeroText());
+                        textView.setText(isTitle ? ConfigManager.homeTitleText() : ConfigManager.homeHeroText());
                         textView.setOnClickListener(null);
-                        if (title) styleTwoLines(textView, 30f, 13f, ThemeColors.getTextColor(), ThemeColors.getTextGrayColor());
+                        if (isTitle) styleTwoLines(textView, 30f, 13f, ThemeColors.getTextColor(), ThemeColors.getTextGrayColor());
                         else styleTwoLines(textView, 17f, 12f, 0xFFFFFFFF, 0xDDFFFFFF);
                     } else if (!item.getKey().equals(Keys.OfflineVisibilityInfo)) {
                         textView.setMaxLines(Integer.MAX_VALUE);

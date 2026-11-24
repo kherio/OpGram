@@ -2,6 +2,9 @@
 
 All notable changes to OpGram are documented here.
 
+## 1.12.1
+- Fix: the loose-pill design was not showing (gaps between options are now applied directly on each row).
+
 ## 1.12.0
 - New design for settings: every option is its own rounded pill over the page background ("loose pills").
 - New: "Strip photo metadata on upload" (Security): removes GPS, camera model, dates and serial numbers from a copy of JPEG files before they are uploaded. The original is never modified.

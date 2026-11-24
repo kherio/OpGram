@@ -183,11 +183,17 @@ public class SettingsAdapter {
             // The header cell IS the row view: the generic listeners below would overwrite the
             // collapse / reset listeners set above (headers then ignored taps and long-press
             // played the original TeleVip audio easter egg).
-            if (viewType == ConfigItem.HEADER) return;
+            if (viewType == ConfigItem.HEADER) {
+                spacing(new ViewHolder(holder).getItemView(), 12, 2);
+                return;
+            }
 
             ViewHolder viewHolder = new ViewHolder(holder);
             if (viewType != ConfigItem.DIVIDER && viewType != ConfigItem.INFO) {
                 pillBackground(viewHolder.getItemView());
+                spacing(viewHolder.getItemView(), 0, 6);
+            } else if (viewType == ConfigItem.DIVIDER) {
+                spacing(viewHolder.getItemView(), 0, 0);
             }
 
             final float[] lastTouchX = new float[]{0f};
@@ -348,6 +354,21 @@ public class SettingsAdapter {
             Logger.e(t);
         }
 
+    }
+
+    /** Gap between pills as plain margins (the list's RecyclerView class may be renamed, so no ItemDecoration). */
+    private static void spacing(View v, int topDp, int bottomDp) {
+        try {
+            android.view.ViewGroup.LayoutParams lp = v.getLayoutParams();
+            if (lp instanceof android.view.ViewGroup.MarginLayoutParams) {
+                float dn = v.getResources().getDisplayMetrics().density;
+                android.view.ViewGroup.MarginLayoutParams m = (android.view.ViewGroup.MarginLayoutParams) lp;
+                m.topMargin = Math.round(topDp * dn);
+                m.bottomMargin = Math.round(bottomDp * dn);
+                v.setLayoutParams(m);
+            }
+        } catch (Throwable ignored) {
+        }
     }
 
     /** Each option is its own rounded pill (model "loose pills"). */
